@@ -1,63 +1,103 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState, useEffect } from 'react';
+// import Link from 'next/link'; // ถ้าไม่ได้ใช้ Link ในหน้าเนื้อหา (เช่นปุ่ม Learn More ไม่ได้เป็น Link) ก็เอาออกได้ครับ
+
+export default function HomePage() {
+  // ลบ state scrolled ออกไป เพราะ Navbar จัดการเองแล้ว
+  const [loaded, setLoaded] = useState(false);
+  
+  // สถานะสำหรับรูปภาพทั้ง 3 การ์ด
+  const [images, setImages] = useState([
+    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/31f60903460cd3e7eb32d2dbcc9e6940.webp',
+    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/078%20copy.webp',
+    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/20250815_1044__remix_01k2nx4b0qftka3qef1be5jx2g.webp'
+  ]);
+  
+  const [updatingCard, setUpdatingCard] = useState<number | null>(null);
+
+  const allImages = [
+    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/assets_task_01k3jxyp8vffk9x738066mczkm_1756203377_img_3.webp',
+    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/078%20copy.webp',
+    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/20250814_1557_remix_01k2kwmvr5exwbsc8fhg59c9xr.webp',
+    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/20250815_1044__remix_01k2nx4b0qftka3qef1be5jx2g.webp',
+    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/20250821_1552__remix_01k35x41xvfc0bfnda599xax37.webp',
+    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/31f60903460cd3e7eb32d2dbcc9e6940.webp',
+    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/assets_task_01k1z469h8fsgbgy0g1cnj95rj_1754465170_img_1.webp',
+    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/assets_task_01k21afxfcfddb42ghs5307qc9_1754538883_img_2.webp'
+  ];
+
+  useEffect(() => {
+    // ลบ event listener scroll ที่ไม่จำเป็นออก (เพราะใช้แค่กับ Navbar)
+    setTimeout(() => setLoaded(true), 300);
+  }, []);
+
+  useEffect(() => {
+    let batchIdx = 0;
+    const cycleImages = async () => {
+        batchIdx = (batchIdx + 1) % Math.floor(allImages.length / 3);
+        const startIdx = batchIdx * 3;
+        
+        const updateOne = (cardIndex: number, newSrc: string) => {
+            return new Promise<void>((resolve) => {
+                setUpdatingCard(cardIndex);
+                setTimeout(() => {
+                    setImages(prev => {
+                        const next = [...prev];
+                        next[cardIndex] = newSrc;
+                        return next;
+                    });
+                    setTimeout(() => {
+                        setUpdatingCard(null);
+                        resolve();
+                    }, 500);
+                }, 800);
+            });
+        };
+
+        await updateOne(0, allImages[(startIdx + 0) % allImages.length]);
+        await new Promise(r => setTimeout(r, 600));
+        await updateOne(1, allImages[(startIdx + 1) % allImages.length]);
+        await new Promise(r => setTimeout(r, 600));
+        await updateOne(2, allImages[(startIdx + 2) % allImages.length]);
+    };
+
+    const interval = setInterval(cycleImages, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="noise min-h-screen bg-black text-[#808080] antialiased">
+      {/* ลบส่วน <nav> ออกไปแล้ว เพราะมันจะมาจาก layout.tsx เอง 
+      */}
+
+      {/* Main Content */}
+      <main className="relative min-h-screen flex flex-col lg:flex-row items-center justify-between pt-40 pb-12 px-6 md:px-16 max-w-[1600px] mx-auto overflow-hidden">
+        
+        {/* Text Content */}
+        <div className="relative z-10 w-full lg:w-[40%] animate-reveal">
+           <h1 className="text-4xl md:text-5xl xl:text-7xl font-bold mb-8 gold-text">
+             ตัวตนของผนัง<br />ที่สะท้อนสไตล์
+           </h1>
+           <p className="text-lg md:text-xl text-[#c2bfb6] font-light max-w-xl">
+             เรามองว่าผนังไม่ใช่เพียงฉากหลัง แต่คือองค์ประกอบหลักที่กำหนดอารมณ์ สร้างบรรยากาศ และบอกเล่ารสนิยมของพื้นที่ได้อย่างชัดเจน
+           </p>
+           {/* ปุ่มและ Stats */}
+           <div className="flex gap-4 mt-12">
+              <button className="px-8 py-4 bg-zinc-800 text-gray-300 rounded-full text-[11px] tracking-widest uppercase font-bold hover:bg-zinc-700 transition">Learn More</button>
+              <button className="px-8 py-4 border border-zinc-600 text-gray-400 rounded-full text-[11px] tracking-widest uppercase font-bold hover:border-zinc-400 transition">View Series</button>
+           </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Floating Display */}
+        <div className="w-full lg:w-[55%] flex items-center justify-center relative">
+          <div className={`display-container ${loaded ? 'loaded' : ''}`}>
+            {images.map((src, index) => (
+               <div key={index} className={`float-card card-${index} ${updatingCard === index ? 'card-updating' : ''}`}>
+                 <img src={src} className="w-full h-full object-cover" alt="Wallcraft" />
+               </div>
+            ))}
+          </div>
         </div>
       </main>
     </div>

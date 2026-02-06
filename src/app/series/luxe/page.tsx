@@ -1,7 +1,13 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
+// import Link from 'next/link'; // ปิดการใช้งานชั่วคราวสำหรับ Preview
+
+// --- Mock Link Component (ใช้สำหรับ Preview เท่านั้น) ---
+const Link = ({ href, children, className, style }: any) => (
+  <a href={href} className={className} style={style}>{children}</a>
+);
+// ----------------------------------------------------
 
 // --- Data ---
 const LAYERS_DATA = [
@@ -38,41 +44,80 @@ const Separator = () => (
 
 const CollectionSection = ({ 
   title, 
-  subtitle, 
   desc, 
   img, 
   link, 
-  reverse = false, 
-  color = '#B08038' 
+  reverse = false 
 }: { 
   title: string, 
-  subtitle: string, 
   desc: string, 
   img: string, 
   link: string, 
-  reverse?: boolean, 
-  color?: string 
+  reverse?: boolean 
 }) => {
+  // Split title to separate Main Title and "Collection"
+  const titleParts = title.split(' ');
+  const mainTitle = titleParts.slice(0, -1).join(' ');
+  const subTitle = titleParts[titleParts.length - 1];
+
+  // Animation State
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Toggle visibility based on intersection status
+        setIsVisible(entry.isIntersecting); 
+      },
+      { threshold: 0.2 } // Trigger when 20% visible
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) observer.disconnect();
+    };
+  }, []);
+
+  // Animation Classes
+  const imageAnim = isVisible 
+    ? 'opacity-100 translate-x-0' 
+    : `opacity-0 ${reverse ? '-translate-x-24' : 'translate-x-24'}`;
+
+  const textAnim = isVisible 
+    ? 'opacity-100 translate-y-0' 
+    : 'opacity-0 translate-y-16';
+
   return (
-    <section className={`relative z-10 flex flex-col ${reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} min-h-[80vh] items-center py-20 border-t border-white/5`}>
-      <div className="w-full lg:w-[50%] flex flex-col justify-center px-8 md:px-16 lg:px-24">
+    <section 
+      ref={sectionRef}
+      className={`relative z-10 flex flex-col ${reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} min-h-[80vh] items-center py-20 border-t border-white/5 overflow-hidden`}
+    >
+      <div className={`w-full lg:w-[50%] flex flex-col justify-center px-8 md:px-16 lg:px-24 transition-all duration-1000 ease-out ${textAnim}`}>
         <div className="max-w-lg">
           <div className="flex-1 space-y-4 mb-8">
             <Separator />
           </div>
-          <h1 className="text-5xl md:text-7xl font-light leading-tight mb-8" style={{ color }}>
-            {title}<br /><span className="text-[20px] text-[#c2bfb6]">{subtitle}</span>
+          <h1 className="text-5xl md:text-7xl font-light leading-tight mb-8" style={{ color: '#B08038' }}>
+            {mainTitle} <span style={{ color: '#c2bfb6' }}><br />{subTitle}</span>
           </h1>
           <p className="text-[10px] md:text-xs lg:text-sm font-light leading-relaxed max-w-md mb-12 text-[#c2bfb6]">
             {desc}
           </p>
-          <Link href={link} className="border px-8 py-4 text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:bg-[#c2bfb6] hover:text-black" style={{ color: '#c2bfb6', borderColor: 'rgba(194, 191, 182, 0.4)' }}>
+          <Link href={link} className="inline-block border px-8 py-4 text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:bg-[#c2bfb6] hover:text-black" style={{ color: '#c2bfb6', borderColor: 'rgba(194, 191, 182, 0.4)' }}>
             Learn More
           </Link>
         </div>
       </div>
       <div className="w-full lg:w-[50%] h-[50vh] lg:h-[80vh] flex items-center justify-center p-6 lg:p-12">
-        <img src={img} className="w-full h-full object-contain relative z-10 drop-shadow-2xl" alt={title} />
+        <img 
+          src={img} 
+          className={`w-full h-full object-contain relative z-10 drop-shadow-2xl transition-all duration-1000 ease-out ${imageAnim}`} 
+          alt={title} 
+        />
       </div>
     </section>
   );
@@ -165,7 +210,7 @@ export default function LuxeSeriesPage() {
   };
 
   return (
-    <div className={`min-h-screen bg-black text-[#9ca3af] selection:bg-orange-500 selection:text-white overflow-x-hidden font-sans`}>
+    <div className={`min-h-screen text-[#9ca3af] selection:bg-orange-500 selection:text-white overflow-x-hidden font-sans`}>
       
       {/* Background with Overlay */}
       <div className="fixed inset-0 z-[-1]">
@@ -179,7 +224,7 @@ export default function LuxeSeriesPage() {
       </div>
 
       {/* --- SECTION 1: HERO --- */}
-      <header className="relative min-h-[85vh] lg:min-h-[90vh] flex items-center overflow-hidden pb-12 lg:pb-0 pt-20">
+      <section className="relative min-h-[85vh] lg:min-h-[90vh] flex items-center overflow-hidden pb-12 lg:pb-0 pt-20">
         <div className="container mx-auto px-8 md:px-16 lg:px-24 max-w-[1800px] grid grid-cols-1 lg:grid-cols-2 z-20">
           <div className="flex flex-col justify-center animate-[fadeInUp_1s_ease-out_forwards]">
             <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight uppercase mb-8 leading-[1.1]" style={{ color: '#B08038' }}>
@@ -201,7 +246,7 @@ export default function LuxeSeriesPage() {
             <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/20 to-transparent lg:w-[100%]"></div>
           </div>
         </div>
-      </header>
+      </section>
 
       {/* --- SECTION 2: Technology Layer --- */}
       <section className="w-full min-h-screen flex flex-col items-center justify-center pt-24 pb-32 border-t border-white/5">
@@ -279,78 +324,62 @@ export default function LuxeSeriesPage() {
 
       {/* --- COLLECTION SECTIONS --- */}
       <CollectionSection 
-        title="Fabric" 
-        subtitle="Soft but Sharp"
+        title="Fabric Collection" 
         desc="ผนังลายผ้าที่สร้างบรรยากาศสบายตาและมีชีวิตชีวา ถ่ายทอดความละเมียดละไม พร้อมดีไซน์ที่คมชัดในทุกมุม เรียบง่ายแต่เต็มไปด้วยพลังของดีไซน์ที่แตกต่าง"
         img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20135@2x.webp"
-        link="/collection/fabric"
-        color="#B08038"
+        link="/collection/luxe-fabric"
       />
 
       <CollectionSection 
-        title="Leather" 
-        subtitle="Luxury with Edge"
+        title="Leather Collection" 
         desc="ผนังลายหนังที่สะท้อนความหรูหราอย่างมั่นใจ เติมเสน่ห์ที่มีเอกลักษณ์เฉพาะตัว คือการออกแบบที่ผสมผสานความหรูหรากับความร่วมสมัยอย่างลงตัว"
         img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20139@2x.webp"
-        link="/collection/leather"
-        color="#6A6C5F"
+        link="/collection/luxe-leather"
         reverse
       />
 
       <CollectionSection 
-        title="Metallic" 
-        subtitle="Shine Your Edge"
+        title="Metallic Collection" 
         desc="ผนังเมทัลลิกที่เปล่งประกายด้วยการเล่นแสงเงา เติมความมีพลังและความโมเดิร์นให้กับทุกพื้นที่ เป็นการแสดงออกที่เฉียบคมและเต็มไปด้วยความทันสมัย"
         img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20137@2x.webp"
-        link="/collection/metallic"
-        color="#CBBDAD"
+        link="/collection/luxe-metallic"
       />
 
       <CollectionSection 
-        title="Outdoor" 
-        subtitle="Strong & Stylish"
+        title="Outdoor Collection" 
         desc="ผนัง Outdoor ที่ออกแบบมาเพื่อรองรับทุกสภาพอากาศ ทั้งแสงแดดและฝน พร้อมดีไซน์ที่โดดเด่น เป็นการผสมผสานฟังก์ชันการใช้งานเข้ากับดีไซน์ที่สะกดสายตา"
         img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20136@2x.webp"
-        link="/collection/outdoor"
-        color="#7B2715"
+        link="/collection/luxe-outdoor"
         reverse
       />
 
       <CollectionSection 
-        title="Signature" 
-        subtitle="Your Statement Piece"
+        title="Signature Collection" 
         desc="ผนัง Signature ถ่ายทอดความคิดสร้างสรรค์ผ่านการผสมวัสดุและเทคนิคเฉพาะ เป็นเสมือนงานแฟชั่นที่ไม่ซ้ำใครและสะท้อนสไตล์ที่ชัดเจนของคุณ"
         img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20134@2x.webp"
-        link="/collection/signature"
-        color="#7C7D75"
+        link="/collection/luxe-signature"
       />
 
       <CollectionSection 
-        title="Stone" 
-        subtitle="Bold & Distinct"
+        title="Stone Collection" 
         desc="ผนังลายหินที่สะท้อนพลังและความสง่างามของธรรมชาติ ถ่ายทอดความแข็งแรงและความโดดเด่นในทุกมิติ ดีไซน์ที่มั่นคงและมีเอกลักษณ์ในตัวเอง"
         img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20140@2x.webp"
-        link="/collection/stone"
-        color="#B08038"
+        link="/collection/luxe-stone"
         reverse
       />
 
       <CollectionSection 
-        title="Velvet" 
-        subtitle="Touch of Night"
+        title="Velvet Collection" 
         desc="ผนังเวลเวทที่มอบสัมผัสเรียบหรูและเต็มไปด้วยชั้นเชิง เพิ่มบรรยากาศที่ลุ่มลึกและน่าค้นหา เป็นการตีความใหม่ของความหรูหราให้ทันสมัยและโดดเด่น"
         img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20138@2x.webp"
-        link="/collection/velvet"
-        color="#7B2715"
+        link="/collection/luxe-velvet"
       />
 
       <CollectionSection 
-        title="Wood" 
-        subtitle="Nature Reinvented"
+        title="Wood Collection" 
         desc="ผนังลายไม้ที่สะท้อนความเป็นธรรมชาติในรูปแบบที่ร่วมสมัย ถ่ายทอดความสมดุลของดีไซน์และฟังก์ชัน สร้างบรรยากาศที่สดใหม่และเข้ากับทุกแนวทางการตกแต่ง"
         img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20133@2x.webp"
-        link="/collection/wood"
-        color="#c2bfb6"
+        link="/collection/luxe-wood"
         reverse
       />
 
@@ -435,19 +464,10 @@ export default function LuxeSeriesPage() {
         </div>
       </section>
 
-      {/* --- FOOTER --- */}
-      <footer className="relative z-10 w-full py-12 px-6 border-t border-white/5">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-            <div>
-                <h4 className="font-bold uppercase tracking-widest mb-2 text-[#B08038]">Wallcraft</h4>
-                <p className="text-[10px] text-gray-500 uppercase tracking-widest">&copy; 2024 Series Collection. All rights reserved.</p>
-            </div>
-            <Link href="#" className="text-[10px] text-gray-500 hover:text-white uppercase transition">Instagram</Link>
-        </div>
-      </footer>
+      {/* Footer Removed (as per original code) */}
 
       {/* --- Global Styles --- */}
-      <style jsx global>{`
+      <style>{`
         @keyframes fadeInUp {
           0% { opacity: 0; transform: translateY(20px); }
           100% { opacity: 1; transform: translateY(0); }

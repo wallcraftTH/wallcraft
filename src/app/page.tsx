@@ -113,10 +113,10 @@ export default function HomePage() {
 
             {/* Buttons */}
             <div className="flex flex-wrap gap-4 mt-12">
-                <Link href="/introduction" className="group flex items-center px-8 py-4 bg-zinc-800 text-gray-300 font-bold rounded-full hover:bg-zinc-700 transition-all uppercase text-[11px] tracking-widest">
+                <Link href="/introduction" className="group flex items-center px-8 py-4 bg-zinc-800 text[#c2bfb6] font-bold rounded-full hover:bg-zinc-700 transition-all uppercase text-[11px] tracking-widest">
                     Learn More <FaArrowRight className="ml-2 transition-transform group-hover:translate-x-1 text-[#c2bfb6]" />
                 </Link>
-                <Link href="/series" className="group flex items-center px-8 py-4 bg-transparent border border-zinc-600 text-gray-400 font-bold rounded-full hover:bg-white/5 transition-all uppercase text-[11px] tracking-widest">
+                <Link href="/series" className="group flex items-center px-8 py-4 bg-transparent border border-zinc-600 text-[#c2bfb6] font-bold rounded-full hover:bg-white/5 transition-all uppercase text-[11px] tracking-widest">
                     <FaLayerGroup className="mr-2 text-[10px]" /> View Series
                 </Link>
             </div>
@@ -124,11 +124,11 @@ export default function HomePage() {
             {/* Stats */}
             <div className="pt-12 mt-12 grid grid-cols-2 gap-8 border-t border-white/10 w-full">
                 <div>
-                    <p className="text-3xl font-bold text-gray-400 tracking-tight">12+</p>
+                    <p className="text-3xl font-bold text-[#c2bfb6] tracking-tight">12+</p>
                     <p className="text-[10px] uppercase tracking-[0.2em] mt-2 text-[#c2bfb6]">Material Collections</p>
                 </div>
                 <div>
-                    <p className="text-3xl font-bold text-gray-400 tracking-tight">Eco-friendly</p>
+                    <p className="text-3xl font-bold text-[#c2bfb6] tracking-tight">Eco-friendly</p>
                     <p className="text-[10px] uppercase tracking-[0.2em] mt-2 text-[#c2bfb6]">Sustainable Clay</p>
                 </div>
             </div>

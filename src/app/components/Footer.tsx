@@ -6,31 +6,28 @@ import { FaFacebookF, FaInstagram, FaLine, FaPhone } from 'react-icons/fa6';
 export default function Footer() {
   return (
     <footer className="bg-[#050505] border-t border-white/5 pt-20 pb-10 text-white relative z-10">
-      <div className="container mx-auto px-8 lg:px-24">
+      {/* Reduced padding (lg:px-10) to move content closer to the left edge */}
+      <div className="container mx-auto px-8 lg:px-10">
         
-        {/* Adjusted Grid: 5 Columns on Desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mb-20">
+        {/* Grid Layout: 5 Columns on Desktop */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 mb-32">
           
-          {/* --- Column 1: Brand (Takes 1 column) --- */}
+          {/* --- Column 1: Contact (Moved Left) --- */}
           <div className="lg:col-span-1">
-            <Link href="/" className="text-3xl font-bold tracking-widest text-[#B08038] uppercase mb-6 block">
-              Wallcraft
+            <Link href="/" className="text-2xl font-bold tracking-widest text-[#B08038] uppercase mb-6 block">
+              TPS GARDEN FURNITURE CO., LTD
             </Link>
-            <p className="text-xs text-zinc-500 leading-relaxed font-light mb-6">
-              Redefining architectural surfaces with a fusion of nature and innovation. 
-              Crafting spaces that tell a story through texture and form.
-            </p>
-            <div className="flex space-x-4">
-              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 hover:bg-[#B08038] hover:text-white transition-all"><FaFacebookF size={12} /></a>
-              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 hover:bg-[#B08038] hover:text-white transition-all"><FaInstagram size={12} /></a>
-              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-400 hover:bg-[#B08038] hover:text-white transition-all"><FaLine size={12} /></a>
-            </div>
+            <ul className="space-y-4 text-xs text-[#c2bfb6] font-light tracking-wide">
+              <li className="flex items-start gap-3">
+                <span className="opacity-50 mt-1 text-[10px] ">📍</span>
+                <span>351/7-8 Soi Bangkok-Nonthaburi 13, Bangkok-Nonthaburi Road, Bang Sue Subdistrict, Bang Sue District, Bangkok 10800</span>
+              </li>
+            </ul>
           </div>
 
           {/* --- Column 2: Collections (Takes 2 columns) --- */}
           <div className="lg:col-span-2">
-             {/* Header placed here so it aligns nicely above the 3 columns */}
-             <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white mb-8">Collections</h4>
+             <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#B08038] mb-8">Collections</h4>
              
              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
                
@@ -85,47 +82,38 @@ export default function Footer() {
              </div>
           </div>
 
-          {/* --- Column 3: Technical Support (Takes 1 column) --- */}
+          {/* --- Column 3: Technical Support --- */}
           <div className="lg:col-span-1">
-            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white mb-8">Technical Support</h4>
+            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#B08038] mb-8">Technical Support</h4>
             <ul className="space-y-4 text-xs text-zinc-400 font-light tracking-wide">
-              <li><Link href="/support/installation" className="hover:text-[#B08038] transition-colors">Installation Guide</Link></li>
-              <li><Link href="/support/maintenance" className="hover:text-[#B08038] transition-colors">Care & Maintenance</Link></li>
-              <li><Link href="/support/warranty" className="hover:text-[#B08038] transition-colors">Warranty & Policy</Link></li>
-              <li><Link href="/studio-qa" className="hover:text-[#B08038] transition-colors">Studio Q&A</Link></li>
+              <li><Link href="/support/installation" className= "text-[#c2bfb6] hover:text-[#B08038] transition-colors">Installation Guide</Link></li>
+              <li><Link href="/support/maintenance" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Care & Maintenance</Link></li>
+              <li><Link href="/support/warranty" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Warranty & Policy</Link></li>
+              <li><Link href="/studio-qa" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Studio Q&A</Link></li>
             </ul>
           </div>
 
-          {/* --- Column 4: Contact (Takes 1 column) --- */}
+          {/* --- Column 4: Brand/Socials --- */}
           <div className="lg:col-span-1">
-            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white mb-8">Contact Us</h4>
-            <ul className="space-y-4 text-xs text-zinc-400 font-light tracking-wide">
-              <li className="flex items-start gap-3">
-                <span className="opacity-50 mt-1 text-[10px]">📍</span>
-                <span>123 Design District,<br />Bangkok, Thailand 10110</span>
-              </li>
+            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#B08038] mb-8">Contact Us</h4>
+            <ul className="space-y-4 text-xs text-[#c2bfb6] font-light tracking-wide mb-6">
               <li className="flex items-center gap-3">
                 <FaPhone size={10} className="opacity-50" />
                 <span>+66 2 123 4567</span>
               </li>
               <li className="flex items-center gap-3">
-                <span className="opacity-50 text-[10px]">@</span>
+                <span className="text-[#c2bfb6] opacity-50 text-[10px]">@</span>
                 <span>contact@wallcraft.th</span>
               </li>
             </ul>
+            
+            <div className="flex space-x-4">
+              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-#c2bfb6 hover:bg-[#B08038] hover:text-white transition-all"><FaFacebookF size={12} /></a>
+              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-#c2bfb6 hover:bg-[#B08038] hover:text-white transition-all"><FaInstagram size={12} /></a>
+              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-#c2bfb6 hover:bg-[#B08038] hover:text-white transition-all"><FaLine size={12} /></a>
+            </div>
           </div>
 
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-[10px] text-zinc-600 uppercase tracking-wider">
-            &copy; {new Date().getFullYear()} Wallcraft Thailand. All rights reserved.
-          </p>
-          <div className="flex gap-6 text-[10px] text-zinc-600 uppercase tracking-wider">
-            <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
-          </div>
         </div>
 
       </div>

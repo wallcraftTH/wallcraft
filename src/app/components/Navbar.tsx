@@ -48,45 +48,45 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center space-x-12">
-            <Link href="/introduction" className="text-[10px] uppercase tracking-[0.4em] text-white/80 hover:text-[#B08038] transition-colors">Band Introduction</Link>
+            <Link href="/introduction" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors">Band Introduction</Link>
             
             {/* Series Dropdown (เดิม) - อาจจะลบออกถ้า Collection ครอบคลุมแล้ว หรือเก็บไว้ตามดีไซน์ */}
             {/* ถ้าต้องการเก็บไว้ก็ปล่อยไว้ครับ แต่ถ้าจะรวม ให้ลบ section นี้ทิ้งได้เลย */}
              <div className="relative py-2 flex items-center group cursor-pointer">
-              <span className="text-[10px] uppercase tracking-[0.4em] text-white/80 hover:text-[#B08038] transition-colors">Series</span>
+              <span className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors">Series</span>
               <div className="ml-2 p-1 group-hover:rotate-180 transition-transform duration-300">
                 <FaChevronDown className="text-[8px] opacity-40 group-hover:text-[#B08038] group-hover:opacity-100" />
               </div>
               <div className="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                 <div className="bg-zinc-900/95 backdrop-blur-2xl border border-white/5 p-6 space-y-4 shadow-2xl rounded-sm">
-                  <Link href="/series/craft-stone" className="block text-[9px] uppercase tracking-[0.3em] c2bfb6 hover:text-[#B08038]">Craft Stone Series</Link>
-                  <Link href="/series/luxe" className="block text-[9px] uppercase tracking-[0.3em] c2bfb6 hover:text-[#B08038]">Luxe Series</Link>
-                  <Link href="/series/essential" className="block text-[9px] uppercase tracking-[0.3em] c2bfb6 hover:text-[#B08038]">Essential Series</Link>
+                  <Link href="/series/craft-stone" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Craft Stone Series</Link>
+                  <Link href="/series/luxe" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Luxe Series</Link>
+                  <Link href="/series/essential" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Essential Series</Link>
                 </div>
               </div>
             </div>
             
             {/* Art Dropdown */}
             <div className="relative py-2 flex items-center group cursor-pointer">
-              <span className="text-[10px] uppercase tracking-[0.4em] text-white/80 hover:text-[#B08038] transition-colors">Art & Gallery</span>
+              <span className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors">Art & Gallery</span>
               <div className="ml-2 p-1 group-hover:rotate-180 transition-transform duration-300">
                 <FaChevronDown className="text-[8px] opacity-40 group-hover:text-[#B08038] group-hover:opacity-100" />
               </div>
                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                 <div className="bg-zinc-900/95 backdrop-blur-2xl border border-white/5 p-6 space-y-4 shadow-2xl rounded-sm">
-                  <Link href="#" className="block text-[9px] uppercase tracking-[0.3em] c2bfb6 hover:text-[#B08038]">Visual Showcase</Link>
-                  <Link href="#" className="block text-[9px] uppercase tracking-[0.3em] c2bfb6 hover:text-[#B08038]">Project Showcase</Link>
+                  <Link href="#" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Visual Showcase</Link>
+                  <Link href="#" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Project Showcase</Link>
                 </div>
               </div>
             </div>
 
-            <Link href="#" className="text-[10px] uppercase tracking-[0.4em] text-white/80 hover:text-[#B08038] transition-colors">Match Inspiration</Link>
-            <Link href="#" className="text-[10px] uppercase tracking-[0.4em] text-white/80 hover:text-[#B08038] transition-colors">Studio Q&A</Link>
+            <Link href="#" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors">Match Inspiration</Link>
+            <Link href="#" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors">Studio Q&A</Link>
           
           </div>
 
           <div className="absolute right-0 lg:right-8 flex items-center space-x-6">
-            <button className="c2bfb6 hover:text-white transition text-[9px] tracking-widest uppercase flex items-center">
+            <button className="text-[#c2bfb6] hover:text-white transition text-[9px] tracking-widest uppercase flex items-center">
               Search <FaMagnifyingGlass className="ml-3 opacity-60" />
             </button>
           </div>

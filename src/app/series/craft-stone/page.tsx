@@ -23,33 +23,33 @@ const LAYERS_DATA: LayerData[] = [
   {
     title: 'UV Coating Layer',
     description: 'เคลือบป้องกันรังสี UVลดการซีดจางของสี <br>ทำความสะอาดง่ายและช่วยยืดอายุการใช้งาน',
-    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/set1_layer/layer1.png'
+    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/set1_layer/layer1.webp'
   },
   {
     title: 'Mineral Color Layer',
     description: 'ชั้นสีจากแร่ธรรมชาติ ทนแดดและทนไฟ <br> ให้สีสวยงามคงทน ไม่ซีดจางแม้ใช้กลางแจ้ง',
-    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/set1_layer/layer2.png'
+    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/set1_layer/layer2.webp'
   },
   {
     title: 'Eco Clay Composite',
     description: 'ชั้นแกนกลางจากดินและผงหินดัดแปลง <br> ด้วยเทคโนโลยี เบา ยืดหยุ่น แข็งแรง ไม่แตกร้าว <br> และเป็นมิตรต่อสิ่งแวดล้อม',
-    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/set1_layer/layer3.png'
+    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/set1_layer/layer3.webp'
   },
   {
     title: 'Fiberglass Mesh',
     description: 'ตาข่ายเสริมแรงป้องกันการแตกร้าวและบิดงอ <br> เพิ่มความทนทาน ทนไฟ และไม่เป็นสนิม',
-    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/set1_layer/layer4.png'
+    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/set1_layer/layer4.webp'
   }
 ];
 
 const TECH_ICONS_DATA = [
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-03.png',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-04.png',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-05.png',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-06.png',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-07.png',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-08.png',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-09.png'
+  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-03.webp',
+  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-04.webp',
+  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-05.webp',
+  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-06.webp',
+  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-07.webp',
+  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-08.webp',
+  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/craft%20stone%20icon/Untitled-1-09.webp'
 ];
 
 // --- Helper Components ---

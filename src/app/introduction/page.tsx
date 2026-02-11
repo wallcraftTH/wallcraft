@@ -305,12 +305,16 @@ export default function IntroductionPage() {
                                         <h2 className="text-3xl md:text-5xl lg:text-6xl tracking-tighter gold-text uppercase leading-tight drop-shadow-md font-normal">{series.title}</h2>
                                     </div>
                                     <p className="text-zinc-300 text-sm md:text-base font-light leading-relaxed max-w-sm opacity-80">{series.desc}</p>
-                                    <div className="pt-4">
-                                        <Link href={series.link} className="inline-flex items-center group space-x-4">
-                                            <span className="text-[11px] uppercase tracking-[0.4em] text-white/60 group-hover:text-[#B08038] transition-colors">Read More</span>
-                                            <div className="w-12 h-[1px] bg-white/20 group-hover:w-16 group-hover:bg-[#B08038] transition-all duration-500"></div>
-                                        </Link>
-                                    </div>
+                                    <div className="pt-6">
+    <Link href={series.link} className="inline-block group">
+        <div className="px-8 py-3 border border-white/20 bg-white/5 backdrop-blur-sm transition-all duration-500 group-hover:border-[#B08038] group-hover:bg-[#B08038]/10 flex items-center space-x-4">
+            <span className="text-[11px] uppercase tracking-[0.4em] text-[#c2bfb6] group-hover:text-white transition-colors">
+                Learn More
+            </span>
+            <div className="w-8 h-[1px] bg-white/40 group-hover:w-12 group-hover:bg-[#B08038] transition-all duration-500"></div>
+        </div>
+    </Link>
+</div>
                                 </div>
                                 <div 
                                     ref={(el) => { collageRefs.current[series.id] = el }} 

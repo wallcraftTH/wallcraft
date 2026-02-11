@@ -62,12 +62,12 @@ const HARDCODED_LIST = [
   {
     title: "Ratten V",
     size: "W600xH2400xT5.5(+-0.5)mm\nW1000xH2400xT5.5(+-0.5)mm",
-    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/finesse_collection/Asset%2067.webp'
+    image: ''
   },
   {
     title: "Water Cube",
     size: "W1160xH3050xT6 mm", 
-    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/finesse_collection/Asset%2064.webp'
+    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/finesse_collection/Asset%2067.webp'
   },
   {
     title: "Wood Cube",

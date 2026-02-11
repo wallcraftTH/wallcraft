@@ -21,7 +21,7 @@ export default function Navbar() {
       {/* Mobile Navigation */}
       <nav className={`fixed top-0 w-full z-[50] px-8 py-3 flex justify-between items-center md:hidden transition-all duration-400 ${scrolled ? 'bg-black/95 backdrop-blur-md border-b border-white/5' : 'bg-black/40 backdrop-blur-md border-b border-white/5'}`}>
         <Link href="/">
-          <img src="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Logo_Images/wallcraft%20logo%20grey%20color.png" alt="Wallcraft Logo" className="h-8 w-auto" />
+          <img src="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Logo_Images/wallcraft%20logo%20grey%20color.webp" alt="Wallcraft Logo" className="h-8 w-auto" />
         </Link>
         <button className="text-white/80 text-xl" onClick={() => setIsMobileMenuOpen(true)}>
           <FaBarsStaggered />
@@ -43,7 +43,7 @@ export default function Navbar() {
         <div className="max-w-[1800px] mx-auto flex justify-center items-center relative">
           <div className="absolute left-0 lg:left-8 flex items-center">
             <Link href="/">
-              <img src="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Logo_Images/wallcraft%20logo%20grey%20color.png" alt="Wallcraft Logo" className="h-5 lg:h-6 opacity-90" />
+              <img src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Logo_Images/wallcraft%20logo%20grey%20color.webp" alt="Wallcraft Logo" className="h-5 lg:h-6 opacity-90" />
             </Link>
           </div>
 

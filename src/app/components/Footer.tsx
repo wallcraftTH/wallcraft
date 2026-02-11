@@ -85,7 +85,7 @@ export default function Footer() {
           {/* --- Column 3: Technical Support --- */}
           <div className="lg:col-span-1">
             <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#B08038] mb-8">Technical Support</h4>
-            <ul className="space-y-4 text-xs text-zinc-400 font-light tracking-wide">
+            <ul className="space-y-4 text-xs text-[#c2bfb6] font-light tracking-wide">
               <li><Link href="/support/installation" className= "text-[#c2bfb6] hover:text-[#B08038] transition-colors">Installation Guide</Link></li>
               <li><Link href="/support/maintenance" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Care & Maintenance</Link></li>
               <li><Link href="/support/warranty" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Warranty & Policy</Link></li>
@@ -97,14 +97,16 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#B08038] mb-8">Contact Us</h4>
             <ul className="space-y-4 text-xs text-[#c2bfb6] font-light tracking-wide mb-6">
-              <li className="flex items-center gap-3">
+              <li><Link href="#" className= "text-[#c2bfb6] hover:text-[#B08038] transition-colors">Showrooms</Link></li>
+              <li><Link href="#" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Location</Link></li>
+              {/* ---<li className="flex items-center gap-3">
                 <FaPhone size={10} className="opacity-50" />
                 <span>+66 2 123 4567</span>
               </li>
               <li className="flex items-center gap-3">
                 <span className="text-[#c2bfb6] opacity-50 text-[10px]">@</span>
                 <span>contact@wallcraft.th</span>
-              </li>
+              </li>--- */}
             </ul>
             
             <div className="flex space-x-4">

@@ -1,30 +1,28 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-// แก้ไข: ลบ import Link ออกเพื่อให้ทำงานได้ใน Environment นี้
-// import Link from 'next/link';
 
 // --- Data ---
 const LAYERS_DATA = [
   {
     title: 'DECORATIVE FILM',
     description: 'Advanced wood texture film with high-definition protective coating.',
-    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20156@2x.webp'
+    image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20156@2x.webp'
   },
   {
     title: 'ECO BAMBOO COMPOSITE',
     description: 'Core structure optimized for flexibility and structural integrity.',
-    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20157@2x.webp'
+    image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20157@2x.webp'
   }
 ];
 
 const TECH_ICONS_DATA = [
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20163@2x.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20162@2x.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20161@2x.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20160@2x.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20159@2x.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20164@2x.webp'
+  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20163@2x.webp',
+  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20162@2x.webp',
+  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20161@2x.webp',
+  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20160@2x.webp',
+  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20159@2x.webp',
+  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20164@2x.webp'
 ];
 
 // --- Helper Components ---
@@ -60,7 +58,9 @@ const CollectionSection = ({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsVisible(entry.isIntersecting); 
+        if (entry.isIntersecting) {
+            setIsVisible(true); 
+        }
       },
       { threshold: 0.2 }
     );
@@ -93,13 +93,12 @@ const CollectionSection = ({
             <Separator />
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-light leading-tight mb-8" style={{ color: '#B08036' }}>
+          <h1 className="text-5xl md:text-7xl font-light leading-tight mb-8" style={{ color: color === '#CBBDAD' ? '#CBBDAD' : (color === '#7B2715' ? '#7B2715' : '#B08036') }}>
             {title}<br /><span style={{ color: '#c2bfb6' }}>{highlight}</span>
           </h1>
           <p className="text-[10px] md:text-xs lg:text-sm font-light leading-relaxed max-w-md mb-12 text-[#c2bfb6]">
             {desc}
           </p>
-          {/* แก้ไข: ใช้ <a> แทน <Link> เพื่อให้ทำงานได้ใน Preview นี้ */}
           <a href={link} className="inline-block border px-8 py-4 text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:bg-[#c2bfb6] hover:text-black" style={{ color: '#c2bfb6', borderColor: 'rgba(194, 191, 182, 0.4)' }}>
             Learn More
           </a>
@@ -118,14 +117,16 @@ const CollectionSection = ({
 
 // --- Main Page Component ---
 
-export default function EssentialSeriesPage() {
+export default function App() {
   const [isStacked, setIsStacked] = useState(true);
   const [activeLayerIndex, setActiveLayerIndex] = useState<number | null>(null);
   const stackContainerRef = useRef<HTMLDivElement>(null);
   const [windowWidth, setWindowWidth] = useState(0);
 
   useEffect(() => {
+    // Initial width
     setWindowWidth(window.innerWidth);
+    
     const handleResize = () => setWindowWidth(window.innerWidth);
 
     const handleScroll = () => {
@@ -201,20 +202,30 @@ export default function EssentialSeriesPage() {
 
   return (
     <div className={`min-h-screen text-[#9ca3af] selection:bg-orange-500 selection:text-white overflow-x-hidden font-sans`}>
-      
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100;300;400;700&family=Prompt:wght@300;400;500;600;700&display=swap');
+        
+        body { font-family: 'Prompt', sans-serif; background-color: #000; }
+        @keyframes fadeInUp {
+          0% { opacity: 0; transform: translateY(20px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
+
       {/* Background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
           style={{ 
-            backgroundImage: "url('https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/a97dadae3afc99615841325016e26563-gigapixel-standard%20v2-2x.webp')" 
+            backgroundImage: "url('https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/a97dadae3afc99615841325016e26563-gigapixel-standard%20v2-2x.webp')" 
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/85 to-black/30" />
       </div>
 
       {/* --- HERO --- */}
-      {/* เปลี่ยน header เป็น section เพื่อไม่ให้ชนกับ Layout หลัก */}
       <section className="relative min-h-[85vh] lg:min-h-[90vh] flex items-center overflow-hidden pb-12 lg:pb-0 pt-20">
         <div className="container mx-auto px-8 md:px-16 lg:px-24 max-w-[1800px] grid grid-cols-1 lg:grid-cols-2 z-20">
           <div className="flex flex-col justify-center animate-[fadeInUp_1s_ease-out_forwards]">
@@ -230,7 +241,7 @@ export default function EssentialSeriesPage() {
         <div className="absolute inset-0 z-10 flex items-center justify-end overflow-hidden pointer-events-none">
           <div className="relative w-full h-full flex justify-end items-center">
             <img 
-              src="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20158@2x.webp" 
+              src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20158@2x.webp" 
               className="h-[85vh] lg:h-[95vh] w-auto object-contain opacity-90 transition-transform duration-1000 transform translate-x-[5%]"
               alt="Essential Material" 
             />
@@ -316,7 +327,7 @@ export default function EssentialSeriesPage() {
         title="Solid" 
         highlight="Panel"
         desc="ผนังสำเร็จรูป พร้อมติดตั้งทันทีโดยไม่ต้องเตรียมพื้นผิวมาก"
-        img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20169@2x.webp"
+        img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20169@2x.webp"
         link="/collection/essential-solid"
         color="#c2bfb6"
       />
@@ -325,7 +336,7 @@ export default function EssentialSeriesPage() {
         title="Hollow Core" 
         highlight="Panel"
         desc="ผนังที่มาพร้อมลูกเล่นหลากหลายในการต่อระหว่างแผ่น รวมถึงระบบการเข้ามุมในตัวที่ช่วยให้งานเรียบร้อยและสวยงาม"
-        img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20165@2x.webp"
+        img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20165@2x.webp"
         link="/collection/essential-hollow"
         color="#c2bfb6"
         reverse
@@ -335,7 +346,7 @@ export default function EssentialSeriesPage() {
         title="Decor" 
         highlight="Panel"
         desc="ผนังระแนงมาพร้อมตัวจบมุมสำเร็จรูปที่ออกแบบ เฉพาะแต่ละรุ่นเพื่อความเรียบร้อยและสมบูรณ์แบบ"
-        img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20168@2x.webp"
+        img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20168@2x.webp"
         link="/collection/essential-decor"
         color="#CBBDAD"
       />
@@ -344,21 +355,11 @@ export default function EssentialSeriesPage() {
         title="Accessories" 
         highlight="Aluminium & LED"
         desc="อลูมิเนียมเก็บงานในบางรุ่น สามารถเทียบสีฟิล์ม ได้อย่างแม่นยำพร้อมไฟ LED ขนาดกะทัดรัด"
-        img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%20167@2x.webp"
+        img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20167@2x.webp"
         link="/collection/essential-accessories"
         color="#c2bfb6"
         reverse
       />
-
-      {/* แก้ไข: ใช้ <style> แทน <style jsx global> เพื่อป้องกัน Warning ใน Console */}
-      <style>{`
-        @keyframes fadeInUp {
-          0% { opacity: 0; transform: translateY(20px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
     </div>
   );
 }

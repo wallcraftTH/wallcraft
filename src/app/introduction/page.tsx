@@ -10,19 +10,19 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 const FALLBACK_TEXTURE = "https://images.unsplash.com/photo-1516550893923-42d28e5677af?q=80&w=800&auto=format&fit=crop";
 
 const CATEGORIES = [
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2042@3x.webp" },
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2043@3x.webp" },
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2044@3x.webp" },
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2045@3x.webp" },
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2046@3x.webp" },
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2047@3x.webp" },
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2048@3x.webp" },
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2049@3x.webp" },
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2050@3x.webp" },
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2051@3x.webp" },
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2052@3x.webp" },
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2053@3x.webp" },
-    { img: "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2054@3x.webp" }
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2042@3x.webp" },
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2043@3x.webp" },
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2044@3x.webp" },
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2045@3x.webp" },
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2046@3x.webp" },
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2047@3x.webp" },
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2048@3x.webp" },
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2049@3x.webp" },
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2050@3x.webp" },
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2051@3x.webp" },
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2052@3x.webp" },
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2053@3x.webp" },
+    { img: "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2054@3x.webp" }
 ];
 
 const SERIES_DATA = [
@@ -31,16 +31,16 @@ const SERIES_DATA = [
         title: 'Craft Stone Series',
         subtitle: 'ซีรี่ส์หัตถกรรมหิน',
         desc: 'ผลิตจากกลุ่มแร่ธรรมชาติ (Eco Clay Composite) มอบคุณสมบัติเด่น น้ำหนักเบา ยืดหยุ่น แข็งแรง และเป็นมิตรต่อสิ่งแวดล้อม เหมาะสำหรับติดตั้งทั้งภายในและภายนอก',
-        link: '/series/craft-stone', // แก้ Link ให้เป็น Next.js path
+        link: '#',
         images: [
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Craft%20Stone%20Series/Asset%2056@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Craft%20Stone%20Series/Asset%2063@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Craft%20Stone%20Series/Asset%2058@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Craft%20Stone%20Series/Asset%2057@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Craft%20Stone%20Series/Asset%2059@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Craft%20Stone%20Series/Asset%2062@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Craft%20Stone%20Series/Asset%2060@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Craft%20Stone%20Series/Asset%2061@3x.webp"
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%2056@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%2063@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%2058@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%2057@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%2059@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%2062@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%2060@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%2061@3x.webp"
         ],
         reverse: false
     },
@@ -49,19 +49,19 @@ const SERIES_DATA = [
         title: 'Luxe Series',
         subtitle: 'ลักซ์ ซีรีส์',
         desc: 'ผนังตกแต่งระดับพรีเมียมที่ออกแบบมาเพื่อยระดับทุกพื้นที่ให้มีทั้งความงามและความทนทาน โครงสร้างหลักใช้ แผ่น HPVC หนา 5 มิลลิเมตร แข็งแรง กันน้ำ และคงรูปได้ดี',
-        link: '/series/luxe',
+        link: '#',
         images: [
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%2068@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%2067@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%2066@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%2071@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%2070@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%2073@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%2074@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%2064@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%2065@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%2072@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%2069@3x.webp"
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2068@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2067@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2066@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2071@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2070@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2073@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2074@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2064@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2065@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2072@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2069@3x.webp"
         ],
         reverse: true
     },
@@ -70,23 +70,24 @@ const SERIES_DATA = [
         title: 'Essential Series',
         subtitle: 'ซีรีส์สำคัญ',
         desc: 'ผนังดีไซน์ใหม่ที่มอบทางเลือกการติดตั้งและการจบงานที่สมบูรณ์แบบ ครอบคลุมทั้ง Flat, 3D Wall และ LED ช่วยลดปัญหาหน้างานเพื่อความสวยที่สมบูรณ์แบบ',
-        link: '/series/essential',
+        link: '#',
         images: [
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%2075@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%2076@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%2077@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%2078@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%2079@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%2080@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%2081@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%2082@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%2083@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%2084@3x.webp",
-            "https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Essential%20Series/Asset%2085@3x.webp"
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2075@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2076@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2077@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2078@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2079@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2080@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2081@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2082@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2083@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2084@3x.webp",
+            "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2085@3x.webp"
         ],
         reverse: false
     }
 ];
+
 
 export default function IntroductionPage() {
     // เอา Logic ของ Navbar ออกทั้งหมด (scrolled, activeDropdown)
@@ -333,14 +334,6 @@ export default function IntroductionPage() {
                 </div>
             </div>
 
-            {/* Footer */}
-            <footer className="py-16 bg-black border-t border-white/5 text-center px-6 relative z-30">
-                <img src="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Logo_Images/wallcraft%20logo%20grey%20color.png" className="h-5 mx-auto mb-8 opacity-20 grayscale" alt="Logo" />
-                <p className="text-[10px] uppercase tracking-[0.6em] text-zinc-700">
-                    &copy; 2024 Wallcraft Material Studio.
-                </p>
-            </footer>
-
             {/* Global Styles for specific animations */}
             <style jsx global>{`
                 :root {
@@ -395,7 +388,7 @@ export default function IntroductionPage() {
                 .no-scrollbar::-webkit-scrollbar { display: none; }
                 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
                 .series-textured {
-                    background-image: url('https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/background/Asset%2091@3x.webp');
+                    background-image: url('https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2091@3x.webp');
                     background-size: 120%;
                     background-position: center;
                     background-attachment: fixed;

@@ -1,35 +1,28 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-// import Link from 'next/link'; // ปิดการใช้งานชั่วคราวสำหรับ Preview
-
-// --- Mock Link Component (ใช้สำหรับ Preview เท่านั้น) ---
-const Link = ({ href, children, className, style }: any) => (
-  <a href={href} className={className} style={style}>{children}</a>
-);
-// ----------------------------------------------------
 
 // --- Data ---
 const LAYERS_DATA = [
   {
     title: 'DECORATIVE SHEET',
     description: 'Advanced protection coating that prevents surface fading.',
-    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20123@2x.webp'
+    image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20123@2x.webp'
   },
   {
     title: 'HPVC/AVIATION FIBER',
     description: 'Modified core designed for structural flexibility.',
-    image: 'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20124@2x.webp'
+    image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20124@2x.webp'
   }
 ];
 
 const TECH_ICONS_DATA = [
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20132@2x.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20131@2x.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20130@2x.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20129@2x.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20128@2x.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20127@2x.webp'
+  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20132@2x.webp',
+  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20131@2x.webp',
+  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20130@2x.webp',
+  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20129@2x.webp',
+  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20128@2x.webp',
+  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20127@2x.webp'
 ];
 
 // --- Helper Components ---
@@ -67,8 +60,9 @@ const CollectionSection = ({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Toggle visibility based on intersection status
-        setIsVisible(entry.isIntersecting); 
+        if (entry.isIntersecting) {
+            setIsVisible(true); 
+        }
       },
       { threshold: 0.2 } // Trigger when 20% visible
     );
@@ -107,9 +101,9 @@ const CollectionSection = ({
           <p className="text-[10px] md:text-xs lg:text-sm font-light leading-relaxed max-w-md mb-12 text-[#c2bfb6]">
             {desc}
           </p>
-          <Link href={link} className="inline-block border px-8 py-4 text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:bg-[#c2bfb6] hover:text-black" style={{ color: '#c2bfb6', borderColor: 'rgba(194, 191, 182, 0.4)' }}>
+          <a href={link} className="inline-block border px-8 py-4 text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:bg-[#c2bfb6] hover:text-black" style={{ color: '#c2bfb6', borderColor: 'rgba(194, 191, 182, 0.4)' }}>
             Learn More
-          </Link>
+          </a>
         </div>
       </div>
       <div className="w-full lg:w-[50%] h-[50vh] lg:h-[80vh] flex items-center justify-center p-6 lg:p-12">
@@ -125,7 +119,7 @@ const CollectionSection = ({
 
 // --- Main Page Component ---
 
-export default function LuxeSeriesPage() {
+export default function App() {
   // Layer Animation State
   const [isStacked, setIsStacked] = useState(true);
   const [activeLayerIndex, setActiveLayerIndex] = useState<number | null>(null);
@@ -134,7 +128,9 @@ export default function LuxeSeriesPage() {
 
   // --- Effects ---
   useEffect(() => {
+    // Initial width
     setWindowWidth(window.innerWidth);
+    
     const handleResize = () => setWindowWidth(window.innerWidth);
 
     const handleScroll = () => {
@@ -211,13 +207,24 @@ export default function LuxeSeriesPage() {
 
   return (
     <div className={`min-h-screen text-[#9ca3af] selection:bg-orange-500 selection:text-white overflow-x-hidden font-sans`}>
-      
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100;300;400;700&family=Prompt:wght@300;400;500;600;700&display=swap');
+        
+        body { font-family: 'Prompt', sans-serif; background-color: #000; }
+        @keyframes fadeInUp {
+          0% { opacity: 0; transform: translateY(20px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
+
       {/* Background with Overlay */}
       <div className="fixed inset-0 z-[-1]">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
           style={{ 
-            backgroundImage: "url('https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20126@2x.webp')" 
+            backgroundImage: "url('https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20126@2x.webp')" 
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/40 to-black/20" />
@@ -239,7 +246,7 @@ export default function LuxeSeriesPage() {
         <div className="absolute top-0 right-0 bottom-0 left-0 z-10 flex items-center justify-end overflow-hidden pointer-events-none">
           <div className="relative w-full h-full flex justify-end items-center">
             <img 
-              src="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20125@2x.webp" 
+              src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20125@2x.webp" 
               className="h-full lg:h-screen w-auto object-contain opacity-95 transition-transform duration-1000 transform translate-x-[5%] drop-shadow-[0_0_50px_rgba(0,0,0,0.9)]"
               alt="Luxe Series Collage" 
             />
@@ -326,14 +333,14 @@ export default function LuxeSeriesPage() {
       <CollectionSection 
         title="Fabric Collection" 
         desc="ผนังลายผ้าที่สร้างบรรยากาศสบายตาและมีชีวิตชีวา ถ่ายทอดความละเมียดละไม พร้อมดีไซน์ที่คมชัดในทุกมุม เรียบง่ายแต่เต็มไปด้วยพลังของดีไซน์ที่แตกต่าง"
-        img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20135@2x.webp"
+        img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20135@2x.webp"
         link="/collection/luxe-fabric"
       />
 
       <CollectionSection 
         title="Leather Collection" 
         desc="ผนังลายหนังที่สะท้อนความหรูหราอย่างมั่นใจ เติมเสน่ห์ที่มีเอกลักษณ์เฉพาะตัว คือการออกแบบที่ผสมผสานความหรูหรากับความร่วมสมัยอย่างลงตัว"
-        img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20139@2x.webp"
+        img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20139@2x.webp"
         link="/collection/luxe-leather"
         reverse
       />
@@ -341,14 +348,14 @@ export default function LuxeSeriesPage() {
       <CollectionSection 
         title="Metallic Collection" 
         desc="ผนังเมทัลลิกที่เปล่งประกายด้วยการเล่นแสงเงา เติมความมีพลังและความโมเดิร์นให้กับทุกพื้นที่ เป็นการแสดงออกที่เฉียบคมและเต็มไปด้วยความทันสมัย"
-        img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20137@2x.webp"
+        img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20137@2x.webp"
         link="/collection/luxe-metallic"
       />
 
       <CollectionSection 
         title="Outdoor Collection" 
         desc="ผนัง Outdoor ที่ออกแบบมาเพื่อรองรับทุกสภาพอากาศ ทั้งแสงแดดและฝน พร้อมดีไซน์ที่โดดเด่น เป็นการผสมผสานฟังก์ชันการใช้งานเข้ากับดีไซน์ที่สะกดสายตา"
-        img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20136@2x.webp"
+        img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20136@2x.webp"
         link="/collection/luxe-outdoor"
         reverse
       />
@@ -356,14 +363,14 @@ export default function LuxeSeriesPage() {
       <CollectionSection 
         title="Signature Collection" 
         desc="ผนัง Signature ถ่ายทอดความคิดสร้างสรรค์ผ่านการผสมวัสดุและเทคนิคเฉพาะ เป็นเสมือนงานแฟชั่นที่ไม่ซ้ำใครและสะท้อนสไตล์ที่ชัดเจนของคุณ"
-        img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20134@2x.webp"
+        img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20134@2x.webp"
         link="/collection/luxe-signature"
       />
 
       <CollectionSection 
         title="Stone Collection" 
         desc="ผนังลายหินที่สะท้อนพลังและความสง่างามของธรรมชาติ ถ่ายทอดความแข็งแรงและความโดดเด่นในทุกมิติ ดีไซน์ที่มั่นคงและมีเอกลักษณ์ในตัวเอง"
-        img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20140@2x.webp"
+        img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20140@2x.webp"
         link="/collection/luxe-stone"
         reverse
       />
@@ -371,14 +378,14 @@ export default function LuxeSeriesPage() {
       <CollectionSection 
         title="Velvet Collection" 
         desc="ผนังเวลเวทที่มอบสัมผัสเรียบหรูและเต็มไปด้วยชั้นเชิง เพิ่มบรรยากาศที่ลุ่มลึกและน่าค้นหา เป็นการตีความใหม่ของความหรูหราให้ทันสมัยและโดดเด่น"
-        img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20138@2x.webp"
+        img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20138@2x.webp"
         link="/collection/luxe-velvet"
       />
 
       <CollectionSection 
         title="Wood Collection" 
         desc="ผนังลายไม้ที่สะท้อนความเป็นธรรมชาติในรูปแบบที่ร่วมสมัย ถ่ายทอดความสมดุลของดีไซน์และฟังก์ชัน สร้างบรรยากาศที่สดใหม่และเข้ากับทุกแนวทางการตกแต่ง"
-        img="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20133@2x.webp"
+        img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20133@2x.webp"
         link="/collection/luxe-wood"
         reverse
       />
@@ -405,7 +412,7 @@ export default function LuxeSeriesPage() {
                             {['154', '152', '153', '151', '150', '149', '148', '147'].map((id) => (
                                 <th key={id} className="py-10 px-4">
                                     <div className="w-20 h-20 flex items-center justify-center mx-auto">
-                                        <img src={`https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20${id}@2x.webp`} className="w-full h-full object-contain opacity-80" alt="Icon" />
+                                        <img src={`https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20${id}@2x.webp`} className="w-full h-full object-contain opacity-80" alt="Icon" />
                                     </div>
                                 </th>
                             ))}
@@ -452,7 +459,7 @@ export default function LuxeSeriesPage() {
                 ].map((item, idx) => (
                     <div key={idx} className="group flex flex-col items-center">
                         <div className="aspect-[3/4] overflow-hidden border border-white/10 mb-6 relative w-full">
-                            <img src={`https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Luxe%20Series/Asset%20${item.img}@2x.webp`} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" alt={item.title} />
+                            <img src={`https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20${item.img}@2x.webp`} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" alt={item.title} />
                         </div>
                         <div className="text-center">
                             <h3 className="text-xl md:text-2xl font-bold uppercase mb-2 text-[#B08038]">{item.title}</h3>
@@ -463,18 +470,6 @@ export default function LuxeSeriesPage() {
             </div>
         </div>
       </section>
-
-      {/* Footer Removed (as per original code) */}
-
-      {/* --- Global Styles --- */}
-      <style>{`
-        @keyframes fadeInUp {
-          0% { opacity: 0; transform: translateY(20px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
     </div>
   );
 }

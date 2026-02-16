@@ -6,25 +6,25 @@ import { FaArrowRight, FaLayerGroup } from 'react-icons/fa6';
 
 // --- Constants: Image URLs ---
 const ALL_IMAGES = [
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/assets_task_01k3jxyp8vffk9x738066mczkm_1756203377_img_3.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/078%20copy.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/20250814_1557_remix_01k2kwmvr5exwbsc8fhg59c9xr.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/20250815_1044__remix_01k2nx4b0qftka3qef1be5jx2g.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/20250821_1552__remix_01k35x41xvfc0bfnda599xax37.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/31f60903460cd3e7eb32d2dbcc9e6940.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/assets_task_01k1z469h8fsgbgy0g1cnj95rj_1754465170_img_1.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/assets_task_01k21afxfcfddb42ghs5307qc9_1754538883_img_2.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/assets_task_01k35mtfpsf8gt42ajqvsp0r25_1755757625_img_0.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/assets_task_01k38mkyq4f89ab8n6ex09za9b_1755858019_img_3.webp',
-  'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/assets_task_01k3g5e97bf87rh72cd7hfp81c_1756110561_img_2.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/078 copy.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/20250814_1557_remix_01k2kwmvr5exwbsc8fhg59c9xr.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/20250815_1044__remix_01k2nx4b0qftka3qef1be5jx2g.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/20250821_1552__remix_01k35x41xvfc0bfnda599xax37.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/31f60903460cd3e7eb32d2dbcc9e6940.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/assets_task_01k1z469h8fsgbgy0g1cnj95rj_1754465170_img_1.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/assets_task_01k21afxfcfddb42ghs5307qc9_1754538883_img_2.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/assets_task_01k38mkyq4f89ab8n6ex09za9b_1755858019_img_3.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/assets_task_01k3g5e97bf87rh72cd7hfp81c_1756110561_img_2.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/assets_task_01k3jxyp8vffk9x738066mczkm_1756203377_img_3.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/assets_task_01k35mtfpsf8gt42ajqvsp0r25_1755757625_img_0.webp',
 ];
 
 export default function HomePage() {
   const [loaded, setLoaded] = useState(false);
   const [currentImages, setCurrentImages] = useState([
-    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/31f60903460cd3e7eb32d2dbcc9e6940.webp',
-    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/078%20copy.webp',
-    'https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/LandPage_Images/20250815_1044__remix_01k2nx4b0qftka3qef1be5jx2g.webp'
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/078 copy.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/20250814_1557_remix_01k2kwmvr5exwbsc8fhg59c9xr.webp',
+            'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/20250815_1044__remix_01k2nx4b0qftka3qef1be5jx2g.webp',
   ]);
   
   // State to track which card is currently updating (for the scale/fade effect)

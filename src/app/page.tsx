@@ -21,7 +21,7 @@ const ALL_IMAGES = [
 
 export default function HomePage() {
   const [loaded, setLoaded] = useState(false);
-  const [currentImages, setCurrentImages] = useState([
+  const [currentImages, setCurrentImages] = useStalte([
             'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/078 copy.webp',
             'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/20250814_1557_remix_01k2kwmvr5exwbsc8fhg59c9xr.webp',
             'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/20250815_1044__remix_01k2nx4b0qftka3qef1be5jx2g.webp',
@@ -124,7 +124,7 @@ export default function HomePage() {
             {/* Stats */}
             <div className="pt-12 mt-12 grid grid-cols-2 gap-8 border-t border-white/10 w-full">
                 <div>
-                    <p className="text-3xl font-bold text-[#c2bfb6] tracking-tight">12+</p>
+                    <p className="text-3xl font-bold text-[#c2bfb6] tracking-tight">20+</p>
                     <p className="text-[10px] uppercase tracking-[0.2em] mt-2 text-[#c2bfb6]">Material Collections</p>
                 </div>
                 <div>

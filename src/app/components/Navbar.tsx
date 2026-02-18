@@ -7,6 +7,7 @@ import { FaBarsStaggered, FaXmark, FaChevronDown, FaMagnifyingGlass } from 'reac
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openSubMenu, setOpenSubMenu] = useState(""); // Default to empty string
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,26 +17,75 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Helper to toggle submenus without errors
+  const toggleSubMenu = (name: React.SetStateAction<string>) => {
+    setOpenSubMenu(openSubMenu === name ? "" : name);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    setOpenSubMenu("");
+  };
+
   return (
     <>
-      {/* Mobile Navigation */}
-      <nav className={`fixed top-0 w-full z-[50] px-8 py-3 flex justify-between items-center md:hidden transition-all duration-400 ${scrolled ? 'bg-black/95 backdrop-blur-md border-b border-white/5' : 'bg-black/40 backdrop-blur-md border-b border-white/5'}`}>
+      {/* Mobile Top Bar */}
+      <nav className={`fixed top-0 w-full z-[60] px-6 py-5 flex justify-between items-center md:hidden transition-all duration-500 ${scrolled ? 'bg-black/95 backdrop-blur-md border-b border-white/5' : 'bg-transparent'}`}>
         <Link href="/">
-          <img src="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/Logo_Images/wallcraft%20logo%20grey%20color.webp" alt="Wallcraft Logo" className="h-8 w-auto" />
+          <img src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Logo_Images/wallcraft%20logo%20grey%20color.webp" alt="Logo" className="h-6 w-auto" />
         </Link>
-        <button className="text-white/80 text-xl" onClick={() => setIsMobileMenuOpen(true)}>
-          <FaBarsStaggered />
-        </button>
+        <div className="flex items-center space-x-5">
+          <FaMagnifyingGlass className="text-white/60 text-sm" />
+          <button className="text-white/80 text-xl" onClick={() => setIsMobileMenuOpen(true)}>
+            <FaBarsStaggered />
+          </button>
+        </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
-      <div className={`fixed inset-0 z-[70] bg-black/95 flex flex-col items-center justify-center space-y-8 md:hidden transition-all duration-400 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
-        <button className="absolute top-6 right-8 text-white text-3xl" onClick={() => setIsMobileMenuOpen(false)}>
+      {/* Mobile Overlay */}
+      <div className={`fixed inset-0 z-[70] bg-black transition-all duration-500 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+        <button className="absolute top-6 right-8 text-white/70 text-3xl" onClick={closeMobileMenu}>
           <FaXmark />
         </button>
-        {['Introduction', 'Series', 'Collection', 'Art & Gallery', 'Contact'].map((item) => (
-          <Link key={item} href="#" className="text-lg uppercase tracking-widest text-white">{item}</Link>
-        ))}
+
+        <div className="flex flex-col items-center justify-center h-full space-y-8 w-full">
+          <Link href="/introduction" onClick={closeMobileMenu} className="text-[11px] uppercase tracking-[0.4em] text-white">Introduction</Link>
+          
+          {/* Series Section */}
+          <div className="w-full flex flex-col items-center">
+            <button 
+              onClick={() => toggleSubMenu('series')}
+              className="text-[11px] uppercase tracking-[0.4em] text-white flex items-center"
+            >
+              Series 
+              <FaChevronDown className={`ml-3 text-[8px] transition-transform ${openSubMenu === 'series' ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {/* Conditional Rendering to avoid height errors */}
+            <div className={`flex flex-col items-center space-y-5 overflow-hidden transition-all duration-500 ${openSubMenu === 'series' ? 'max-h-[300px] mt-8 opacity-100' : 'max-h-0 opacity-0'}`}>
+              <Link href="/series/craft-stone" onClick={closeMobileMenu} className="text-[10px] uppercase tracking-[0.3em] text-[#c2bfb6]">Craft Stone</Link>
+              <Link href="/series/luxe" onClick={closeMobileMenu} className="text-[10px] uppercase tracking-[0.3em] text-[#c2bfb6]">Luxe Series</Link>
+              <Link href="/series/essential" onClick={closeMobileMenu} className="text-[10px] uppercase tracking-[0.3em] text-[#c2bfb6]">Essential Series</Link>
+            </div>
+          </div>
+
+          {/* Art & Gallery Section */}
+          <div className="w-full flex flex-col items-center">
+            <button 
+              onClick={() => toggleSubMenu('art')}
+              className="text-[11px] uppercase tracking-[0.4em] text-white flex items-center"
+            >
+              Art & Gallery 
+              <FaChevronDown className={`ml-3 text-[8px] transition-transform ${openSubMenu === 'art' ? 'rotate-180' : ''}`} />
+            </button>
+            <div className={`flex flex-col items-center space-y-5 overflow-hidden transition-all duration-500 ${openSubMenu === 'art' ? 'max-h-[200px] mt-8 opacity-100' : 'max-h-0 opacity-0'}`}>
+              <Link href="/art&gallery/visual-showcase" onClick={closeMobileMenu} className="text-[10px] uppercase tracking-[0.3em] text-[#c2bfb6]">Visual Showcase</Link>
+              <Link href="#" onClick={closeMobileMenu} className="text-[10px] uppercase tracking-[0.3em] text-[#c2bfb6]">Project Showcase</Link>
+            </div>
+          </div>
+
+          <Link href="#" onClick={closeMobileMenu} className="text-[11px] uppercase tracking-[0.4em] text-white">Match Inspiration</Link>
+        </div>
       </div>
 
       {/* Desktop Navigation */}
@@ -74,7 +124,7 @@ export default function Navbar() {
               </div>
                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                 <div className="bg-zinc-900/95 backdrop-blur-2xl border border-white/5 p-6 space-y-4 shadow-2xl rounded-sm">
-                  <Link href="#" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Visual Showcase</Link>
+                  <Link href="/art&gallery/visual-showcase" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Visual Showcase</Link>
                   <Link href="#" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Project Showcase</Link>
                 </div>
               </div>

@@ -1,12 +1,8 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef } from 'react'; // ลบ useState ออกถ้าไม่ได้ใช้
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// เก็บเฉพาะ icon ที่ใช้ในหน้านี้ (Left/Right สำหรับ Slider)
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import React, { useEffect, useRef } from 'react';
 
-// --- Constants & Data ---
+// --- ข้อมูลคงที่และข้อมูลสินค้า ---
 const FALLBACK_TEXTURE = "https://images.unsplash.com/photo-1516550893923-42d28e5677af?q=80&w=800&auto=format&fit=crop";
 
 const CATEGORIES = [
@@ -31,7 +27,7 @@ const SERIES_DATA = [
         title: 'Craft Stone Series',
         subtitle: 'ซีรี่ส์หัตถกรรมหิน',
         desc: 'ผลิตจากกลุ่มแร่ธรรมชาติ (Eco Clay Composite) มอบคุณสมบัติเด่น น้ำหนักเบา ยืดหยุ่น แข็งแรง และเป็นมิตรต่อสิ่งแวดล้อม เหมาะสำหรับติดตั้งทั้งภายในและภายนอก',
-        link: '#',
+        link: '/series/craft-stone',
         images: [
             "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%2056@3x.webp",
             "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%2063@3x.webp",
@@ -49,7 +45,7 @@ const SERIES_DATA = [
         title: 'Luxe Series',
         subtitle: 'ลักซ์ ซีรีส์',
         desc: 'ผนังตกแต่งระดับพรีเมียมที่ออกแบบมาเพื่อยระดับทุกพื้นที่ให้มีทั้งความงามและความทนทาน โครงสร้างหลักใช้ แผ่น HPVC หนา 5 มิลลิเมตร แข็งแรง กันน้ำ และคงรูปได้ดี',
-        link: '#',
+        link: '/series/luxe',
         images: [
             "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2068@3x.webp",
             "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%2067@3x.webp",
@@ -70,7 +66,7 @@ const SERIES_DATA = [
         title: 'Essential Series',
         subtitle: 'ซีรีส์สำคัญ',
         desc: 'ผนังดีไซน์ใหม่ที่มอบทางเลือกการติดตั้งและการจบงานที่สมบูรณ์แบบ ครอบคลุมทั้ง Flat, 3D Wall และ LED ช่วยลดปัญหาหน้างานเพื่อความสวยที่สมบูรณ์แบบ',
-        link: '#',
+        link: '/series/essential',
         images: [
             "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2075@3x.webp",
             "https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%2076@3x.webp",
@@ -88,22 +84,18 @@ const SERIES_DATA = [
     }
 ];
 
-
-export default function IntroductionPage() {
-    // เอา Logic ของ Navbar ออกทั้งหมด (scrolled, activeDropdown)
+export default function Page() {
     const sliderRef = useRef<HTMLDivElement>(null);
     const collageRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-    // --- Core Animations & Logic (เหลือเฉพาะส่วนที่จำเป็นสำหรับเนื้อหา) ---
+    // --- Handling scroll velocity for tilt/scale effect ---
     useEffect(() => {
         let lastScrollTop = 0;
-
         const handleScroll = () => {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             const scrollVelocity = Math.abs(scrollTop - lastScrollTop);
             lastScrollTop = scrollTop;
 
-            // Velocity Scaling for Collage Cards
             const activeCards = document.querySelectorAll<HTMLElement>('.collage-card[data-active="true"]');
             activeCards.forEach(card => {
                 const tx = card.getAttribute('data-tx');
@@ -118,7 +110,7 @@ export default function IntroductionPage() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // --- Intersection Observer for Collage ---
+    // --- Intersection Observer for Floating Collage with Responsive Logic ---
     useEffect(() => {
         const CS = 1.05;
         const SF = 1.2;
@@ -163,6 +155,9 @@ export default function IntroductionPage() {
         };
 
         const observer = new IntersectionObserver((entries) => {
+            const isMobile = window.innerWidth < 1024;
+            const mobileFactor = 0.45; // Scale down movement for mobile screens
+
             entries.forEach(entry => {
                 const container = entry.target as HTMLElement;
                 const seriesId = container.getAttribute('data-series-id') || '01';
@@ -172,21 +167,26 @@ export default function IntroductionPage() {
                 if (entry.isIntersecting) {
                     cards.forEach((card, i) => {
                         const p = pos[i % pos.length];
-                        card.setAttribute('data-tx', String(p.x));
-                        card.setAttribute('data-ty', String(p.y));
+                        const finalX = isMobile ? p.x * mobileFactor : p.x;
+                        const finalY = isMobile ? p.y * mobileFactor : p.y;
+                        const finalW = isMobile ? p.w * 0.6 : p.w;
+                        const finalH = isMobile ? p.h * 0.6 : p.h;
+
+                        card.setAttribute('data-tx', String(finalX));
+                        card.setAttribute('data-ty', String(finalY));
                         card.setAttribute('data-tr', String(p.r));
                         
                         setTimeout(() => {
                             card.setAttribute('data-active', 'true');
                             card.style.opacity = "1";
-                            card.style.width = `${p.w}px`;
-                            card.style.height = `${p.h}px`;
+                            card.style.width = `${finalW}px`;
+                            card.style.height = `${finalH}px`;
                             card.style.zIndex = String(p.z || 10);
-                            card.style.setProperty('--target-x', `${p.x}px`);
-                            card.style.setProperty('--target-y', `${p.y}px`);
+                            card.style.setProperty('--target-x', `${finalX}px`);
+                            card.style.setProperty('--target-y', `${finalY}px`);
                             card.style.setProperty('--base-rotation', `${p.r}deg`);
                             card.style.setProperty('--float-delay', `${i * 0.12}s`);
-                            card.style.transform = `translate(${p.x}px, ${p.y}px) rotate(${p.r}deg) scale(1)`;
+                            card.style.transform = `translate(${finalX}px, ${finalY}px) rotate(${p.r}deg) scale(1)`;
                             card.classList.add('active-float');
                         }, i * 70);
                     });
@@ -208,7 +208,7 @@ export default function IntroductionPage() {
         return () => observer.disconnect();
     }, []);
 
-    // --- Material Slider Drag ---
+    // --- Material Slider Drag Handling ---
     useEffect(() => {
         const slider = sliderRef.current;
         if (!slider) return;
@@ -246,46 +246,52 @@ export default function IntroductionPage() {
 
     return (
         <div className="bg-[#080808] text-[#808080] font-light selection:bg-brand-gold/30">
-            {/* [สำคัญ] ส่วน Navigation Bar ถูกลบออกแล้ว 
-               เพราะมันจะถูกเรียกใช้ผ่าน layout.tsx อัตโนมัติ 
-            */}
-
-            {/* Hero Section */}
-            <header className="relative min-h-[85vh] lg:min-h-screen flex flex-col items-center overflow-hidden bg-black px-6 pt-10">
-                <div className="absolute top-8 bottom-0 left-0 right-0 z-0 flex items-start justify-center pointer-events-none">
-                    <img src="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/2.Band%20introduction/Asset%2055@3x.webp" className="max-w-full max-h-full object-contain object-top transition-opacity duration-1000 transform scale-95" alt="Main Texture" />
-                    <div className="absolute inset-0 bg-black/30 transition-opacity duration-1000"></div>
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80"></div>
+            {/* Hero Section - Fixed background for Mobile */}
+            <header className="relative min-h-[75vh] md:min-h-screen flex flex-col items-center justify-center overflow-hidden bg-black px-6">
+                <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+                    <img 
+                        src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2055@3x.webp" 
+                        className="w-full h-full object-cover md:object-contain transition-opacity duration-1000 transform scale-105 md:scale-95 opacity-60 md:opacity-100" 
+                        alt="Main Texture" 
+                    />
+                    <div className="absolute inset-0 bg-black/40 md:bg-black/20 transition-opacity"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black"></div>
                 </div>
 
-                <div className="relative z-10 text-center max-w-[1800px] w-full px-4 mt-20 md:mt-24 lg:mt-32">
-                    <h1 className="text-2xl md:text-4xl lg:text-6xl tracking-tighter uppercase leading-tight gold-text animate-reveal drop-shadow-2xl font-['Prompt']" style={{ animationDelay: '0.2s' }}>
+                <div className="relative z-10 text-center max-w-[1800px] w-full px-4 mt-10">
+                    <h1 className="text-3xl md:text-5xl lg:text-7xl tracking-tighter uppercase leading-tight gold-text animate-reveal drop-shadow-2xl font-['Prompt']">
                         ตัวตนของผนังที่สะท้อนสไตล์
                     </h1>
-                    <div className="mt-8 animate-reveal" style={{ animationDelay: '0.4s' }}>
-                        <p className="text-sm md:text-base lg:text-lg font-light leading-relaxed max-w-[1250px] mx-auto drop-shadow-sm font-['Prompt']" style={{ color: '#c2bfb6' }}>
+                    <div className="mt-6 md:mt-10 animate-reveal" style={{ animationDelay: '0.4s' }}>
+                        <p className="text-sm md:text-base lg:text-lg font-light leading-relaxed max-w-[90%] md:max-w-[1250px] mx-auto drop-shadow-sm font-['Prompt']" style={{ color: '#c2bfb6' }}>
                             เรามองว่าผนังไม่ใช่เพียงฉากหลัง แต่คือองค์ประกอบหลักที่ กำหนดอารมณ์ สร้างบรรยากาศ และบอกเล่ารสนิยมของพื้นที่ได้ อย่างชัดเจน ทุกเส้นสายและผิวสัมผัสถูกออกแบบมาให้เป็นเหมือน แฟชั่นไอเท็มที่เสริมความโดดเด่นให้กับงานดีไซน์ที่นักออกแบบ สามารถใช้ Wallcraft เพื่อสร้าง Statement ของงานออกแบบได้ อย่างมีเอกลักษณ์ เราคือ...โซลูชันผนังโมดูลาร์สำหรับงานดีไซน์ ติดตั้งและบำรุงรักษาง่าย ยืดหยุ่น กับทุกคอนเซปต์ เลือกเท็กซ์เจอร์ สี ดีเทลได้ครบ-จบงานง่ายและเรียบสวย.
                         </p>
                     </div>
                 </div>
             </header>
 
-            <div className="series-textured relative z-20 -mt-60">
+            <div className="series-textured relative z-20 -mt-20 md:-mt-40 lg:-mt-60">
                 {/* Material Slider Section */}
                 <section className="pb-12 overflow-hidden relative">
                     <div className="relative-content">
                         <div className="absolute top-0 right-8 md:right-16 z-30 flex space-x-3 -translate-y-full mb-8">
-                            <button onClick={() => sliderRef.current?.scrollBy({ left: -400, behavior: 'smooth' })} className="w-10 h-10 border border-white/10 rounded-full flex items-center justify-center hover:bg-white/10 transition text-white bg-black/40 backdrop-blur-lg">
-                                <FontAwesomeIcon icon={faChevronLeft} className="text-xs" />
+                            <button 
+                                onClick={() => sliderRef.current?.scrollBy({ left: -400, behavior: 'smooth' })} 
+                                className="w-10 h-10 border border-white/10 rounded-full flex items-center justify-center hover:bg-white/10 transition text-white bg-black/40 backdrop-blur-lg"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                             </button>
-                            <button onClick={() => sliderRef.current?.scrollBy({ left: 400, behavior: 'smooth' })} className="w-10 h-10 border border-white/10 rounded-full flex items-center justify-center hover:bg-white/10 transition text-white bg-black/40 backdrop-blur-lg">
-                                <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
+                            <button 
+                                onClick={() => sliderRef.current?.scrollBy({ left: 400, behavior: 'smooth' })} 
+                                className="w-10 h-10 border border-white/10 rounded-full flex items-center justify-center hover:bg-white/10 transition text-white bg-black/40 backdrop-blur-lg"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                             </button>
                         </div>
 
-                        <div ref={sliderRef} className="flex overflow-x-auto space-x-6 no-scrollbar px-6 md:px-16 max-w-[1800px] mx-auto pt-4 pb-4 select-none cursor-grab active:cursor-grabbing">
+                        <div ref={sliderRef} className="flex overflow-x-auto space-x-4 md:space-x-6 no-scrollbar px-6 md:px-16 max-w-[1800px] mx-auto pt-4 pb-4 select-none cursor-grab active:cursor-grabbing">
                             {CATEGORIES.map((cat, idx) => (
-                                <div key={idx} className="flex-none w-[75vw] md:w-[280px] group">
+                                <div key={idx} className="flex-none w-[65vw] md:w-[280px] group">
                                     <div className="relative aspect-square overflow-hidden bg-zinc-900/50 border border-white/5 transition-all duration-700 hover:border-[#B08038]/40 shadow-xl">
                                         <img src={cat.img} onError={(e) => (e.currentTarget.src = FALLBACK_TEXTURE)} className="w-full h-full object-cover object-center transition-all duration-700 group-hover:scale-105 pointer-events-none" alt="Material" />
                                     </div>
@@ -298,25 +304,27 @@ export default function IntroductionPage() {
                 {/* Editorial Content Area */}
                 <div id="series-content" className="relative z-10 font-['Prompt']">
                     {SERIES_DATA.map((series) => (
-                        <section key={series.id} className="py-20 md:py-32 border-t border-white/5 overflow-hidden">
-                            <div className={`relative-content max-w-[1800px] mx-auto px-6 md:px-16 flex flex-col ${series.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 md:gap-20 items-center`}>
-                                <div className="w-full lg:w-2/5 space-y-6 relative z-20">
+                        <section key={series.id} className="py-16 md:py-32 border-t border-white/5 overflow-hidden">
+                            <div className={`relative-content max-w-[1800px] mx-auto px-6 md:px-16 flex flex-col ${series.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 md:gap-20 items-center`}>
+                                <div className="w-full lg:w-2/5 space-y-6 relative z-20 text-center lg:text-left">
                                     <div className="space-y-4">
                                         <span className="text-[10px] tracking-[0.5em] gold-text uppercase font-light block">{series.id} &nbsp; — &nbsp; {series.subtitle}</span>
                                         <h2 className="text-3xl md:text-5xl lg:text-6xl tracking-tighter gold-text uppercase leading-tight drop-shadow-md font-normal">{series.title}</h2>
                                     </div>
-                                    <p className="text-zinc-300 text-sm md:text-base font-light leading-relaxed max-w-sm opacity-80">{series.desc}</p>
-                                    <div className="pt-6">
-    <Link href={series.link} className="inline-block group">
-        <div className="px-8 py-3 border border-white/20 bg-white/5 backdrop-blur-sm transition-all duration-500 group-hover:border-[#B08038] group-hover:bg-[#B08038]/10 flex items-center space-x-4">
-            <span className="text-[11px] uppercase tracking-[0.4em] text-[#c2bfb6] group-hover:text-white transition-colors">
-                Learn More
-            </span>
-            <div className="w-8 h-[1px] bg-white/40 group-hover:w-12 group-hover:bg-[#B08038] transition-all duration-500"></div>
-        </div>
-    </Link>
-</div>
+                                    <p className="text-zinc-300 text-sm md:text-base font-light leading-relaxed max-w-md mx-auto lg:mx-0 opacity-80">{series.desc}</p>
+                                    <div className="pt-4 md:pt-6">
+                                        <a href={series.link} className="inline-block group">
+                                            <div className="px-8 py-3 border border-white/20 bg-white/5 backdrop-blur-sm transition-all duration-500 group-hover:border-[#B08038] group-hover:bg-[#B08038]/10 flex items-center space-x-4">
+                                                <span className="text-[11px] uppercase tracking-[0.4em] text-[#c2bfb6] group-hover:text-white transition-colors">
+                                                    Learn More
+                                                </span>
+                                                <div className="w-8 h-[1px] bg-white/40 group-hover:w-12 group-hover:bg-[#B08038] transition-all duration-500"></div>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
+
+                                {/* Collage Container - Responsive Height */}
                                 <div 
                                     ref={(el) => { collageRefs.current[series.id] = el }} 
                                     data-series-id={series.id} 
@@ -334,40 +342,32 @@ export default function IntroductionPage() {
                 </div>
             </div>
 
-            {/* Global Styles for specific animations */}
-            <style jsx global>{`
+            <style>
+                {`
                 :root {
                     --brand-gold: #B08038;
                     --deep-black: #080808;
                     --text-grey: #808080;
                 }
                 .gold-text { color: var(--brand-gold); }
-                .glass-nav {
-                    background: rgba(0, 0, 0, 0.12);
-                    backdrop-filter: blur(16px);
-                    -webkit-backdrop-filter: blur(16px);
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-                }
-                .glass-nav.scrolled {
-                    background: rgba(0, 0, 0, 0.45);
-                    padding-top: 1rem;
-                    padding-bottom: 1rem;
-                }
                 @keyframes reveal {
-                    0% { transform: translateY(80px); opacity: 0; }
+                    0% { transform: translateY(40px); opacity: 0; }
                     100% { transform: translateY(0); opacity: 1; }
                 }
                 .animate-reveal { animation: reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
+                
                 .collage-container {
                     position: relative;
                     width: 100%;
-                    height: 500px;
+                    height: 320px; /* Shorter for Mobile */
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    perspective: 2000px;
+                    perspective: 1200px;
                 }
+                @media (min-width: 768px) { .collage-container { height: 450px; } }
                 @media (min-width: 1024px) { .collage-container { height: 700px; } }
+
                 .collage-card {
                     position: absolute;
                     transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.165, 0.84, 0.44, 1), width 1s ease, height 1s ease;
@@ -375,31 +375,32 @@ export default function IntroductionPage() {
                 }
                 .collage-card img {
                     width: 100%; height: 100%; object-fit: contain;
-                    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.65));
+                    filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.5));
                 }
                 @keyframes clutter-float {
                     0%, 100% { transform: translate(var(--target-x), var(--target-y)) rotate(var(--base-rotation)); }
-                    50% { transform: translate(var(--target-x), calc(var(--target-y) - 10px)) rotate(calc(var(--base-rotation) + 0.2deg)); }
+                    50% { transform: translate(var(--target-x), calc(var(--target-y) - 10px)) rotate(calc(var(--base-rotation) + 0.3deg)); }
                 }
                 .active-float {
-                    animation: clutter-float 12s ease-in-out infinite;
+                    animation: clutter-float 10s ease-in-out infinite;
                     animation-delay: var(--float-delay);
                 }
                 .no-scrollbar::-webkit-scrollbar { display: none; }
                 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
                 .series-textured {
                     background-image: url('https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2091@3x.webp');
-                    background-size: 120%;
+                    background-size: cover;
                     background-position: center;
                     background-attachment: fixed;
                     position: relative;
                 }
                 .series-textured::before {
                     content: ''; position: absolute; inset: 0;
-                    background: rgba(0, 0, 0, 0.78); z-index: 0;
+                    background: rgba(0, 0, 0, 0.82); z-index: 0;
                 }
                 .relative-content { position: relative; z-index: 10; }
-            `}</style>
+                `}
+            </style>
         </div>
     );
 }

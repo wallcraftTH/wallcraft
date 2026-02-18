@@ -15,11 +15,9 @@ const config: Config = {
         'deep-black': '#080808',
       },
       fontFamily: {
-        // --- ส่วนที่แก้ไข ---
-        // ใช้ var(--font-prompt) เพื่อดึงฟอนต์ Prompt ที่โหลดมาแบบ Optimized
-        sans: ['var(--font-prompt)', 'Helvetica Neue', 'Arial', 'sans-serif'], 
-        // เพิ่ม noto เผื่ออยากใช้แยก (เรียกใช้ด้วย class="font-noto")
-        noto: ['var(--font-noto)', 'sans-serif'],
+        // ตั้งค่าให้ใช้ Helvetica Neue และ LINE Seed Sans เป็นฟอนต์หลัก
+        // ลบ Prompt และ Noto ออกตามคำขอ
+        sans: ['"Helvetica Neue"', '"LINE Seed Sans"', 'Helvetica', 'Arial', 'sans-serif'],
       },
       animation: {
         reveal: 'reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards',
@@ -34,4 +32,5 @@ const config: Config = {
   },
   plugins: [],
 };
+
 export default config;

@@ -21,7 +21,7 @@ const ALL_IMAGES = [
 
 export default function HomePage() {
   const [loaded, setLoaded] = useState(false);
-  const [currentImages, setCurrentImages] = useStalte([
+  const [currentImages, setCurrentImages] = useState([
             'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/078 copy.webp',
             'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/20250814_1557_remix_01k2kwmvr5exwbsc8fhg59c9xr.webp',
             'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/LandPage_Images/LandPage_Images/20250815_1044__remix_01k2nx4b0qftka3qef1be5jx2g.webp',

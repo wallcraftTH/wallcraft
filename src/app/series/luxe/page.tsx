@@ -152,15 +152,16 @@ export default function App() {
 
   const getLayerStyle = (index: number) => {
     const isMobile = windowWidth < 768;
-    const spacing = isStacked ? (isMobile ? 12 : 25) : (isMobile ? 60 : 180);
+    // Spacing mapping identical to HTML
+    const spacing = isStacked ? (isMobile ? 12 : 25) : (isMobile ? 65 : 180);
 
     if (activeLayerIndex !== null) {
       if (index === activeLayerIndex) {
         return {
           opacity: 1,
           zIndex: 100,
-          transform: isMobile ? 'translateY(-40px) scale(1.05)' : 'translateY(0px) scale(1.05)',
-          className: 'expanded active-layer',
+          transform: `translateY(${isMobile ? -40 : 0}px) scale(1.05)`,
+          className: 'active-layer',
           pointerEvents: 'auto' as const
         };
       } else {
@@ -168,7 +169,7 @@ export default function App() {
           opacity: 0,
           zIndex: 0,
           transform: 'translateY(50px) scale(0.8)',
-          className: 'inactive-layer',
+          className: '',
           pointerEvents: 'none' as const
         };
       }
@@ -179,7 +180,7 @@ export default function App() {
       opacity: 1,
       zIndex: LAYERS_DATA.length - index,
       transform: `translateY(${finalY}px)`,
-      className: !isStacked ? 'expanded' : '',
+      className: '',
       pointerEvents: 'auto' as const
     };
   };
@@ -194,11 +195,30 @@ export default function App() {
       <style dangerouslySetInnerHTML={{__html: `
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Prompt', sans-serif; background-color: #000; }
-        .layer-wrapper { transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); will-change: transform, opacity; }
+        
+        .layer-wrapper { 
+            transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            will-change: transform, opacity; 
+            position: absolute;
+            width: 100%;
+        }
+        
+        .layer-inner-card {
+            transform: rotateX(50deg) rotateZ(-15deg);
+            transition: all 0.5s ease;
+        }
+        
+        .active-layer .layer-inner-card {
+            transform: rotateX(0deg) rotateZ(0deg);
+            filter: drop-shadow(0 0 30px rgba(176, 128, 56, 0.5));
+        }
+
         @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fadeInUp 1s ease-out forwards; }
         @keyframes fadeInRight { 0% { opacity: 0; transform: translateX(60px); } 100% { opacity: 1; transform: translateX(0); } }
         .animate-fade-in-right { animation: fadeInRight 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+        @keyframes fadeInLeft { 0% { opacity: 0; transform: translateX(-60px); } 100% { opacity: 1; transform: translateX(0); } }
+        .animate-fade-in-left { animation: fadeInLeft 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .headline-gold { color: #B08038; }
@@ -232,25 +252,32 @@ export default function App() {
       </div>
 
       {/* --- HERO SECTION --- */}
-      <header className="relative min-h-[90vh] lg:min-h-screen flex items-center justify-start overflow-hidden px-8 md:px-16 lg:px-24">
-        <div className="container mx-auto max-w-[1400px] z-30 relative pointer-events-none">
-          <div className="flex flex-col justify-center animate-fade-in-up text-left pointer-events-auto">
-            <h1 className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight uppercase headline-gold mb-6 leading-[1.1]">
-              Luxe<br />Series
+      <header className="relative z-10 min-h-[90vh] lg:min-h-screen flex items-start lg:items-center justify-start overflow-hidden px-6 md:px-16 lg:px-24 pt-32 md:pt-40 lg:pt-0 pb-16 lg:pb-0">
+        
+        {/* Faded Mask Wrapper */}
+        <div 
+            className="absolute inset-0 z-0 w-full h-full" 
+            style={{ WebkitMaskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)', maskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)' }}
+        >
+            <img 
+                src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20125@2x.webp" 
+                className="w-full h-full object-cover object-bottom lg:object-contain lg:object-right animate-fade-in-right drop-shadow-[0_0_50px_rgba(0,0,0,0.8)]"
+                alt="Luxe Series Material Display" 
+            />
+            {/* Gradients */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#000000] via-black/35 to-transparent lg:hidden"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent hidden lg:block"></div>
+        </div>
+
+        <div className="container mx-auto max-w-[1400px] z-30 relative pointer-events-none mt-4 lg:mt-0">
+          <div className="flex flex-col animate-fade-in-up text-left pointer-events-auto">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight uppercase headline-gold mb-4 lg:mb-6 leading-[1.1] drop-shadow-md">
+              Luxe<br/>Series
             </h1>
-            <p className="text-[10px] sm:text-sm md:text-base font-light leading-relaxed max-w-[220px] sm:max-w-md mb-10 text-[#c2bfb6]">
+            <p className="text-[12px] sm:text-sm md:text-base font-light leading-relaxed max-w-[280px] sm:max-w-md text-gray-200 drop-shadow-md">
               ผนังตกแต่งระดับพรีเมียมที่ออกแบบมาเพื่อยกระดับทุกพื้นที่ให้มีทั้งความงามและความทนทาน ด้วยโครงสร้างหลัก HPVC หนา 5 มิลลิเมตร แข็งแรง กันน้ำ และคงรูปได้ดีเยี่ยม
             </p>
           </div>
-        </div>
-        
-        <div className="absolute inset-0 z-10 flex items-center justify-end pointer-events-none">
-          <img 
-            src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20125@2x.webp" 
-            className="h-[60vh] sm:h-[75vh] md:h-[85vh] lg:h-[95vh] w-auto object-contain opacity-100 transform translate-x-[15%] lg:translate-x-[5%] transition-all duration-1000 animate-fade-in-right drop-shadow-[0_0_50px_rgba(0,0,0,0.8)]" 
-            alt="Luxe Series" 
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
         </div>
       </header>
 
@@ -258,7 +285,7 @@ export default function App() {
       <section id="technology" className="relative z-10 py-24 flex flex-col items-center border-t border-white/5">
         <div className="text-center mb-16 px-6">
           <Separator />
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 uppercase text-white drop-shadow-lg">Luxe Technology</h2>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight uppercase text-[#B08038]">Luxe Technology</h2>
         </div>
 
         <div ref={stackContainerRef} className="relative w-full max-w-6xl h-[500px] md:h-[600px] flex justify-center items-center" style={{ perspective: '2500px' }}>
@@ -269,14 +296,19 @@ export default function App() {
             return (
               <div 
                 key={index}
-                className={`layer-wrapper absolute w-full flex flex-col md:flex-row justify-center items-center ${isActive ? 'active-layer' : ''}`}
-                style={style}
+                className={`layer-wrapper flex flex-col md:flex-row justify-center items-center ${style.className}`}
+                style={{ 
+                  zIndex: style.zIndex, 
+                  transform: style.transform,
+                  opacity: style.opacity,
+                  pointerEvents: style.pointerEvents
+                }}
               >
                 <div 
-                  className="relative w-[280px] h-[160px] md:w-[600px] md:h-[350px] cursor-pointer group"
+                  className="relative w-[300px] h-[180px] md:w-[650px] md:h-[380px] cursor-pointer group layer-click-target"
                   onClick={() => toggleLayer(index)}
                 >
-                  <div className="w-full h-full transition-all duration-500" style={{ transform: 'rotateX(50deg) rotateZ(-15deg)' }}>
+                  <div className="layer-inner-card w-full h-full">
                     <img src={layer.image} className="w-full h-full object-contain drop-shadow-2xl" alt={layer.title} />
                   </div>
 
@@ -296,7 +328,7 @@ export default function App() {
 
                 {/* Mobile Description */}
                 {isActive && (
-                  <div className="md:hidden mt-10 px-8 w-full animate-fade-in-up">
+                  <div className="md:hidden mt-8 px-8 w-full animate-fade-in-up">
                     <div className="bg-zinc-900/90 p-6 border-t-2 border-[#B08038] rounded-b-xl text-center">
                       <h3 className="headline-gold font-bold text-lg uppercase mb-2">{layer.title}</h3>
                       <p className="text-gray-200 text-[11px] leading-relaxed">{layer.description}</p>
@@ -308,17 +340,17 @@ export default function App() {
           })}
         </div>
 
-        <div className="mt-12 flex flex-col items-center gap-6">
-          <button onClick={() => { setIsStacked(!isStacked); setActiveLayerIndex(null); }} className="btn-explore">
+        <div className="mt-12 flex flex-col items-center gap-6 relative z-40">
+          <button onClick={() => toggleLayer(activeLayerIndex !== null ? activeLayerIndex : 0)} className="btn-explore">
             {isStacked ? 'Explore Layers' : 'Stack Layers'}
           </button>
         </div>
 
-        {/* Tech Icons - Grid filling line space */}
-        <div className="w-full max-w-[1600px] mx-auto mt-24 md:mt-32 px-6 relative z-20">
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-6 sm:gap-10 items-center justify-items-center">
+        {/* Tech Icons */}
+        <div className="w-full max-w-[1600px] mx-auto mt-24 px-6 relative z-20">
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-8 items-center justify-items-center opacity-80">
             {TECH_ICONS_DATA.map((src, i) => (
-              <div key={i} className="w-full max-w-[120px] md:max-w-[160px] aspect-square flex items-center justify-center p-2">
+              <div key={i} className="w-full max-w-[120px] aspect-square flex items-center justify-center p-2">
                 <img 
                   src={src} 
                   className="w-full h-full object-contain opacity-80 hover:opacity-100 transition-all duration-300 hover:scale-110" 
@@ -354,7 +386,7 @@ export default function App() {
       />
 
       <CollectionSection 
-        title="Outdoor Collection" 
+        title="Semi Outdoor Collection" 
         desc="ผนัง Outdoor ที่ออกแบบมาเพื่อรองรับทุกสภาพอากาศ ทั้งแสงแดดและฝน พร้อมดีไซน์ที่โดดเด่น เป็นการผสมผสานฟังก์ชันการใช้งานเข้ากับดีไซน์ที่สะกดสายตา"
         img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20136@2x.webp"
         link="/collection/luxe-outdoor"

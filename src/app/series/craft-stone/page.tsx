@@ -4,43 +4,50 @@ import React, { useState, useEffect, useRef } from 'react';
 
 // --- Types ---
 interface Layer {
-  title: string;
-  description: string;
-  image: string;
+    title: string;
+    description: string;
+    image: string;
+}
+
+interface AnimatedSectionProps {
+    children: React.ReactNode;
+    className?: string;
+    animation?: "fade-in-up" | "fade-in-right" | "fade-in-left";
+    delay?: number;
 }
 
 // --- Data Constants ---
 const LAYERS_DATA: Layer[] = [
-  {
-    title: 'UV Coating Layer',
-    description: 'เคลือบป้องกันรังสี UV ลดการซีดจางของสี ป้องกันรอยขีดข่วน และทำให้พื้นผิวทำความสะอาดง่ายเป็นพิเศษ',
-    image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_layer/layer1.webp'
-  },
-  {
-    title: 'Mineral Color Layer',
-    description: 'ชั้นสีที่สกัดจากแร่ธรรมชาติ 100% ทนทานต่อแสงแดดจัดและทนไฟได้ดีเยี่ยม ให้สีสันที่สวยงามดูเป็นธรรมชาติและไม่ซีดจางตามกาลเวลา',
-    image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_layer/layer2.webp'
-  },
-  {
-    title: 'Eco Clay Composite',
-    description: 'ชั้นแกนกลางนวัตกรรมใหม่จากดินและผงหินดัดแปลง (Modified Clay) ให้คุณสมบัติเด่นเรื่องความเบา ความยืดหยุ่นสูง แต่ยังคงความแข็งแรงทนทาน',
-    image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_layer/layer3.webp'
-  },
-  {
-    title: 'Fiberglass Mesh',
-    description: 'ตาข่ายไฟเบอร์กลาสเสริมแรงชั้นล่างสุด ช่วยป้องกันการแตกร้าวและการบิดงอของแผ่นวัสดุ เพิ่มความเสถียรในการติดตั้งกับทุกสภาพพื้นผิว',
-    image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_layer/layer4.webp'
-  }
+    {
+        title: 'UV Coating Layer',
+        description: 'เคลือบป้องกันรังสี UV ลดการซีดจางของสี ป้องกันรอยขีดข่วน และทำให้พื้นผิวทำความสะอาดง่ายเป็นพิเศษ',
+        image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_layer/layer1.webp'
+    },
+    {
+        title: 'Mineral Color Layer',
+        description: 'ชั้นสีที่สกัดจากแร่ธรรมชาติ 100% ทนทานต่อแสงแดดจัดและทนไฟได้ดีเยี่ยม ให้สีสันที่สวยงามดูเป็นธรรมชาติและไม่ซีดจางตามกาลเวลา',
+        image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_layer/layer2.webp'
+    },
+    {
+        title: 'Eco Clay Composite',
+        description: 'ชั้นแกนกลางนวัตกรรมใหม่จากดินและผงหินดัดแปลง (Modified Clay) ให้คุณสมบัติเด่นเรื่องความเบา ความยืดหยุ่นสูง แต่ยังคงความแข็งแรงทนทาน',
+        image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_layer/layer3.webp'
+    },
+    {
+        title: 'Fiberglass Mesh',
+        description: 'ตาข่ายไฟเบอร์กลาสเสริมแรงชั้นล่างสุด ช่วยป้องกันการแตกร้าวและการบิดงอของแผ่นวัสดุ เพิ่มความเสถียรในการติดตั้งกับทุกสภาพพื้นผิว',
+        image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_layer/layer4.webp'
+    }
 ];
 
 const TECH_ICONS_DATA = [
-  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-03.webp',
-  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-04.webp',
-  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-05.webp',
-  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-06.webp',
-  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-07.webp',
-  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-08.webp',
-  'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-09.webp'
+    'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-03.webp',
+    'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-04.webp',
+    'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-05.webp',
+    'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-06.webp',
+    'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-07.webp',
+    'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-08.webp',
+    'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft%20stone%20icon/craft%20stone%20icon/Untitled-1-09.webp'
 ];
 
 const INSTALLATION_STEPS = [
@@ -90,13 +97,6 @@ const Separator = () => (
     </div>
 );
 
-interface AnimatedSectionProps {
-  children: React.ReactNode;
-  className?: string;
-  animation?: "fade-in-up" | "fade-in-right" | "fade-in-left";
-  delay?: number;
-}
-
 const AnimatedSection = ({ 
     children, 
     className = "", 
@@ -131,7 +131,17 @@ export default function App() {
     const [isStacked, setIsStacked] = useState(true);
     const [activeLayerIndex, setActiveLayerIndex] = useState<number | null>(null);
     const stackContainerRef = useRef<HTMLDivElement>(null);
+    const [windowWidth, setWindowWidth] = useState(1200);
 
+    // Track window resize for responsive layer spacing
+    useEffect(() => {
+        setWindowWidth(window.innerWidth);
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // Track scroll to auto-expand/collapse layers
     useEffect(() => {
         const handleScroll = () => {
             if (!stackContainerRef.current) return;
@@ -158,8 +168,7 @@ export default function App() {
     };
 
     const getLayerStyle = (index: number) => {
-        if (typeof window === 'undefined') return {};
-        const isMobile = window.innerWidth < 768;
+        const isMobile = windowWidth < 768;
         const spacing = isStacked ? (isMobile ? 12 : 18) : (isMobile ? 50 : 130);
 
         if (activeLayerIndex !== null) {
@@ -223,7 +232,7 @@ export default function App() {
                     transition: all 0.5s ease;
                 }
                 .active-layer .layer-card {
-                    transform: rotateZ(0deg);
+                    transform: rotateZ(0deg) scale(1.02);
                     filter: drop-shadow(0 0 20px rgba(176, 128, 56, 0.4));
                 }
                 .layer-label {
@@ -238,7 +247,8 @@ export default function App() {
                     pointer-events: auto;
                 }
                 .active-layer .layer-label {
-                    transform: translateX(0) scale(1.1);
+                    transform: translateX(0) scale(1.05);
+                    opacity: 1;
                 }
                 .pointer-line {
                     height: 1px;
@@ -257,6 +267,7 @@ export default function App() {
                     background: rgba(176, 128, 56, 0.1);
                     backdrop-filter: blur(10px);
                     transition: all 0.4s ease;
+                    cursor: pointer;
                 }
                 .btn-explore:hover {
                     background: var(--brand-gold);
@@ -272,32 +283,37 @@ export default function App() {
                     100% { opacity: 1; transform: translateX(0); }
                 }
                 .animate-fade-in-right { animation: fadeInRight 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+                @keyframes fadeInLeft {
+                    0% { opacity: 0; transform: translateX(-60px); }
+                    100% { opacity: 1; transform: translateX(0); }
+                }
+                .animate-fade-in-left { animation: fadeInLeft 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
                 .no-scrollbar::-webkit-scrollbar { display: none; }
             `}} />
 
             <div className="craft-stone-unified-bg">
-                {/* --- Hero Section: Smaller Text for Mobile, Unified Desktop Look --- */}
-                <header className="relative min-h-[90vh] lg:min-h-screen flex items-center justify-start overflow-hidden px-6 md:px-16 lg:px-24">
-                    <div className="container mx-auto max-w-[1400px] z-30 relative pointer-events-none">
-                        <div className="flex flex-col justify-center animate-fade-in-up text-left pointer-events-auto">
-                            {/* Adjusted heading text size for mobile (text-2xl) vs sm/desktop */}
-                            <h1 className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight uppercase headline-gold mb-6 leading-[1.1]">
+                
+                {/* --- Hero Section --- */}
+                <header className="relative z-10 min-h-[90vh] lg:min-h-screen flex items-start lg:items-center justify-start overflow-hidden px-6 md:px-16 lg:px-24 pt-32 md:pt-40 lg:pt-0 pb-16 lg:pb-0">
+                    <div className="absolute inset-0 z-0 w-full h-full">
+                        <img 
+                            src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%20100@2x.webp" 
+                            className="w-full h-full object-cover object-bottom lg:object-contain lg:object-right animate-fade-in-right" 
+                            alt="Craft Stone Material" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-b from-[#000000] via-black/35 to-transparent lg:hidden"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent hidden lg:block"></div>
+                    </div>
+
+                    <div className="container mx-auto max-w-[1400px] z-30 relative pointer-events-none mt-4 lg:mt-0">
+                        <div className="flex flex-col animate-fade-in-up text-left pointer-events-auto">
+                            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight uppercase headline-gold mb-4 lg:mb-6 leading-[1.1] drop-shadow-md">
                                 Craft Stone<br/>Series
                             </h1>
-                            {/* Adjusted paragraph text size for mobile (text-[10px]) to prevent overlap */}
-                            <p className="text-[10px] sm:text-sm md:text-base font-light leading-relaxed max-w-[200px] sm:max-w-md mb-10 text-gray-300">
+                            <p className="text-[12px] sm:text-sm md:text-base font-light leading-relaxed max-w-[280px] sm:max-w-md text-gray-200 drop-shadow-md">
                                 วัสดุตกแต่งผนังนวัตกรรมใหม่ ผลิตจากแร่ธรรมชาติ (Eco Clay Composite) มอบคุณสมบัติเด่น น้ำหนักเบา ยืดหยุ่น แข็งแรง และเป็นมิตรต่อสิ่งแวดล้อม
                             </p>
                         </div>
-                    </div>
-                    {/* Background Adjustment: Full visibility with protective gradient */}
-                    <div className="absolute inset-0 z-10 flex items-center justify-end pointer-events-none">
-                        <img 
-                            src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%20100@2x.webp" 
-                            className="h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[95vh] w-auto object-contain opacity-100 transform translate-x-[15%] lg:translate-x-[10%] transition-all duration-1000 animate-fade-in-right" 
-                            alt="Material" 
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
                     </div>
                 </header>
 
@@ -338,7 +354,7 @@ export default function App() {
                                             <div className="ml-8 text-left min-w-[300px]">
                                                 <h3 className={`headline-gold font-bold text-xl uppercase transition-all ${isActive ? 'scale-110' : ''}`}>{layer.title}</h3>
                                                 <div className={`mt-3 text-white text-sm leading-relaxed transition-all duration-500 overflow-hidden ${isActive ? 'max-h-[150px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                                    <p className="p-4 bg-black/60 border-l-2 border-brand-gold backdrop-blur-md">
+                                                    <p className="p-4 bg-black/60 border-l-2 border-[#B08038] backdrop-blur-md">
                                                         {layer.description}
                                                     </p>
                                                 </div>
@@ -348,7 +364,7 @@ export default function App() {
 
                                     {isActive && (
                                         <div className="md:hidden mt-10 px-8 w-full animate-fade-in-up">
-                                            <div className="bg-zinc-900/90 p-6 border-t-2 border-brand-gold rounded-b-xl">
+                                            <div className="bg-zinc-900/90 p-6 border-t-2 border-[#B08038] rounded-b-xl">
                                                 <h3 className="headline-gold font-bold text-lg uppercase mb-2">{layer.title}</h3>
                                                 <p className="text-gray-200 text-sm leading-relaxed">{layer.description}</p>
                                             </div>
@@ -359,7 +375,7 @@ export default function App() {
                         })}
                     </div>
 
-                    <div className="mt-12 flex flex-col items-center gap-6">
+                    <div className="mt-12 flex flex-col items-center gap-6 relative z-40">
                         <button onClick={() => { setIsStacked(!isStacked); setActiveLayerIndex(null); }} className="btn-explore">
                             {isStacked ? 'Explore Layers' : 'Stack Layers'}
                         </button>
@@ -380,6 +396,7 @@ export default function App() {
                     </div>
                 </section>
 
+                {/* --- Collections Section (Reverted to Original) --- */}
                 <div className="space-y-0">
                     {COLLECTIONS_DATA.map((col, idx) => (
                         <section key={idx} className={`flex flex-col ${col.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} min-h-[70vh] items-center border-t border-white/5 py-16`}>
@@ -401,6 +418,7 @@ export default function App() {
                     ))}
                 </div>
 
+                {/* --- Installation Process (Reverted to Original) --- */}
                 <section className="py-24 border-t border-white/5 bg-black/40">
                     <div className="container mx-auto px-6 max-w-[1400px]">
                         <div className="text-center mb-16">
@@ -420,6 +438,7 @@ export default function App() {
                     </div>
                 </section>
 
+                {/* --- Performance Tests (Reverted to Original) --- */}
                 <section className="py-24 border-t border-white/5">
                     <div className="container mx-auto px-6 max-w-[1200px]">
                         <div className="text-center mb-16">
@@ -437,6 +456,7 @@ export default function App() {
                     </div>
                 </section>
 
+                {/* --- Showcase (Reverted to Original) --- */}
                 <section className="min-h-[60vh] flex flex-col lg:flex-row border-t border-white/5">
                     <div className="w-full lg:w-1/2">
                         <img src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/craft_stone/Asset%20120@2x.webp" className="w-full h-full object-cover min-h-[400px]" alt="Showcase" />
@@ -453,6 +473,7 @@ export default function App() {
                         </div>
                     </div>
                 </section>
+
             </div>
         </div>
     );

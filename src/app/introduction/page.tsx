@@ -246,31 +246,40 @@ export default function Page() {
 
     return (
         <div className="bg-[#080808] text-[#808080] font-light selection:bg-brand-gold/30">
-            {/* Hero Section - Fixed background for Mobile */}
-            <header className="relative min-h-[75vh] md:min-h-screen flex flex-col items-center justify-center overflow-hidden bg-black px-6">
-                <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+            {/* Hero Section - Reverted to match original HTML structure */}
+            <header className="relative min-h-[85vh] lg:min-h-screen flex flex-col items-center overflow-hidden px-6 pt-10 bg-[#080808]">
+                {/* Masking the absolute background so it fades out smoothly into the unified body texture */}
+                <div 
+                    className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none" 
+                    style={{ 
+                        WebkitMaskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)', 
+                        maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)' 
+                    }}
+                >
                     <img 
                         src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Band_Introduction/Asset%2055@3x.webp" 
-                        className="w-full h-full object-cover md:object-contain transition-opacity duration-1000 transform scale-105 md:scale-95 opacity-60 md:opacity-100" 
+                        className="w-full h-full object-cover lg:object-contain lg:object-top opacity-100 transition-opacity duration-1000 lg:transform lg:scale-95"
                         alt="Main Texture" 
                     />
-                    <div className="absolute inset-0 bg-black/40 md:bg-black/20 transition-opacity"></div>
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black"></div>
+                    <div className="absolute inset-0 bg-black/60 lg:bg-black/40 transition-opacity duration-1000"></div>
                 </div>
 
-                <div className="relative z-10 text-center max-w-[1800px] w-full px-4 mt-10">
-                    <h1 className="text-3xl md:text-5xl lg:text-7xl tracking-tighter uppercase leading-tight gold-text animate-reveal drop-shadow-2xl font-['Prompt']">
+                <div className="relative z-10 text-center max-w-[1800px] w-full px-4 mt-20 md:mt-24 lg:mt-32">
+                    <h1 
+                        className="text-2xl md:text-4xl lg:text-6xl font-bold tracking-tighter uppercase leading-tight gold-text animate-reveal drop-shadow-2xl font-['Prompt']" 
+                        style={{ animationDelay: '0.2s' }}
+                    >
                         ตัวตนของผนังที่สะท้อนสไตล์
                     </h1>
-                    <div className="mt-6 md:mt-10 animate-reveal" style={{ animationDelay: '0.4s' }}>
-                        <p className="text-sm md:text-base lg:text-lg font-light leading-relaxed max-w-[90%] md:max-w-[1250px] mx-auto drop-shadow-sm font-['Prompt']" style={{ color: '#c2bfb6' }}>
+                    <div className="mt-8 md:mt-10 animate-reveal" style={{ animationDelay: '0.4s' }}>
+                        <p className="text-sm md:text-base lg:text-lg font-light leading-relaxed max-w-[90%] md:max-w-[1250px] mx-auto drop-shadow-sm text-[#c2bfb6] font-['Prompt']">
                             เรามองว่าผนังไม่ใช่เพียงฉากหลัง แต่คือองค์ประกอบหลักที่ กำหนดอารมณ์ สร้างบรรยากาศ และบอกเล่ารสนิยมของพื้นที่ได้ อย่างชัดเจน ทุกเส้นสายและผิวสัมผัสถูกออกแบบมาให้เป็นเหมือน แฟชั่นไอเท็มที่เสริมความโดดเด่นให้กับงานดีไซน์ที่นักออกแบบ สามารถใช้ Wallcraft เพื่อสร้าง Statement ของงานออกแบบได้ อย่างมีเอกลักษณ์ เราคือ...โซลูชันผนังโมดูลาร์สำหรับงานดีไซน์ ติดตั้งและบำรุงรักษาง่าย ยืดหยุ่น กับทุกคอนเซปต์ เลือกเท็กซ์เจอร์ สี ดีเทลได้ครบ-จบงานง่ายและเรียบสวย.
                         </p>
                     </div>
                 </div>
             </header>
 
-            <div className="series-textured relative z-20 -mt-20 md:-mt-40 lg:-mt-60">
+            <div className="series-textured relative z-20 -mt-10 lg:-mt-60">
                 {/* Material Slider Section */}
                 <section className="pb-12 overflow-hidden relative">
                     <div className="relative-content">

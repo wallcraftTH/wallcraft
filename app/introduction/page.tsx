@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from 'react';
+import Link from 'next/link';
 
 // --- ข้อมูลคงที่และข้อมูลสินค้า ---
 const FALLBACK_TEXTURE = "https://images.unsplash.com/photo-1516550893923-42d28e5677af?q=80&w=800&auto=format&fit=crop";

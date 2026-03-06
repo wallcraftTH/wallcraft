@@ -277,7 +277,7 @@ export default function TarraStonePage() {
         className="relative min-h-[75vh] flex items-center overflow-hidden pt-20 text-left"
         style={{
           backgroundImage:
-            "linear-gradient(to right, rgba(10, 10, 10, 0.5) 0%, rgba(10, 10, 10, 0.2) 50%, rgba(10, 10, 10, 0) 100%), url('https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/collections_cover/Tarra.webp')",
+            "linear-gradient(to right, rgba(10, 10, 10, 0.5) 0%, rgba(10, 10, 10, 0.2) 50%, rgba(10, 10, 10, 0) 100%), url('https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/collections_cover/Tarra.webp')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',

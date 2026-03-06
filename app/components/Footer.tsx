@@ -6,13 +6,12 @@ import { FaFacebookF, FaInstagram, FaLine, FaPhone } from 'react-icons/fa6';
 export default function Footer() {
   return (
     <footer className="bg-[#050505] border-t border-white/5 pt-20 pb-10 text-white relative z-10">
-      {/* Reduced padding (lg:px-10) to move content closer to the left edge */}
       <div className="container mx-auto px-8 lg:px-10">
         
         {/* Grid Layout: 5 Columns on Desktop */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 mb-32">
           
-          {/* --- Column 1: Contact (Moved Left) --- */}
+          {/* --- Column 1: Contact --- */}
           <div className="lg:col-span-1">
             <Link href="/" className="text-2xl font-bold tracking-widest text-[#B08038] uppercase mb-6 block">
               TPS GARDEN FURNITURE CO., LTD
@@ -33,20 +32,21 @@ export default function Footer() {
                
                {/* Sub-Col 1: Craft Stone */}
                <div className="space-y-4">
-                 <h3 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#B08038] border-b border-white/10 pb-2 mb-3">
-                   Craft Stone
-                 </h3>
-                 <div className="space-y-3 flex flex-col">
-                   <Link href="/collection/craft-stone-collection/tarra-stone" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Terra Stone</Link>
-                   <Link href="/collection/craft-stone-collection/panorama" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Panorama</Link>
-                   <Link href="/collection/craft-stone-collection/strength-rock" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Strength Rock</Link>
-                   <Link href="/collection/craft-stone-collection/geoform" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Geoform</Link>
-                   <Link href="/collection/craft-stone-collection/urban-form" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Urban Form</Link>
-                   <Link href="/collection/craft-stone-collection/nature-grain" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Nature Grain</Link>
-                   <Link href="/collection/craft-stone-collection/rust" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Rust</Link>
-                   <Link href="/collection/craft-stone-collection/finesse" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Finesse</Link>
-                 </div>
-               </div>
+                <h3 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#B08038] border-b border-white/10 pb-2 mb-3">
+                  Craft Stone
+                </h3>
+                  <div className="space-y-3 flex flex-col">
+                    <Link href="/collections/craft-stone-collection/tarra-stone" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Tarra Stone</Link>
+                    <Link href="/collections/craft-stone-collection/panorama" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Panorama</Link>
+                    <Link href="/collections/craft-stone-collection/strength-rock" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Strength Rock</Link>
+                    {/* Fixed typo: geoform -> geo-form */}
+                    <Link href="/collections/craft-stone-collection/geo-form" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Geoform</Link>
+                    <Link href="/collections/craft-stone-collection/urban-form" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Urban Form</Link>
+                    <Link href="/collections/craft-stone-collection/nature-grain" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Nature Grain</Link>
+                    <Link href="/collections/craft-stone-collection/rust" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Rust</Link>
+                    <Link href="/collections/craft-stone-collection/finesse" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Finesse</Link>
+                  </div>
+                </div>
 
                {/* Sub-Col 2: Luxe Series */}
                <div className="space-y-4">
@@ -54,13 +54,14 @@ export default function Footer() {
                    Luxe Series
                  </h3>
                  <div className="space-y-3 flex flex-col">
-                   <Link href="/collection/fabric" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Fabric</Link>
-                   <Link href="/collection/leather" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Leather</Link>
-                   <Link href="/collection/outdoor" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Outdoor</Link>
-                   <Link href="/collection/signature" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Signature</Link>
-                   <Link href="/collection/stone" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Stone</Link>
-                   <Link href="/collection/velvet" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Velvet</Link>
-                   <Link href="/collection/wood" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Wood</Link>
+                   <Link href="/collections/luxe-collection/fabric" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Fabric</Link>
+                   <Link href="/collections/luxe-collection/leather" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Leather</Link>
+                   <Link href="/collections/luxe-collection/semi-outdoor" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Outdoor</Link>
+                   <Link href="/collections/luxe-collection/signature" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Signature</Link>
+                   <Link href="/collections/luxe-collection/stone" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Stone</Link>
+                   <Link href="/collections/luxe-collection/velvet" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Velvet</Link>
+                   {/* Fixed typo: collectiosn -> collections */}
+                   <Link href="/collections/luxe-collection/wood" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Wood</Link>
                  </div>
                </div>
 
@@ -99,20 +100,12 @@ export default function Footer() {
             <ul className="space-y-4 text-xs text-[#c2bfb6] font-light tracking-wide mb-6">
               <li><Link href="#" className= "text-[#c2bfb6] hover:text-[#B08038] transition-colors">Showrooms</Link></li>
               <li><Link href="#" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Location</Link></li>
-              {/* ---<li className="flex items-center gap-3">
-                <FaPhone size={10} className="opacity-50" />
-                <span>+66 2 123 4567</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="text-[#c2bfb6] opacity-50 text-[10px]">@</span>
-                <span>contact@wallcraft.th</span>
-              </li>--- */}
             </ul>
             
             <div className="flex space-x-4">
-              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-#c2bfb6 hover:bg-[#B08038] hover:text-white transition-all"><FaFacebookF size={12} /></a>
-              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-#c2bfb6 hover:bg-[#B08038] hover:text-white transition-all"><FaInstagram size={12} /></a>
-              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-#c2bfb6 hover:bg-[#B08038] hover:text-white transition-all"><FaLine size={12} /></a>
+              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#c2bfb6] hover:bg-[#B08038] hover:text-white transition-all"><FaFacebookF size={12} /></a>
+              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#c2bfb6] hover:bg-[#B08038] hover:text-white transition-all"><FaInstagram size={12} /></a>
+              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#c2bfb6] hover:bg-[#B08038] hover:text-white transition-all"><FaLine size={12} /></a>
             </div>
           </div>
 

@@ -305,25 +305,26 @@ export default function FinessePage() {
 
   return (
     <div className="font-sans bg-[#0a0a0a] text-white min-h-screen">
-      <header
-        className="relative min-h-[75vh] flex items-center overflow-hidden pt-20 text-left"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(10, 10, 10, 0.5) 0%, rgba(10, 10, 10, 0.2) 50%, rgba(10, 10, 10, 0) 100%), url('https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/collections_cover/finesse.webp')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-        <div className="container mx-auto px-8 lg:px-24 z-20">
-          <div className="max-w-2xl">
+      <header className="relative w-full h-[90vh] overflow-hidden flex items-center text-left bg-black">
+        {/* Explicit z-0 added here */}
+        <img
+          src="https://mpsnwijabfingujzirri.supabase.co/storage/v1/object/public/wallcraft_web/collections_cover/finesse.webp"
+          alt="Finesse Collection Hero"
+          className="absolute inset-0 w-full h-full object-cover object-center block select-none z-0"
+        />
+        
+        {/* Softened from-black/100 to from-black/80 so it doesn't look like a solid black wall */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10 pointer-events-none"></div>
+        
+        <div className="container mx-auto px-8 lg:px-24 relative z-20 pt-20">
+          <div className="max-w-2xl animate-reveal">
             <div className="flex gap-1 h-1.5 w-28 mb-10">
               <div className="bg-[#6A6C5F] w-1/3" />
               <div className="bg-[#7B2715] w-1/3" />
               <div className="bg-[#B08038] w-1/3" />
             </div>
 
-            <h1 className="text-5xl lg:text-8xl font-bold tracking-tight mb-6">
+            <h1 className="text-5xl lg:text-8xl font-bold tracking-tight mb-6 drop-shadow-2xl">
               <span className="text-[#B08038]">Finesse</span>
               <br />
               <span className="text-[#c2bfb6]">Collection</span>

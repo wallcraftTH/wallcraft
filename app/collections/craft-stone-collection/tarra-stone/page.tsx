@@ -10,7 +10,7 @@ import {
   FaHeart,
 } from 'react-icons/fa6';
 
-// Initialize Supabase client directly for this page
+// Initialize Supabase client
 const supabase = createClient(
   'https://mpsnwijabfingujzirri.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wc253aWphYmZpbmd1anppcnJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NDUzNzIsImV4cCI6MjA4MzQyMTM3Mn0.RTNnZHJRnYjoeX9faOi324CbooNxNaW6Fm2xJrV609M'
@@ -87,7 +87,6 @@ export default function TarraStonePage() {
   const [globalData, setGlobalData] = useState<Product[]>([]);
   const [modalState, setModalState] = useState<ModalState | null>(null);
   const [selectedQty, setSelectedQty] = useState(1);
-  const [customNote, setCustomNote] = useState('');
   const [requestAdded, setRequestAdded] = useState(false);
   const [isFavoriting, setIsFavoriting] = useState(false);
 
@@ -109,7 +108,6 @@ export default function TarraStonePage() {
         if (isMounted) setGlobalData((data as Product[]) || []);
       } catch (err) {
         console.error('Supabase Error:', err);
-        if (isMounted) setGlobalData([]);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -133,7 +131,6 @@ export default function TarraStonePage() {
 
   const resetModalControls = () => {
     setSelectedQty(1);
-    setCustomNote('');
     setRequestAdded(false);
     if (addTimerRef.current) clearTimeout(addTimerRef.current);
   };
@@ -177,12 +174,33 @@ export default function TarraStonePage() {
       alert("Please select a specific finish/color first.");
       return;
     }
-    setRequestAdded(true);
-    await saveToProfile(modalState.activeProductId);
-    addTimerRef.current = setTimeout(() => {
+
+    try {
+      setRequestAdded(true);
+      
+      // Trigger browser download
+      const response = await fetch(modalState.image);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `${modalState.code}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+
+      // Auto-save to profile for download history
+      await saveToProfile(modalState.activeProductId);
+
+      addTimerRef.current = setTimeout(() => {
+        setRequestAdded(false);
+        closeModal(); // Closes modal after success
+      }, 900);
+    } catch (error) {
+      console.error('Download failed:', error);
       setRequestAdded(false);
-      closeModal();
-    }, 1000);
+    }
   };
 
   const openModalFromDetail = (detail: HardcodedProduct) => {
@@ -240,7 +258,8 @@ export default function TarraStonePage() {
     const state = dragStates.current[index];
     if (!el || !state?.isDown) return;
     e.preventDefault();
-    const walk = ((e.pageX - el.offsetLeft) - state.startX) * 2;
+    const x = e.pageX - el.offsetLeft;
+    const walk = (x - state.startX) * 2;
     el.scrollLeft = state.scrollLeft - walk;
   };
 
@@ -251,24 +270,25 @@ export default function TarraStonePage() {
   };
 
   return (
-    <div className="font-sans bg-[#0a0a0a] text-white min-h-screen">
+    <div className="font-sans bg-[#0a0a0a] text-white min-h-screen selection:bg-[#B08038]/30">
       <header
-        className="relative min-h-[75vh] flex items-center overflow-hidden pt-20 text-left"
-        style={{
-          backgroundImage: "linear-gradient(to right, rgba(10, 10, 10, 0.5) 0%, rgba(10, 10, 10, 0.2) 50%, rgba(10, 10, 10, 0) 100%), url('https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/collections_cover/Tarra.webp')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
+        className="relative min-h-[75vh] flex items-center overflow-hidden pt-20 text-left bg-[#0a0a0a]"
       >
-        <div className="container mx-auto px-8 lg:px-24 z-20">
+        <img
+          src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/collections_cover/Tarra.webp"
+          alt="Tarra Stone Collection Hero"
+          className="absolute inset-0 w-full h-full object-cover object-center block select-none z-0"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
+        
+        <div className="container mx-auto px-8 lg:px-24 relative z-20">
           <div className="max-w-2xl">
             <div className="flex gap-1 h-1.5 w-28 mb-10">
               <div className="bg-[#6A6C5F] w-1/3" />
               <div className="bg-[#7B2715] w-1/3" />
               <div className="bg-[#B08038] w-1/3" />
             </div>
-            <h1 className="text-5xl lg:text-8xl font-bold tracking-tight mb-6">
+            <h1 className="text-5xl lg:text-8xl font-bold tracking-tight mb-6 animate-reveal">
               <span className="text-[#B08038]">Tarra Stone</span>
               <br />
               <span className="text-[#c2bfb6]">Collection</span>
@@ -293,8 +313,9 @@ export default function TarraStonePage() {
                     <div className="w-full lg:w-1/2 relative group flex justify-center">
                       <button type="button" onClick={() => openModalFromDetail(detail)} className="relative block w-full cursor-zoom-in bg-transparent border-0 p-0">
                         <div className="absolute inset-0 bg-[#B08038]/10 blur-[80px] rounded-full pointer-events-none w-3/4 mx-auto h-3/4 mt-8" />
-                        <div className="relative z-10 w-[85%] lg:w-full max-w-[450px] lg:max-w-[550px] mx-auto aspect-square flex items-center justify-center overflow-hidden rounded-[2px] shadow-[0_30px_60px_-12px_rgba(0,0,0,0.5)] border border-white/5">
-                          <img src={detail.image} alt={detail.title} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" />
+                        <div className="relative z-10 w-[85%] lg:w-full max-w-[450px] lg:max-w-[550px] mx-auto aspect-square flex items-center justify-center overflow-hidden rounded-[2px] shadow-2xl border border-white/5">
+                          {/* Design correction: object-contain to prevent cropping */}
+                          <img src={detail.image} alt={detail.title} className="w-full h-full object-contain p-4 transition-all duration-700 group-hover:scale-105" />
                           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <div className="p-4 border border-white/30 bg-black/40 backdrop-blur-md text-white text-[10px] uppercase tracking-widest font-bold">Quick View</div>
                           </div>
@@ -315,7 +336,7 @@ export default function TarraStonePage() {
                           </button>
                           <div ref={(el) => { sliderRefs.current[i] = el; }} onMouseDown={(e) => handleSliderMouseDown(i, e)} onMouseMove={(e) => handleSliderMouseMove(i, e)} onMouseUp={() => handleSliderMouseUp(i)} onMouseLeave={() => handleSliderMouseUp(i)} className="flex gap-4 lg:gap-5 overflow-x-auto w-[240px] lg:w-[400px] snap-x py-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" style={{ cursor: 'grab' }}>
                             {variants.map((variant) => (
-                              <button key={variant.id} type="button" onClick={() => openProductModalById(variant.id)} className="flex-none w-[70px] lg:w-[100px] aspect-square opacity-90 hover:opacity-100 cursor-pointer transition-all snap-center hover:scale-105 border border-white/10 hover:border-[#B08038] bg-transparent p-0">
+                              <button key={variant.id} type="button" onClick={() => openProductModalById(variant.id)} className="flex-none w-[70px] lg:w-[100px] aspect-square opacity-90 hover:opacity-100 cursor-pointer transition-all snap-center hover:scale-105 border border-white/10 hover:border-[#B08038] bg-transparent p-0 overflow-hidden">
                                 <img src={variant.image_url} alt={variant.title} className="w-full h-full object-cover" />
                               </button>
                             ))}
@@ -340,7 +361,7 @@ export default function TarraStonePage() {
           <div className="relative w-full max-w-6xl bg-[#0f0f0f] border border-white/10 rounded-xl overflow-hidden shadow-2xl flex flex-col lg:flex-row max-h-[95vh]">
             <button type="button" onClick={closeModal} className="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-[#B08038] transition-colors"><FaXmark /></button>
             <div className="w-full lg:w-3/5 bg-[#050505] flex items-center justify-center p-8 relative">
-              <img src={modalState.image} alt={modalState.title} className="max-w-full max-h-[600px] object-contain transition-all duration-500" />
+              <img src={modalState.image} alt={modalState.title} className="max-w-full max-h-[600px] object-contain p-4 transition-all duration-500" />
             </div>
             <div className="w-full lg:w-2/5 p-8 lg:p-12 flex flex-col border-l border-white/5 bg-[#0a0a0a] overflow-y-auto">
               <div className="mb-8">
@@ -372,11 +393,6 @@ export default function TarraStonePage() {
                 </div>
               )}
 
-              <div className="mb-8 text-left">
-                <span className="block text-white text-[10px] font-bold uppercase tracking-widest mb-4">Customization Note</span>
-                <textarea value={customNote} onChange={(e) => setCustomNote(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-md p-3 text-sm text-white focus:outline-none focus:border-[#B08038] transition-colors resize-none" rows={3} placeholder="Enter custom dimensions..." />
-              </div>
-
               <div className="mt-auto pt-8 border-t border-white/10 text-left">
                 <div className="flex flex-col gap-4">
                   <div className="flex gap-4">
@@ -385,11 +401,11 @@ export default function TarraStonePage() {
                       <span className="px-2 text-white font-mono w-8 text-center">{selectedQty}</span>
                       <button type="button" className="px-4 py-3 text-white" onClick={() => setSelectedQty(p => p + 1)}>+</button>
                     </div>
-                    <button type="button" onClick={handleAddToRequest} className="flex-1 bg-white text-black uppercase text-[10px] font-bold tracking-[0.2em] hover:bg-[#B08038] hover:text-white transition-all rounded-sm flex items-center justify-center gap-3">
-                      {requestAdded ? 'Added' : 'Download Simple'} <FaCartPlus />
+                    <button type="button" onClick={handleAddToRequest} className="flex-1 bg-white text-black uppercase text-[11px] font-bold tracking-[0.2em] hover:bg-[#B08038] hover:text-white transition-all rounded-sm flex items-center justify-center gap-3">
+                      {requestAdded ? 'Downloaded' : 'Download Simple'} <FaCartPlus />
                     </button>
                   </div>
-                  <button type="button" disabled={isFavoriting} onClick={() => handleFavorite(modalState.activeProductId)} className="w-full border border-[#B08038] text-[#B08038] hover:bg-[#B08038] hover:text-white uppercase text-[10px] font-bold tracking-[0.2em] py-4 rounded-sm transition-all flex items-center justify-center gap-3">
+                  <button type="button" disabled={isFavoriting} onClick={() => handleFavorite(modalState.activeProductId)} className="w-full border border-[#B08038] text-[#B08038] hover:bg-[#B08038] hover:text-white uppercase text-[11px] font-bold tracking-[0.2em] py-4 rounded-sm transition-all flex items-center justify-center gap-3">
                     {isFavoriting ? 'Saving...' : 'Add to Favorite'} <FaHeart />
                   </button>
                 </div>
@@ -398,6 +414,14 @@ export default function TarraStonePage() {
           </div>
         </div>
       )}
+
+      <style jsx global>{`
+        @keyframes reveal {
+          0% { transform: translateY(40px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+        .animate-reveal { animation: reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
+      `}</style>
     </div>
   );
 }

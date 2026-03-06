@@ -26,7 +26,6 @@ const SERIES_DATA = [
     {
         id: '01',
         title: 'Craft Stone Series',
-        subtitle: 'ซีรี่ส์หัตถกรรมหิน',
         desc: 'ผลิตจากกลุ่มแร่ธรรมชาติ (Eco Clay Composite) มอบคุณสมบัติเด่น น้ำหนักเบา ยืดหยุ่น แข็งแรง และเป็นมิตรต่อสิ่งแวดล้อม เหมาะสำหรับติดตั้งทั้งภายในและภายนอก',
         link: '/series/craft-stone',
         images: [
@@ -44,7 +43,6 @@ const SERIES_DATA = [
     {
         id: '02',
         title: 'Luxe Series',
-        subtitle: 'ลักซ์ ซีรีส์',
         desc: 'ผนังตกแต่งระดับพรีเมียมที่ออกแบบมาเพื่อยระดับทุกพื้นที่ให้มีทั้งความงามและความทนทาน โครงสร้างหลักใช้ แผ่น HPVC หนา 5 มิลลิเมตร แข็งแรง กันน้ำ และคงรูปได้ดี',
         link: '/series/luxe',
         images: [
@@ -65,7 +63,6 @@ const SERIES_DATA = [
     {
         id: '03',
         title: 'Essential Series',
-        subtitle: 'ซีรีส์สำคัญ',
         desc: 'ผนังดีไซน์ใหม่ที่มอบทางเลือกการติดตั้งและการจบงานที่สมบูรณ์แบบ ครอบคลุมทั้ง Flat, 3D Wall และ LED ช่วยลดปัญหาหน้างานเพื่อความสวยที่สมบูรณ์แบบ',
         link: '/series/essential',
         images: [
@@ -318,7 +315,6 @@ export default function Page() {
                             <div className={`relative-content max-w-[1800px] mx-auto px-6 md:px-16 flex flex-col ${series.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 md:gap-20 items-center`}>
                                 <div className="w-full lg:w-2/5 space-y-6 relative z-20 text-center lg:text-left">
                                     <div className="space-y-4">
-                                        <span className="text-[10px] tracking-[0.5em] gold-text uppercase font-light block">{series.id} &nbsp; — &nbsp; {series.subtitle}</span>
                                         <h2 className="text-3xl md:text-5xl lg:text-6xl tracking-tighter gold-text uppercase leading-tight drop-shadow-md font-normal">{series.title}</h2>
                                     </div>
                                     <p className="text-zinc-300 text-sm md:text-base font-light leading-relaxed max-w-md mx-auto lg:mx-0 opacity-80">{series.desc}</p>

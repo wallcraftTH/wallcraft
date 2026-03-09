@@ -86,8 +86,8 @@ export default function HomePage() {
 
   return (
     <div 
-      className="bg-black min-h-screen text-[#808080] antialiased selection:bg-[#B08038] selection:text-white overflow-x-hidden relative"
-      style={{ fontFamily: "'Helvetica', 'LINE Seed Sans TH', sans-serif" }}
+      className="bg-black min-h-screen text-[#808080] antialiased selection:bg-[#B08038] selection:text-white overflow-x-hidden relative font-['Prompt']"
+      style={{ fontFamily: "'Prompt', sans-serif" }}
     >
       
       <main className="relative min-h-screen flex flex-col lg:flex-row items-center justify-between pt-32 pb-12 px-6 md:px-16 max-w-[1900px] mx-auto overflow-hidden z-10">
@@ -158,21 +158,8 @@ export default function HomePage() {
 
       {/* --- Page Specific Styles --- */}
       <style jsx global>{`
-        /* LINE Seed Sans TH Web Fonts via jsDelivr CDN */
-        @font-face {
-            font-family: 'LINE Seed Sans TH';
-            src: url('https://cdn.jsdelivr.net/gh/line/line-seed@main/fonts/th/woff2/LINESeedSansTH_W_Rg.woff2') format('woff2');
-            font-weight: 400;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'LINE Seed Sans TH';
-            src: url('https://cdn.jsdelivr.net/gh/line/line-seed@main/fonts/th/woff2/LINESeedSansTH_W_Bd.woff2') format('woff2');
-            font-weight: 700;
-            font-style: normal;
-            font-display: swap;
-        }
+        /* Import Prompt Font from Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;700&display=swap');
 
         /* Fade In Reveal */
         @keyframes reveal {

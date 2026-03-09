@@ -41,8 +41,11 @@ const collectionOrder = [
   'L.LEEDS',
   'L.STARRY',
   'L.DUPIONI',
+  'L.VICTORIA',
   'L.CANVAS',
-  'L.AGATE'
+  'L.AGATE',
+  'L.JUNGLE',
+  'L.RUGGED'
 ];
 
 const normalizeTitle = (text: string = ''): string => text.trim();

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { FaCamera, FaArrowRightFromBracket, FaDownload, FaTrash, FaUser } from 'react-icons/fa6';
+import { FaCamera, FaArrowRightFromBracket, FaDownload, FaUser, FaChevronRight, FaPencil } from 'react-icons/fa6';
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -24,6 +24,9 @@ export default function ProfilePage() {
   // Profile Data
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [bio, setBio] = useState('');
+  const [gender, setGender] = useState('');
+  const [birthday, setBirthday] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [email, setEmail] = useState('');
@@ -59,11 +62,14 @@ export default function ProfilePage() {
       if (profileData && !profileError) {
         setFirstName(profileData.first_name || '');
         setLastName(profileData.last_name || '');
+        setBio(profileData.bio || '');
+        setGender(profileData.gender || '');
+        setBirthday(profileData.birthday || '');
         setPhoneNumber(profileData.phone_number || '');
         setAvatarUrl(profileData.avatar_url || '');
       }
 
-      // 3. Fetch Saved Downloads (Joined with products table)
+      // 3. Fetch Saved Downloads
       const { data: downloadsData, error: downloadsError } = await supabase
         .from('user_downloads')
         .select(`
@@ -100,6 +106,9 @@ export default function ProfilePage() {
         .update({
           first_name: firstName,
           last_name: lastName,
+          bio: bio,
+          gender: gender,
+          birthday: birthday,
           phone_number: phoneNumber,
           updated_at: new Date().toISOString(),
         })
@@ -127,7 +136,7 @@ export default function ProfilePage() {
       const fileName = `${user.id}-${Math.random()}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      // Upload image to Supabase Storage
+      // Upload image
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, file);
@@ -141,7 +150,7 @@ export default function ProfilePage() {
 
       const newAvatarUrl = publicUrlData.publicUrl;
 
-      // Update Profile table with new Avatar URL
+      // Update Profile table
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ avatar_url: newAvatarUrl })
@@ -176,25 +185,35 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white pt-28 pb-20 px-6 lg:px-16 font-['Prompt']">
       <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-12 lg:gap-20">
         
-        {/* Left Column - Profile Info & Edit */}
-        <div className="w-full lg:w-1/3 flex flex-col space-y-10">
+        {/* Left Column - Profile Info & Edit (Styled like the reference image) */}
+        <div className="w-full lg:w-1/3 flex flex-col">
           
-          {/* Avatar & Greeting */}
-          <div className="flex flex-col items-center lg:items-start space-y-6">
-            <div className="relative group">
-              <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-white/10 bg-zinc-900 shadow-2xl">
-                {avatarUrl ? (
-                  <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-4xl text-zinc-600 font-light">
-                    {firstName ? firstName.charAt(0).toUpperCase() : <FaUser />}
-                  </div>
-                )}
+          <form onSubmit={handleUpdateProfile} className="space-y-6">
+            
+            {/* Avatar Centered */}
+            <div className="flex flex-col items-center justify-center pt-4 pb-6 border-b border-white/5">
+              <div className="relative group mb-3">
+                <div className="w-24 h-24 rounded-full overflow-hidden bg-zinc-800 shadow-xl flex items-center justify-center border border-white/10">
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <FaUser className="text-4xl text-zinc-500" />
+                  )}
+                </div>
+                {/* Upload Button Overlay */}
+                <label className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition-opacity duration-300">
+                  <FaCamera className="text-white text-xl" />
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleAvatarUpload} 
+                    disabled={uploading}
+                    className="hidden" 
+                  />
+                </label>
               </div>
-              
-              {/* Upload Button Overlay */}
-              <label className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition-opacity duration-300">
-                <FaCamera className="text-white text-xl" />
+              <label className="text-zinc-400 text-sm flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                <FaPencil className="text-xs" /> Edit Profile Picture
                 <input 
                   type="file" 
                   accept="image/*" 
@@ -205,72 +224,131 @@ export default function ProfilePage() {
               </label>
             </div>
 
-            <div className="text-center lg:text-left">
-              <h1 className="text-3xl font-medium tracking-wide text-white mb-1">
-                {firstName} {lastName}
-              </h1>
-              <p className="text-zinc-500 text-sm">{email}</p>
-            </div>
-            
-            <button 
-            onClick={handleSignOut}
-            className="text-[#B08038] text-[10px] uppercase tracking-widest flex items-center gap-2 hover:text-white transition-colors"
-            >
-            <FaArrowRightFromBracket /> Sign Out
-            </button>
-          </div>
-
-          <hr className="border-white/10" />
-
-          {/* Edit Profile Form */}
-          <div>
-            <h3 className="text-[11px] uppercase tracking-[0.2em] text-[#B08038] font-bold mb-6">Account Details</h3>
-            <form onSubmit={handleUpdateProfile} className="space-y-5">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-500">First Name</label>
+            {/* List Group 1: Name & Bio */}
+            <div className="bg-white/5 rounded-lg border border-white/5 overflow-hidden">
+              <div className="flex justify-between items-center p-4 border-b border-white/5">
+                <span className="text-sm text-zinc-300 w-1/3">First Name</span>
+                <div className="flex items-center w-2/3 justify-end">
                   <input 
                     type="text" 
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-sm text-white focus:outline-none focus:border-[#B08038] transition-colors"
+                    placeholder="Set Now"
+                    className="bg-transparent text-right text-sm text-white placeholder:text-[#B08038] outline-none w-full"
                   />
+                  <FaChevronRight className="ml-3 text-zinc-600 text-xs" />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-500">Last Name</label>
+              </div>
+              <div className="flex justify-between items-center p-4 border-b border-white/5">
+                <span className="text-sm text-zinc-300 w-1/3">Last Name</span>
+                <div className="flex items-center w-2/3 justify-end">
                   <input 
                     type="text" 
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-sm text-white focus:outline-none focus:border-[#B08038] transition-colors"
+                    placeholder="Set Now"
+                    className="bg-transparent text-right text-sm text-white placeholder:text-[#B08038] outline-none w-full"
                   />
+                  <FaChevronRight className="ml-3 text-zinc-600 text-xs" />
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500">Phone Number</label>
-                <input 
-                  type="text" 
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-sm text-white focus:outline-none focus:border-[#B08038] transition-colors"
-                  placeholder="+66 8X XXX XXXX"
-                />
+              <div className="flex justify-between items-center p-4">
+                <span className="text-sm text-zinc-300 w-1/3">Bio</span>
+                <div className="flex items-center w-2/3 justify-end">
+                  <input 
+                    type="text" 
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    placeholder="Set Now"
+                    className="bg-transparent text-right text-sm text-white placeholder:text-[#B08038] outline-none w-full"
+                  />
+                  <FaChevronRight className="ml-3 text-zinc-600 text-xs" />
+                </div>
               </div>
+            </div>
 
+            {/* List Group 2: Gender & Birthday */}
+            <div className="bg-white/5 rounded-lg border border-white/5 overflow-hidden">
+              <div className="flex justify-between items-center p-4 border-b border-white/5">
+                <span className="text-sm text-zinc-300 w-1/3">Gender</span>
+                <div className="flex items-center w-2/3 justify-end">
+                  <select 
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="bg-transparent text-right text-sm outline-none w-full appearance-none cursor-pointer"
+                    style={{ color: gender ? 'white' : '#B08038', direction: 'rtl' }}
+                  >
+                    <option value="" disabled>Set Now</option>
+                    <option value="Male" className="bg-[#1a1a1a] text-white">Male</option>
+                    <option value="Female" className="bg-[#1a1a1a] text-white">Female</option>
+                    <option value="Other" className="bg-[#1a1a1a] text-white">Other</option>
+                  </select>
+                  <FaChevronRight className="ml-3 text-zinc-600 text-xs" />
+                </div>
+              </div>
+              <div className="flex justify-between items-center p-4">
+                <span className="text-sm text-zinc-300 w-1/3">Birthday</span>
+                <div className="flex items-center w-2/3 justify-end">
+                  <input 
+                    type="date" 
+                    value={birthday}
+                    onChange={(e) => setBirthday(e.target.value)}
+                    className="bg-transparent text-right text-sm outline-none w-full cursor-pointer"
+                    style={{ color: birthday ? 'white' : '#B08038' }}
+                  />
+                  <FaChevronRight className="ml-3 text-zinc-600 text-xs" />
+                </div>
+              </div>
+            </div>
+
+            {/* List Group 3: Contact */}
+            <div className="bg-white/5 rounded-lg border border-white/5 overflow-hidden">
+              <div className="flex justify-between items-center p-4 border-b border-white/5">
+                <span className="text-sm text-zinc-300 w-1/3">Phone</span>
+                <div className="flex items-center w-2/3 justify-end">
+                  <input 
+                    type="text" 
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    placeholder="Set Now"
+                    className="bg-transparent text-right text-sm text-white placeholder:text-[#B08038] outline-none w-full"
+                  />
+                  <FaChevronRight className="ml-3 text-zinc-600 text-xs" />
+                </div>
+              </div>
+              <div className="flex justify-between items-center p-4">
+                <span className="text-sm text-zinc-300 w-1/3">Email</span>
+                <div className="flex items-center w-2/3 justify-end">
+                  <span className="text-sm text-zinc-500 truncate">{email}</span>
+                  <FaChevronRight className="ml-3 text-zinc-600 text-xs opacity-0" />
+                </div>
+              </div>
+            </div>
+
+            {/* Save & Sign Out Buttons */}
+            <div className="flex items-center justify-between pt-4">
+              <button 
+                type="button"
+                onClick={handleSignOut}
+                className="text-zinc-500 text-xs flex items-center gap-2 hover:text-white transition-colors"
+              >
+                <FaArrowRightFromBracket /> Sign Out
+              </button>
+              
               <button 
                 type="submit" 
                 disabled={saving}
-                className="w-full mt-4 border border-[#B08038] text-[#B08038] hover:bg-[#B08038] hover:text-white uppercase text-[10px] font-bold tracking-[0.2em] py-3 rounded-sm transition-all"
+                className="bg-[#B08038] text-white px-6 py-2 rounded-sm text-xs font-medium tracking-wide hover:bg-[#8f662a] transition-colors disabled:opacity-50"
               >
-                {saving ? 'Saving...' : 'Save Changes'}
+                {saving ? 'Saving...' : 'Save Profile'}
               </button>
-            </form>
-          </div>
+            </div>
+
+          </form>
         </div>
 
-        {/* Right Column - Saved Downloads */}
-        <div className="w-full lg:w-2/3 lg:pl-12 lg:border-l border-white/10">
+        {/* Right Column - Saved Downloads (Unchanged layout) */}
+        <div className="w-full lg:w-2/3 lg:pl-12 lg:border-l border-white/10 mt-10 lg:mt-0">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-xl md:text-2xl font-medium tracking-wide text-white uppercase">Saved Textures</h2>
             <span className="text-zinc-500 text-xs">{savedProducts.length} Items</span>

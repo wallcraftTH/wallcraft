@@ -1,519 +1,565 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { FaChevronLeft, FaChevronRight, FaHeart, FaXmark } from 'react-icons/fa6';
+// Adjust your Supabase import path based on where your client file is located. 
+// Example: import { supabase } from '@/lib/supabase';
 import { createClient } from '@supabase/supabase-js';
-import Link from 'next/link';
-import { 
-  FaCamera, 
-  FaArrowRightFromBracket, 
-  FaDownload, 
-  FaUser, 
-  FaChevronRight, 
-  FaPencil, 
-  FaTrash, 
-  FaXmark,
-  FaEye
-} from 'react-icons/fa6';
 
-// Initialize Supabase client
+// Initialize Supabase client (make sure this matches your project setup)
 const supabase = createClient(
   'https://mpsnwijabfingujzirri.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wc253aWphYmZpbmd1anppcnJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NDUzNzIsImV4cCI6MjA4MzQyMTM3Mn0.RTNnZHJRnYjoeX9faOi324CbooNxNaW6Fm2xJrV609M'
 );
 
-export default function ProfilePage() {
-  const router = useRouter();
-  
-  // State
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  
-  // Track which field is currently being edited
-  const [editingField, setEditingField] = useState<string | null>(null);
-  
-  // Detail Modal State
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  
-  // Profile Data
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [bio, setBio] = useState('');
-  const [gender, setGender] = useState('');
-  const [birthday, setBirthday] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
-  const [email, setEmail] = useState('');
+type Product = {
+  id: string | number;
+  title: string;
+  item_code?: string | null;
+  image_url?: string | null;
+  dimensions?: string | null;
+  subtitle?: string | null;
+  description?: string | null;
+  price?: number | string | null;
+  collection_type?: string | null;
+};
 
-  // User Downloads
-  const [savedProducts, setSavedProducts] = useState<any[]>([]);
+type GroupedProduct = {
+  title: string;
+  mainItem: Product;
+  variants: Product[];
+};
+
+type DragState = {
+  id: string | null;
+  isDown: boolean;
+  startX: number;
+  scrollLeft: number;
+};
+
+const collectionOrder = [
+  'L.MYSTIC',
+  'L.ACTUATE',
+  'L.WOOLLAM',
+  'L.MEADOW',
+  'L.ECOTINE',
+  'L.PEARL',
+  'L.LEEDS',
+  'L.STARRY',
+  'L.DUPIONI',
+  'L.CANVAS',
+  'L.AGATE'
+];
+
+const normalizeTitle = (text: string = ''): string => text.trim();
+
+export default function FabricCollection() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
+  
+  // Button loading states
+  const [downloadState, setDownloadState] = useState<boolean>(false);
+  const [isFavoriting, setIsFavoriting] = useState<boolean>(false);
+  
+  const [draggingSliderId, setDraggingSliderId] = useState<string | null>(null);
+
+  const sliderRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const dragRef = useRef<DragState>({
+    id: null,
+    isDown: false,
+    startX: 0,
+    scrollLeft: 0,
+  });
 
   useEffect(() => {
-    fetchUserData();
+    let ignore = false;
+
+    async function fetchCollection() {
+      try {
+        setLoading(true);
+        setErrorMsg('');
+
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('collection_type', 'fabric_collection'); // Make sure this matches your DB
+
+        if (error) throw error;
+
+        const safeData: Product[] = Array.isArray(data) ? (data as Product[]) : [];
+
+        if (!ignore) {
+          setProducts(safeData);
+        }
+      } catch (err: unknown) {
+        console.error('Supabase Error:', err);
+
+        if (!ignore) {
+          const message = err instanceof Error ? err.message : 'Failed to load content.';
+          setErrorMsg(message);
+          setProducts([]);
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchCollection();
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
-  // Prevent scrolling when modal is open
   useEffect(() => {
-    if (selectedProduct) {
+    if (currentProduct) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
     }
+
     return () => {
       document.body.style.overflow = '';
     };
-  }, [selectedProduct]);
+  }, [currentProduct]);
 
-  const fetchUserData = async () => {
+  useEffect(() => {
+    function handleMouseUp() {
+      dragRef.current.isDown = false;
+      setDraggingSliderId(null);
+    }
+
+    function handleMouseMove(e: MouseEvent) {
+      if (!dragRef.current.isDown || !dragRef.current.id) return;
+
+      const el = sliderRefs.current[dragRef.current.id];
+      if (!el) return;
+
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - dragRef.current.startX) * 2;
+      el.scrollLeft = dragRef.current.scrollLeft - walk;
+    }
+
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  const groupedProducts = useMemo<GroupedProduct[]>(() => {
+    const grouped: Record<string, Product[]> = {};
+
+    products.forEach((item: Product) => {
+      const cleanTitle = normalizeTitle(item.title || '');
+      if (!grouped[cleanTitle]) grouped[cleanTitle] = [];
+      grouped[cleanTitle].push(item);
+    });
+
+    return Object.keys(grouped)
+      .sort((a, b) => {
+        const indexA = collectionOrder.indexOf(a);
+        const indexB = collectionOrder.indexOf(b);
+        return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+      })
+      .map((title) => {
+        const variants = [...grouped[title]].sort((a, b) =>
+          String(a.item_code || '').localeCompare(String(b.item_code || ''))
+        );
+
+        const mainItem = variants[0];
+        if (!mainItem) return null;
+
+        return {
+          title,
+          mainItem,
+          variants,
+        };
+      })
+      .filter((group): group is GroupedProduct => group !== null);
+  }, [products]);
+
+  const currentVariants = useMemo<Product[]>(() => {
+    if (!currentProduct) return [];
+
+    return products
+      .filter((item) => normalizeTitle(item.title || '') === normalizeTitle(currentProduct.title || ''))
+      .sort((a, b) => String(a.item_code || '').localeCompare(String(b.item_code || '')));
+  }, [currentProduct, products]);
+
+  const openProductModal = (product: Product) => {
+    setCurrentProduct(product);
+    setDownloadState(false);
+    setIsFavoriting(false);
+  };
+
+  const closeModal = () => {
+    setCurrentProduct(null);
+    setDownloadState(false);
+    setIsFavoriting(false);
+  };
+
+  const scrollSlider = (sliderId: string, amount: number) => {
+    const el = sliderRefs.current[sliderId];
+    if (!el) return;
+
+    el.scrollBy({
+      left: amount,
+      behavior: 'smooth',
+    });
+  };
+
+  const handleMouseDown = (sliderId: string, e: React.MouseEvent<HTMLDivElement>) => {
+    const el = sliderRefs.current[sliderId];
+    if (!el) return;
+
+    dragRef.current = {
+      id: sliderId,
+      isDown: true,
+      startX: e.pageX - el.offsetLeft,
+      scrollLeft: el.scrollLeft,
+    };
+
+    setDraggingSliderId(sliderId);
+  };
+
+  // --- 1. HANDLE DOWNLOAD (Saves to user_downloads table) ---
+  const handleDownloadSimple = async () => {
+    if (!currentProduct?.image_url) return;
+
     try {
-      setLoading(true);
-      // 1. Get Logged in User
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      setDownloadState(true);
+
+      // Log download to Supabase
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        await supabase.from('user_downloads').insert({
+          user_id: session.user.id,
+          product_id: currentProduct.id
+        });
+      }
+
+      // Execute File Download
+      const response = await fetch(currentProduct.image_url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `${currentProduct.item_code || currentProduct.title || 'fabric'}.webp`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(blobUrl);
+
+      setTimeout(() => {
+        setDownloadState(false);
+      }, 1500);
+
+    } catch (error) {
+      console.error('Download failed:', error);
+      setDownloadState(false);
+      alert('Failed to download image.');
+    }
+  };
+
+  // --- 2. HANDLE FAVORITE (Saves to user_favorites table) ---
+  const handleFavorite = async () => {
+    if (!currentProduct) return;
+
+    try {
+      setIsFavoriting(true);
+      const { data: { session } } = await supabase.auth.getSession();
       
-      if (sessionError || !session) {
-        router.push('/login');
+      if (!session?.user) {
+        alert("Please log in to save textures to your profile.");
+        setIsFavoriting(false);
         return;
       }
-      
-      setUser(session.user);
-      setEmail(session.user.email || '');
 
-      // 2. Fetch Profile Details
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .single();
+      // Insert into user_favorites table
+      const { error } = await supabase.from('user_favorites').insert({
+        user_id: session.user.id,
+        product_id: currentProduct.id
+      });
 
-      if (profileData && !profileError) {
-        setFirstName(profileData.first_name || '');
-        setLastName(profileData.last_name || '');
-        setBio(profileData.bio || '');
-        setGender(profileData.gender || '');
-        setBirthday(profileData.birthday || '');
-        setPhoneNumber(profileData.phone_number || '');
-        setAvatarUrl(profileData.avatar_url || '');
-      }
-
-      // 3. Fetch Saved Downloads
-      const { data: downloadsData, error: downloadsError } = await supabase
-        .from('user_downloads')
-        .select(`
-          id,
-          downloaded_at,
-          products (
-            id,
-            title,
-            image_url,
-            item_code,
-            collection_type,
-            dimensions,
-            subtitle,
-            description
-          )
-        `)
-        .eq('user_id', session.user.id)
-        .order('downloaded_at', { ascending: false });
-
-      if (downloadsData && !downloadsError) {
-        setSavedProducts(downloadsData);
+      if (error) {
+        // Handle duplicate saves gracefully
+        if (error.code === '23505') {
+          alert("This texture is already in your saved list!");
+        } else {
+          throw error;
+        }
+      } else {
+        alert("Texture saved to your profile!");
       }
 
     } catch (error) {
-      console.error('Error loading user data:', error);
+      console.error('Error saving favorite:', error);
+      alert("Failed to save texture.");
     } finally {
-      setLoading(false);
+      setIsFavoriting(false);
     }
   };
-
-  const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      setSaving(true);
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          first_name: firstName,
-          last_name: lastName,
-          bio: bio,
-          gender: gender,
-          birthday: birthday,
-          phone_number: phoneNumber,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', user.id);
-
-      if (error) throw error;
-      alert('Profile updated successfully!');
-      setEditingField(null); // Close any open edits on save
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      alert('Failed to update profile.');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      setUploading(true);
-      if (!event.target.files || event.target.files.length === 0) {
-        throw new Error('You must select an image to upload.');
-      }
-
-      const file = event.target.files[0];
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}-${Math.random()}.${fileExt}`;
-      const filePath = `${fileName}`;
-
-      // Upload image
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      // Get public URL
-      const { data: publicUrlData } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-
-      const newAvatarUrl = publicUrlData.publicUrl;
-
-      // Update Profile table
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({ avatar_url: newAvatarUrl })
-        .eq('id', user.id);
-
-      if (updateError) throw updateError;
-      
-      setAvatarUrl(newAvatarUrl);
-      
-    } catch (error) {
-      console.error('Error uploading avatar:', error);
-      alert('Error uploading avatar!');
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleRemoveSavedItem = async (downloadId: string | number) => {
-    // Optional: Add a confirmation dialog
-    if (!confirm("Are you sure you want to remove this texture from your saved list?")) return;
-
-    try {
-      const { error } = await supabase
-        .from('user_downloads')
-        .delete()
-        .eq('id', downloadId);
-
-      if (error) throw error;
-
-      // Remove item from UI instantly without refreshing
-      setSavedProducts(prev => prev.filter(item => item.id !== downloadId));
-    } catch (error) {
-      console.error('Error removing saved item:', error);
-      alert('Failed to remove item.');
-    }
-  };
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/login');
-  };
-
-  // Helper function to render a row that toggles between text and an input
-  const renderEditableRow = (
-    label: string, 
-    fieldKey: string, 
-    value: string, 
-    setter: (val: string) => void, 
-    inputType: 'text' | 'date' | 'select' = 'text',
-    options: string[] = []
-  ) => {
-    const isEditing = editingField === fieldKey;
-
-    return (
-      <div className="flex justify-between items-center p-4 border-b border-white/5 last:border-0 min-h-[56px]">
-        <span className="text-sm text-zinc-300 w-1/3">{label}</span>
-        <div className="flex items-center w-2/3 justify-end">
-          {isEditing ? (
-            inputType === 'select' ? (
-              <select
-                value={value}
-                onChange={(e) => setter(e.target.value)}
-                onBlur={() => setEditingField(null)}
-                autoFocus
-                className="bg-transparent text-right text-sm text-white outline-none w-full appearance-none"
-                style={{ direction: 'rtl' }}
-              >
-                <option value="" disabled className="bg-[#1a1a1a]">Select</option>
-                {options.map(opt => (
-                  <option key={opt} value={opt} className="bg-[#1a1a1a]">{opt}</option>
-                ))}
-              </select>
-            ) : (
-              <input
-                type={inputType}
-                value={value}
-                onChange={(e) => setter(e.target.value)}
-                onBlur={() => setEditingField(null)}
-                onKeyDown={(e) => e.key === 'Enter' && setEditingField(null)}
-                autoFocus
-                className="bg-transparent border-b border-[#B08038] text-right text-sm text-white outline-none w-full pb-1"
-                style={inputType === 'date' ? { colorScheme: 'dark' } : {}}
-              />
-            )
-          ) : (
-            <div 
-              className="flex items-center cursor-pointer group justify-end w-full"
-              onClick={() => setEditingField(fieldKey)}
-            >
-              <span className={`text-sm text-right truncate ${value ? 'text-white' : 'text-[#B08038]'}`}>
-                {value || 'Set Now'}
-              </span>
-              <FaChevronRight className="ml-3 text-zinc-600 text-xs group-hover:text-[#B08038] transition-colors" />
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <div className="w-12 h-12 border-2 border-white/10 border-t-[#B08038] rounded-full animate-spin" />
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white pt-28 pb-20 px-6 lg:px-16 font-['Prompt'] relative">
-      <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-12 lg:gap-20">
-        
-        {/* Left Column - Profile Info & Edit */}
-        <div className="w-full lg:w-1/3 flex flex-col">
-          
-          <form onSubmit={handleUpdateProfile} className="space-y-6">
-            
-            {/* Avatar Centered */}
-            <div className="flex flex-col items-center justify-center pt-4 pb-6 border-b border-white/5">
-              <div className="relative group mb-3">
-                <div className="w-24 h-24 rounded-full overflow-hidden bg-zinc-800 shadow-xl flex items-center justify-center border border-white/10">
-                  {avatarUrl ? (
-                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                  ) : (
-                    <FaUser className="text-4xl text-zinc-500" />
-                  )}
-                </div>
-                {/* Upload Button Overlay */}
-                <label className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition-opacity duration-300">
-                  <FaCamera className="text-white text-xl" />
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    onChange={handleAvatarUpload} 
-                    disabled={uploading}
-                    className="hidden" 
-                  />
-                </label>
-              </div>
-              <label className="text-zinc-400 text-sm flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
-                <FaPencil className="text-xs" /> Edit Profile Picture
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handleAvatarUpload} 
-                  disabled={uploading}
-                  className="hidden" 
-                />
-              </label>
+    <div className="bg-[#0a0a0a] text-white overflow-x-hidden antialiased font-sans">
+      <header
+        className="relative min-h-[70vh] flex items-center overflow-hidden pt-20 text-left"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, rgba(10, 10, 10, 0.7) 0%, rgba(10, 10, 10, 0.4) 50%, rgba(10, 10, 10, 0.1) 100%), url('https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/luxe_series/Asset%20135@2x.webp')",
+          backgroundSize: '100%',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        <div className="container mx-auto px-8 lg:px-24 z-20">
+          <div className="max-w-2xl animate-reveal">
+            <div className="flex gap-1 h-1.5 w-28 mb-10">
+              <div className="bg-gray-600 w-1/3"></div>
+              <div className="bg-red-900 w-1/3"></div>
+              <div className="bg-[#B08038] w-1/3"></div>
             </div>
 
-            {/* List Group 1: Name & Bio */}
-            <div className="bg-white/5 rounded-lg border border-white/5 overflow-hidden">
-              {renderEditableRow('First Name', 'firstName', firstName, setFirstName)}
-              {renderEditableRow('Last Name', 'lastName', lastName, setLastName)}
-              {renderEditableRow('Bio', 'bio', bio, setBio)}
-            </div>
-
-            {/* List Group 2: Gender & Birthday */}
-            <div className="bg-white/5 rounded-lg border border-white/5 overflow-hidden">
-              {renderEditableRow('Gender', 'gender', gender, setGender, 'select', ['Male', 'Female', 'Other'])}
-              {renderEditableRow('Birthday', 'birthday', birthday, setBirthday, 'date')}
-            </div>
-
-            {/* List Group 3: Contact */}
-            <div className="bg-white/5 rounded-lg border border-white/5 overflow-hidden">
-              {renderEditableRow('Phone', 'phone', phoneNumber, setPhoneNumber)}
-              <div className="flex justify-between items-center p-4 border-b border-white/5 last:border-0 min-h-[56px]">
-                <span className="text-sm text-zinc-300 w-1/3">Email</span>
-                <div className="flex items-center w-2/3 justify-end">
-                  <span className="text-sm text-zinc-500 truncate">{email}</span>
-                  <FaChevronRight className="ml-3 text-zinc-600 text-xs opacity-0" />
-                </div>
-              </div>
-            </div>
-
-            {/* Save & Sign Out Buttons */}
-            <div className="flex items-center justify-between pt-4">
-              <button 
-                type="button"
-                onClick={handleSignOut}
-                className="text-zinc-500 text-xs flex items-center gap-2 hover:text-white transition-colors"
-              >
-                <FaArrowRightFromBracket /> Sign Out
-              </button>
-              
-              <button 
-                type="submit" 
-                disabled={saving}
-                className="bg-[#B08038] text-white px-6 py-2 rounded-sm text-xs font-medium tracking-wide hover:bg-[#8f662a] transition-colors disabled:opacity-50"
-              >
-                {saving ? 'Saving...' : 'Save Profile'}
-              </button>
-            </div>
-
-          </form>
-        </div>
-
-        {/* Right Column - Saved Downloads */}
-        <div className="w-full lg:w-2/3 lg:pl-12 lg:border-l border-white/10 mt-10 lg:mt-0">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-xl md:text-2xl font-medium tracking-wide text-white uppercase">Saved Textures</h2>
-            <span className="text-zinc-500 text-xs">{savedProducts.length} Items</span>
+            <h1 className="text-5xl lg:text-8xl font-bold tracking-tight mb-6 leading-none">
+              <span className="text-[#B08038]">Fabric</span>
+              <br />
+              <span className="text-[#c2bfb6]">Collection</span>
+            </h1>
           </div>
+        </div>
+      </header>
 
-          {savedProducts.length === 0 ? (
-            <div className="bg-white/5 border border-white/10 rounded-sm p-12 text-center flex flex-col items-center">
-              <FaDownload className="text-4xl text-zinc-600 mb-4" />
-              <h3 className="text-white font-medium mb-2">No textures saved yet.</h3>
-              <p className="text-zinc-500 text-sm max-w-sm mb-6">
-                Explore our collections and click "Favorite" or "Download Simple" to save materials to your project board.
-              </p>
-              <Link href="/introduction" className="bg-[#B08038] text-white px-8 py-3 text-[10px] uppercase tracking-widest rounded-sm hover:bg-[#8f662a] transition-colors">
-                Explore Collections
-              </Link>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-              {savedProducts.map((savedItem) => {
-                const product = savedItem.products;
-                if (!product) return null;
+      <main className="max-w-[1600px] mx-auto px-8 lg:px-16 py-20 min-h-[50vh]">
+        {loading && (
+          <div className="flex flex-col items-center justify-center space-y-4 py-20 opacity-60">
+            <div className="w-12 h-12 border-2 border-white/10 border-t-[#B08038] rounded-full animate-spin"></div>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-medium text-center">
+              Loading Fabric Textures.
+            </p>
+          </div>
+        )}
 
-                return (
-                  <div key={savedItem.id} className="group relative bg-[#050505] border border-white/10 rounded-sm overflow-hidden hover:border-[#B08038]/50 transition-colors flex flex-col">
-                    
-                    <div 
-                      className="aspect-square p-4 bg-zinc-900/50 flex items-center justify-center overflow-hidden cursor-pointer relative"
-                      onClick={() => setSelectedProduct(product)}
-                    >
-                      <img 
-                        src={product.image_url} 
-                        alt={product.title} 
-                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" 
-                      />
-                      {/* Hover Overlay for View */}
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
-                        <span className="flex items-center gap-2 text-white text-xs uppercase tracking-widest font-bold border border-white/30 px-4 py-2 bg-black/40">
-                          <FaEye /> View
-                        </span>
-                      </div>
+        {!loading && errorMsg && (
+          <div className="py-20 text-center">
+            <p className="text-red-500">{errorMsg}</p>
+          </div>
+        )}
+
+        {!loading && !errorMsg && (
+          <div>
+            {groupedProducts.map((group, i) => {
+              const sliderId = `slider-${i}`;
+              const mainItem = group.mainItem;
+
+              return (
+                <section
+                  key={group.title}
+                  className="product-card mb-24 lg:mb-[12rem] animate-reveal"
+                  style={{ animationDelay: `${i * 0.1}s` }}
+                >
+                  <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center justify-center max-w-5xl lg:max-w-6xl mx-auto">
+                    <div className="w-full lg:w-1/2 relative group flex justify-center cursor-zoom-in">
+                      <button
+                        type="button"
+                        onClick={() => openProductModal(mainItem)}
+                        className="w-full flex justify-center bg-transparent border-0 p-0"
+                      >
+                        <div className="absolute inset-0 bg-[#B08038]/10 blur-[80px] rounded-full pointer-events-none w-3/4 mx-auto h-3/4 mt-8"></div>
+
+                        <div className="texture-preview-container relative z-10 w-[85%] lg:w-full max-w-[450px] lg:max-w-[550px] shadow-2xl">
+                          <img
+                            src={mainItem.image_url || ''}
+                            alt={group.title}
+                            className="transition-all duration-700 group-hover:scale-105"
+                          />
+
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <div className="p-4 border border-white/30 bg-black/40 backdrop-blur-md text-white text-[10px] uppercase tracking-widest font-bold">
+                              Quick View
+                            </div>
+                          </div>
+                        </div>
+                      </button>
                     </div>
-                    
-                    <div className="p-4 border-t border-white/5 flex-grow flex flex-col justify-between">
-                      <div>
-                        <h4 className="text-[#B08038] text-xs font-bold uppercase tracking-wider mb-1 truncate">
-                          {product.title}
+
+                    <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
+                      <h2 className="text-3xl lg:text-5xl font-bold uppercase mb-8 tracking-wide text-[#B08038]">
+                        {group.title}
+                      </h2>
+
+                      <div className="w-[85%] lg:w-full max-w-[300px] lg:max-w-[400px] text-left mb-8 px-2 lg:px-0">
+                        <h4 className="text-white text-xs lg:text-sm font-bold mb-2">
+                          Size
                         </h4>
-                        <p className="text-zinc-500 text-[10px] tracking-widest uppercase mb-4">
-                          {product.item_code}
+                        <p className="text-[#c2bfb6] text-[11px] lg:text-sm leading-relaxed whitespace-pre-line">
+                          {mainItem.dimensions || 'W1220 x H2440 x T5+- mm.\nW1220 x H2800 x T5+- mm.'}
                         </p>
                       </div>
-                      
-                      {/* Actions Footer */}
-                      <div className="flex justify-between items-center pt-3 border-t border-white/5">
-                        <button 
-                          onClick={() => setSelectedProduct(product)}
-                          className="text-[10px] uppercase tracking-wider text-zinc-400 hover:text-white transition-colors"
+
+                      <div className="flex items-center gap-4 lg:gap-6 mb-10 w-full justify-center lg:justify-start">
+                        <button
+                          type="button"
+                          className="w-8 h-8 lg:w-10 lg:h-10 rounded-full border border-white/40 flex items-center justify-center text-white/70 hover:border-[#B08038] hover:text-[#B08038] transition-colors"
+                          onClick={() => scrollSlider(sliderId, -200)}
                         >
-                          Details
+                          <FaChevronLeft className="text-[10px] lg:text-[12px]" />
                         </button>
-                        <button 
-                          onClick={() => handleRemoveSavedItem(savedItem.id)}
-                          className="text-zinc-600 hover:text-red-500 transition-colors p-1"
-                          title="Remove from saved"
+
+                        <div
+                          ref={(el) => {
+                            sliderRefs.current[sliderId] = el;
+                          }}
+                          onMouseDown={(e) => handleMouseDown(sliderId, e)}
+                          className={`flex gap-4 lg:gap-5 overflow-x-auto no-scrollbar w-[240px] lg:w-[400px] snap-x cursor-grab py-2 select-none ${
+                            draggingSliderId === sliderId ? 'grabbing' : ''
+                          }`}
                         >
-                          <FaTrash className="text-sm" />
+                          {group.variants.map((variant) => (
+                            <button
+                              key={variant.id}
+                              type="button"
+                              onClick={() => openProductModal(variant)}
+                              className="flex-none w-[70px] lg:w-[100px] aspect-square opacity-90 hover:opacity-100 cursor-pointer transition-all snap-center hover:scale-105 border border-white/10 hover:border-[#B08038] overflow-hidden"
+                            >
+                              <img
+                                src={variant.image_url || ''}
+                                alt={variant.item_code || variant.title || ''}
+                                className="w-full h-full object-cover pointer-events-none"
+                              />
+                            </button>
+                          ))}
+                        </div>
+
+                        <button
+                          type="button"
+                          className="w-8 h-8 lg:w-10 lg:h-10 rounded-full border border-white/40 flex items-center justify-center text-white/70 hover:border-[#B08038] hover:text-[#B08038] transition-colors"
+                          onClick={() => scrollSlider(sliderId, 200)}
+                        >
+                          <FaChevronRight className="text-[10px] lg:text-[12px]" />
                         </button>
                       </div>
+
+                      <button
+                        type="button"
+                        className="border border-white/60 text-white px-8 py-2 lg:px-10 lg:py-3 lg:text-sm rounded-lg text-xs font-medium tracking-wide hover:bg-white hover:text-black transition-colors"
+                        onClick={() => openProductModal(mainItem)}
+                      >
+                        Learn more
+                      </button>
                     </div>
-
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
+                </section>
+              );
+            })}
+          </div>
+        )}
+      </main>
 
-      {/* Product Detail Modal */}
-      {selectedProduct && (
-        <div 
+      {currentProduct && (
+        <div
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md transition-opacity duration-300"
           onClick={(e) => {
-            if (e.target === e.currentTarget) setSelectedProduct(null);
+            if (e.target === e.currentTarget) closeModal();
           }}
         >
-          <div className="relative w-full max-w-4xl bg-[#0a0a0a] border border-white/10 rounded-sm overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
-            
+          <div className="relative w-full max-w-5xl bg-[#0a0a0a] border border-white/10 rounded-sm overflow-hidden shadow-2xl flex flex-col lg:flex-row max-h-[95vh]">
             <button
               type="button"
-              onClick={() => setSelectedProduct(null)}
+              onClick={closeModal}
               className="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-[#B08038] transition-colors"
             >
               <FaXmark />
             </button>
 
-            {/* Left side: Image */}
-            <div className="w-full md:w-1/2 bg-[#050505] flex items-center justify-center p-8 relative min-h-[300px]">
+            <div className="w-full lg:w-1/2 bg-[#050505] flex items-center justify-center p-8 relative">
               <div className="w-full aspect-square relative border border-white/5">
                 <img
-                  src={selectedProduct.image_url || ''}
-                  alt={selectedProduct.title || ''}
+                  src={currentProduct.image_url || ''}
+                  alt={currentProduct.title || ''}
                   className="w-full h-full object-cover"
                 />
               </div>
             </div>
 
-            {/* Right side: Details */}
-            <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col overflow-y-auto no-scrollbar text-left relative bg-[#0a0a0a]">
-              <div className="mb-6">
-                <h2 className="text-3xl md:text-4xl text-[#B08038] font-medium mb-2 leading-tight uppercase tracking-wide">
-                  {selectedProduct.title}
+            <div className="w-full lg:w-1/2 p-8 lg:p-10 flex flex-col overflow-y-auto no-scrollbar text-left relative bg-[#0a0a0a]">
+              <div className="mb-4">
+                <h2 className="text-4xl lg:text-5xl text-[#B08038] font-medium mb-2 leading-tight">
+                  {currentProduct.title}
                 </h2>
+
                 <p className="text-white text-[10px] tracking-[0.3em] uppercase mb-4 font-bold">
-                  {selectedProduct.subtitle || selectedProduct.collection_type?.replace('_', ' ') || 'Collection'}
+                  {currentProduct.subtitle || 'Fabric Collection'}
                 </p>
-                <p className="text-zinc-400 text-sm leading-relaxed font-light">
-                  {selectedProduct.description || 'Premium architectural material saved from your Wallcraft gallery.'}
+
+                <p className="text-[#c2bfb6] text-sm leading-relaxed opacity-80 font-light">
+                  {currentProduct.description || 'Premium textured finish.'}
                 </p>
               </div>
 
               <hr className="border-white/10 mb-6" />
 
-              <div className="mb-8 p-5 bg-white/5 rounded-sm border border-white/5 space-y-4">
+              <div className="mb-6">
+                <span className="block text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-3">
+                  Available Styles
+                </span>
+
+                <div className="flex flex-wrap gap-3">
+                  {currentVariants.map((variant) => {
+                    const isActive = variant.id === currentProduct.id;
+                    const suffix = variant.item_code?.split('-').pop() || variant.item_code || '-';
+
+                    return (
+                      <button
+                        key={variant.id}
+                        type="button"
+                        onClick={() => openProductModal(variant)}
+                        className="group flex flex-col items-center gap-1 cursor-pointer"
+                      >
+                        <div
+                          className={`w-16 h-16 border transition-all overflow-hidden ${
+                            isActive
+                              ? 'border-[#B08038] scale-105'
+                              : 'border-white/20 group-hover:border-[#B08038]'
+                          }`}
+                        >
+                          <img
+                            src={variant.image_url || ''}
+                            alt={variant.item_code || variant.title || ''}
+                            className="w-full h-full object-cover pointer-events-none"
+                          />
+                        </div>
+
+                        <span
+                          className={`text-[9px] uppercase tracking-widest ${
+                            isActive ? 'text-[#B08038] font-bold' : 'text-zinc-500'
+                          }`}
+                        >
+                          {suffix}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="mb-8 p-4 bg-white/5 rounded-sm border border-white/5 space-y-4">
                 <div className="flex justify-between items-start gap-6">
                   <div>
                     <span className="block text-zinc-500 text-[9px] uppercase tracking-wider mb-1">
                       Dimensions
                     </span>
-                    <span className="text-[#c2bfb6] text-xs font-light whitespace-pre-line leading-relaxed block">
-                      {selectedProduct.dimensions || 'Standard Form'}
+                    <span className="text-[#c2bfb6] text-xs font-light whitespace-pre-line leading-relaxed">
+                      {currentProduct.dimensions || 'Standard Form'}
                     </span>
                   </div>
 
@@ -522,40 +568,101 @@ export default function ProfilePage() {
                       Ref Code
                     </span>
                     <span className="text-[#B08038] text-xs tracking-wider">
-                      {selectedProduct.item_code || '-'}
+                      {currentProduct.item_code || '-'}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-auto pt-6">
-                <a
-                  href={selectedProduct.image_url}
-                  download={`${selectedProduct.item_code || 'texture'}.webp`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-4 bg-white hover:bg-[#B08038] text-black hover:text-white uppercase text-[11px] font-bold tracking-[0.2em] rounded-sm flex items-center justify-center gap-2 transition-colors"
-                >
-                  <FaDownload /> Download
-                </a>
+              <div className="mt-auto pt-6 border-t border-white/10 flex flex-col gap-5">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl text-white font-medium">
+                    {currentProduct.price
+                      ? `฿${Number(currentProduct.price).toLocaleString()}`
+                      : '฿ -'}
+                  </span>
+                </div>
+
+                <div className="flex gap-4 w-full">
+                  
+                  {/* --- DOWNLOAD BUTTON --- */}
+                  <button
+                    type="button"
+                    onClick={handleDownloadSimple}
+                    disabled={downloadState}
+                    className={`flex-1 py-4 uppercase text-[11px] font-bold tracking-[0.2em] rounded-sm flex items-center justify-center gap-2 transition-colors ${
+                      downloadState
+                        ? 'bg-[#B08038] text-white cursor-not-allowed'
+                        : 'bg-white text-black hover:bg-[#B08038] hover:text-white'
+                    }`}
+                  >
+                    {downloadState ? 'DOWNLOADING...' : 'Download Simple'}
+                  </button>
+
+                  {/* --- FAVORITE BUTTON --- */}
+                  <button
+                    type="button"
+                    onClick={handleFavorite}
+                    disabled={isFavoriting}
+                    className="flex-1 py-4 border border-white/20 text-white hover:border-[#B08038] hover:text-[#B08038] transition-colors uppercase text-[11px] font-bold tracking-[0.2em] rounded-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isFavoriting ? 'SAVING...' : <>Favorite <FaHeart /></>}
+                  </button>
+                  
+                </div>
               </div>
             </div>
-
           </div>
         </div>
       )}
 
-      {/* Hide Scrollbar for Modal content */}
-      <style jsx global>{`
+      <style jsx>{`
+        .animate-reveal {
+          animation: reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+
+        @keyframes reveal {
+          0% {
+            transform: translateY(80px);
+            opacity: 0;
+          }
+          100% {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+
         .no-scrollbar::-webkit-scrollbar {
           display: none;
         }
+
         .no-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
-      `}</style>
 
+        .texture-preview-container {
+          width: 100%;
+          aspect-ratio: 1 / 1;
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          border-radius: 2px;
+          border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .texture-preview-container img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .grabbing {
+          cursor: grabbing !important;
+        }
+      `}</style>
     </div>
   );
 }

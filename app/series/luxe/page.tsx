@@ -328,7 +328,7 @@ export default function App() {
 
                 {/* Mobile Description */}
                 {isActive && (
-                  <div className="md:hidden mt-8 px-8 w-full animate-fade-in-up">
+                  <div className="text-[#c2bfb6] md:hidden mt-8 px-8 w-full animate-fade-in-up">
                     <div className="bg-zinc-900/90 p-6 border-t-2 border-[#B08038] rounded-b-xl text-center">
                       <h3 className="headline-gold font-bold text-lg uppercase mb-2">{layer.title}</h3>
                       <p className="text-gray-200 text-[11px] leading-relaxed">{layer.description}</p>
@@ -340,7 +340,7 @@ export default function App() {
           })}
         </div>
 
-        <div className="mt-12 flex flex-col items-center gap-6 relative z-40">
+        <div className="text-[#c2bfb6] mt-12 flex flex-col items-center gap-6 relative z-40">
           <button onClick={() => toggleLayer(activeLayerIndex !== null ? activeLayerIndex : 0)} className="btn-explore">
             {isStacked ? 'Explore Layers' : 'Stack Layers'}
           </button>

@@ -403,7 +403,7 @@ export default function App() {
                                     </div>
 
                                     {isActive && (
-                                        <div className="md:hidden mt-10 px-8 w-full animate-fade-in-up">
+                                        <div className="text-[#c2bfb6] md:hidden mt-10 px-8 w-full animate-fade-in-up">
                                             <div className="bg-zinc-900/90 p-6 border-t-2 border-[#B08038] rounded-b-xl">
                                                 <h3 className="headline-gold font-bold text-lg uppercase mb-2">{layer.title}</h3>
                                                 <p className="text-[#c2bfb6] text-sm leading-relaxed">{layer.description}</p>
@@ -415,7 +415,7 @@ export default function App() {
                         })}
                     </div>
 
-                    <div className="mt-12 flex flex-col items-center gap-6 relative z-40">
+                    <div className="text-[#c2bfb6] mt-12 flex flex-col items-center gap-6 relative z-40">
                         <button onClick={() => { setIsStacked(!isStacked); setActiveLayerIndex(null); }} className="btn-explore">
                             {isStacked ? 'Explore Layers' : 'Stack Layers'}
                         </button>
@@ -445,7 +445,7 @@ export default function App() {
                                 <h2 className="text-4xl md:text-6xl font-light leading-tight mt-6 mb-8 text-[#B08038]">
                                     {col.title} <span className="text-[#c2bfb6] block">Collection</span>
                                 </h2>
-                                <a href={col.link} className="inline-block border border-gray-700 px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-[#c2bfb6] hover:bg-white hover:text-black transition-all">
+                                <a href={col.link} className="inline-block border border-'rgba(194, 191, 182, 0.4)' px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-[#c2bfb6] hover:bg-white hover:text-black transition-all">
                                     View Collection
                                 </a>
                             </div>

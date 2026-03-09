@@ -107,7 +107,7 @@ const CollectionSection = ({
           <p className="text-[10px] md:text-sm font-light leading-relaxed max-w-md mb-10 text-[#c2bfb6]">
             {desc}
           </p>
-          <a href={link} className="inline-block border border-[#c2bfb6] px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-[#c2bfb6] hover:bg-white hover:text-black transition-all">
+          <a href={link} className="inline-block border border-'rgba(194, 191, 182, 0.4)' px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-[#c2bfb6] hover:bg-white hover:text-black transition-all">
             Learn More
           </a>
         </div>
@@ -351,7 +351,7 @@ export default function App() {
 
                 {/* Mobile Description */}
                 {isActive && (
-                  <div className="md:hidden mt-8 px-8 w-full animate-fade-in-up">
+                  <div className="text-[#c2bfb6] md:hidden mt-8 px-8 w-full animate-fade-in-up">
                     <div className="bg-zinc-900/90 p-6 border-t-2 border-[#B08038] rounded-b-xl text-center">
                       <h3 className="headline-gold font-bold text-lg uppercase mb-2">{layer.title}</h3>
                       <p className="text-[#c2bfb6] text-[11px] leading-relaxed">{layer.description}</p>
@@ -363,7 +363,7 @@ export default function App() {
           })}
         </div>
 
-        <div className="mt-12 flex flex-col items-center gap-6 relative z-40">
+        <div className="text-[#c2bfb6] mt-12 flex flex-col items-center gap-6 relative z-40">
           <button onClick={() => toggleLayer(activeLayerIndex !== null ? activeLayerIndex : 0)} className="btn-explore">
             {isStacked ? 'Explore Layers' : 'Stack Layers'}
           </button>

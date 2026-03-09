@@ -41,7 +41,7 @@ export default function LoginPage() {
       setSuccessMsg("Login successful! Redirecting...");
       
       setTimeout(() => {
-        router.push('/profile');
+        router.push('/');
       }, 1000);
 
     } catch (err: any) {

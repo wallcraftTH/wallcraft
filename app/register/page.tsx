@@ -62,7 +62,7 @@ export default function RegisterPage() {
       
       // Optional: Auto-redirect to login after 3 seconds
       setTimeout(() => {
-        router.push('/login');
+        router.push('/');
       }, 3000);
 
     } catch (err: any) {

@@ -347,7 +347,7 @@ export default function ProfilePage() {
               <p className="text-zinc-500 text-sm max-w-sm mb-6">
                 Explore our collections and click "Favorite" or "Download Simple" to save materials to your project board.
               </p>
-              <Link href="/series/luxe" className="bg-[#B08038] text-white px-8 py-3 text-[10px] uppercase tracking-widest rounded-sm hover:bg-[#8f662a] transition-colors">
+              <Link href="/introduction" className="bg-[#B08038] text-white px-8 py-3 text-[10px] uppercase tracking-widest rounded-sm hover:bg-[#8f662a] transition-colors">
                 Explore Collections
               </Link>
             </div>

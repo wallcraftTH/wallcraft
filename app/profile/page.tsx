@@ -4,7 +4,17 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { FaCamera, FaArrowRightFromBracket, FaDownload, FaUser, FaChevronRight, FaPencil } from 'react-icons/fa6';
+import { 
+  FaCamera, 
+  FaArrowRightFromBracket, 
+  FaDownload, 
+  FaUser, 
+  FaChevronRight, 
+  FaPencil, 
+  FaTrash, 
+  FaXmark,
+  FaEye
+} from 'react-icons/fa6';
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -24,6 +34,9 @@ export default function ProfilePage() {
   // Track which field is currently being edited
   const [editingField, setEditingField] = useState<string | null>(null);
   
+  // Detail Modal State
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  
   // Profile Data
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -40,6 +53,18 @@ export default function ProfilePage() {
   useEffect(() => {
     fetchUserData();
   }, []);
+
+  // Prevent scrolling when modal is open
+  useEffect(() => {
+    if (selectedProduct) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedProduct]);
 
   const fetchUserData = async () => {
     try {
@@ -83,7 +108,10 @@ export default function ProfilePage() {
             title,
             image_url,
             item_code,
-            collection_type
+            collection_type,
+            dimensions,
+            subtitle,
+            description
           )
         `)
         .eq('user_id', session.user.id)
@@ -172,6 +200,26 @@ export default function ProfilePage() {
     }
   };
 
+  const handleRemoveSavedItem = async (downloadId: string | number) => {
+    // Optional: Add a confirmation dialog
+    if (!confirm("Are you sure you want to remove this texture from your saved list?")) return;
+
+    try {
+      const { error } = await supabase
+        .from('user_downloads')
+        .delete()
+        .eq('id', downloadId);
+
+      if (error) throw error;
+
+      // Remove item from UI instantly without refreshing
+      setSavedProducts(prev => prev.filter(item => item.id !== downloadId));
+    } catch (error) {
+      console.error('Error removing saved item:', error);
+      alert('Failed to remove item.');
+    }
+  };
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.push('/login');
@@ -244,7 +292,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white pt-28 pb-20 px-6 lg:px-16 font-['Prompt']">
+    <div className="min-h-screen bg-[#0a0a0a] text-white pt-28 pb-20 px-6 lg:px-16 font-['Prompt'] relative">
       <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-12 lg:gap-20">
         
         {/* Left Column - Profile Info & Edit */}
@@ -358,23 +406,51 @@ export default function ProfilePage() {
                 if (!product) return null;
 
                 return (
-                  <div key={savedItem.id} className="group relative bg-[#050505] border border-white/10 rounded-sm overflow-hidden hover:border-[#B08038]/50 transition-colors">
+                  <div key={savedItem.id} className="group relative bg-[#050505] border border-white/10 rounded-sm overflow-hidden hover:border-[#B08038]/50 transition-colors flex flex-col">
                     
-                    <div className="aspect-square p-4 bg-zinc-900/50 flex items-center justify-center overflow-hidden">
+                    <div 
+                      className="aspect-square p-4 bg-zinc-900/50 flex items-center justify-center overflow-hidden cursor-pointer relative"
+                      onClick={() => setSelectedProduct(product)}
+                    >
                       <img 
                         src={product.image_url} 
                         alt={product.title} 
                         className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" 
                       />
+                      {/* Hover Overlay for View */}
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                        <span className="flex items-center gap-2 text-white text-xs uppercase tracking-widest font-bold border border-white/30 px-4 py-2 bg-black/40">
+                          <FaEye /> View
+                        </span>
+                      </div>
                     </div>
                     
-                    <div className="p-4 border-t border-white/5">
-                      <h4 className="text-[#B08038] text-xs font-bold uppercase tracking-wider mb-1 truncate">
-                        {product.title}
-                      </h4>
-                      <p className="text-zinc-500 text-[10px] tracking-widest uppercase">
-                        {product.item_code}
-                      </p>
+                    <div className="p-4 border-t border-white/5 flex-grow flex flex-col justify-between">
+                      <div>
+                        <h4 className="text-[#B08038] text-xs font-bold uppercase tracking-wider mb-1 truncate">
+                          {product.title}
+                        </h4>
+                        <p className="text-zinc-500 text-[10px] tracking-widest uppercase mb-4">
+                          {product.item_code}
+                        </p>
+                      </div>
+                      
+                      {/* Actions Footer */}
+                      <div className="flex justify-between items-center pt-3 border-t border-white/5">
+                        <button 
+                          onClick={() => setSelectedProduct(product)}
+                          className="text-[10px] uppercase tracking-wider text-zinc-400 hover:text-white transition-colors"
+                        >
+                          Details
+                        </button>
+                        <button 
+                          onClick={() => handleRemoveSavedItem(savedItem.id)}
+                          className="text-zinc-600 hover:text-red-500 transition-colors p-1"
+                          title="Remove from saved"
+                        >
+                          <FaTrash className="text-sm" />
+                        </button>
+                      </div>
                     </div>
 
                   </div>
@@ -383,8 +459,103 @@ export default function ProfilePage() {
             </div>
           )}
         </div>
-
       </div>
+
+      {/* Product Detail Modal */}
+      {selectedProduct && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md transition-opacity duration-300"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedProduct(null);
+          }}
+        >
+          <div className="relative w-full max-w-4xl bg-[#0a0a0a] border border-white/10 rounded-sm overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
+            
+            <button
+              type="button"
+              onClick={() => setSelectedProduct(null)}
+              className="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-[#B08038] transition-colors"
+            >
+              <FaXmark />
+            </button>
+
+            {/* Left side: Image */}
+            <div className="w-full md:w-1/2 bg-[#050505] flex items-center justify-center p-8 relative min-h-[300px]">
+              <div className="w-full aspect-square relative border border-white/5">
+                <img
+                  src={selectedProduct.image_url || ''}
+                  alt={selectedProduct.title || ''}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+
+            {/* Right side: Details */}
+            <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col overflow-y-auto no-scrollbar text-left relative bg-[#0a0a0a]">
+              <div className="mb-6">
+                <h2 className="text-3xl md:text-4xl text-[#B08038] font-medium mb-2 leading-tight uppercase tracking-wide">
+                  {selectedProduct.title}
+                </h2>
+                <p className="text-white text-[10px] tracking-[0.3em] uppercase mb-4 font-bold">
+                  {selectedProduct.subtitle || selectedProduct.collection_type?.replace('_', ' ') || 'Collection'}
+                </p>
+                <p className="text-zinc-400 text-sm leading-relaxed font-light">
+                  {selectedProduct.description || 'Premium architectural material saved from your Wallcraft gallery.'}
+                </p>
+              </div>
+
+              <hr className="border-white/10 mb-6" />
+
+              <div className="mb-8 p-5 bg-white/5 rounded-sm border border-white/5 space-y-4">
+                <div className="flex justify-between items-start gap-6">
+                  <div>
+                    <span className="block text-zinc-500 text-[9px] uppercase tracking-wider mb-1">
+                      Dimensions
+                    </span>
+                    <span className="text-[#c2bfb6] text-xs font-light whitespace-pre-line leading-relaxed block">
+                      {selectedProduct.dimensions || 'Standard Form'}
+                    </span>
+                  </div>
+
+                  <div className="text-right">
+                    <span className="block text-zinc-500 text-[9px] uppercase tracking-wider mb-1">
+                      Ref Code
+                    </span>
+                    <span className="text-[#B08038] text-xs tracking-wider">
+                      {selectedProduct.item_code || '-'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-auto pt-6">
+                <a
+                  href={selectedProduct.image_url}
+                  download={`${selectedProduct.item_code || 'texture'}.webp`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-4 bg-white hover:bg-[#B08038] text-black hover:text-white uppercase text-[11px] font-bold tracking-[0.2em] rounded-sm flex items-center justify-center gap-2 transition-colors"
+                >
+                  <FaDownload /> Download
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* Hide Scrollbar for Modal content */}
+      <style jsx global>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
     </div>
   );
 }

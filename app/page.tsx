@@ -63,7 +63,6 @@ export default function HomePage() {
             });
             
             // 3. Fade In (Simulate load complete)
-            // In a real app, you might use onLoadingComplete, but timeout is smoother for this loop
             setTimeout(() => {
                setFadingIndices(prev => prev.filter(i => i !== cardIndex));
             }, 100); 
@@ -86,7 +85,10 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="bg-black min-h-screen text-[#808080] font-sans antialiased selection:bg-[#B08038] selection:text-white overflow-x-hidden relative">
+    <div 
+      className="bg-black min-h-screen text-[#808080] antialiased selection:bg-[#B08038] selection:text-white overflow-x-hidden relative"
+      style={{ fontFamily: "'Helvetica', 'LINE Seed Sans TH', sans-serif" }}
+    >
       
       <main className="relative min-h-screen flex flex-col lg:flex-row items-center justify-between pt-32 pb-12 px-6 md:px-16 max-w-[1900px] mx-auto overflow-hidden z-10">
         
@@ -113,7 +115,7 @@ export default function HomePage() {
 
             {/* Buttons */}
             <div className="flex flex-wrap gap-4 mt-12">
-                <Link href="/introduction" className="group flex items-center px-8 py-4 bg-zinc-800 text[#c2bfb6] font-bold rounded-full hover:bg-zinc-700 transition-all uppercase text-[11px] tracking-widest">
+                <Link href="/introduction" className="group flex items-center px-8 py-4 bg-zinc-800 text-[#c2bfb6] font-bold rounded-full hover:bg-zinc-700 transition-all uppercase text-[11px] tracking-widest">
                     Learn More <FaArrowRight className="ml-2 transition-transform group-hover:translate-x-1 text-[#c2bfb6]" />
                 </Link>
                 <Link href="/series" className="group flex items-center px-8 py-4 bg-transparent border border-zinc-600 text-[#c2bfb6] font-bold rounded-full hover:bg-white/5 transition-all uppercase text-[11px] tracking-widest">
@@ -156,6 +158,22 @@ export default function HomePage() {
 
       {/* --- Page Specific Styles --- */}
       <style jsx global>{`
+        /* LINE Seed Sans TH Web Fonts via jsDelivr CDN */
+        @font-face {
+            font-family: 'LINE Seed Sans TH';
+            src: url('https://cdn.jsdelivr.net/gh/line/line-seed@main/fonts/th/woff2/LINESeedSansTH_W_Rg.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'LINE Seed Sans TH';
+            src: url('https://cdn.jsdelivr.net/gh/line/line-seed@main/fonts/th/woff2/LINESeedSansTH_W_Bd.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
         /* Fade In Reveal */
         @keyframes reveal {
             0% { transform: translateY(40px); opacity: 0; }

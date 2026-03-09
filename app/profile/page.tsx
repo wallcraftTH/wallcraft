@@ -21,6 +21,9 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   
+  // Track which field is currently being edited
+  const [editingField, setEditingField] = useState<string | null>(null);
+  
   // Profile Data
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -116,6 +119,7 @@ export default function ProfilePage() {
 
       if (error) throw error;
       alert('Profile updated successfully!');
+      setEditingField(null); // Close any open edits on save
     } catch (error) {
       console.error('Error updating profile:', error);
       alert('Failed to update profile.');
@@ -173,6 +177,64 @@ export default function ProfilePage() {
     router.push('/login');
   };
 
+  // Helper function to render a row that toggles between text and an input
+  const renderEditableRow = (
+    label: string, 
+    fieldKey: string, 
+    value: string, 
+    setter: (val: string) => void, 
+    inputType: 'text' | 'date' | 'select' = 'text',
+    options: string[] = []
+  ) => {
+    const isEditing = editingField === fieldKey;
+
+    return (
+      <div className="flex justify-between items-center p-4 border-b border-white/5 last:border-0 min-h-[56px]">
+        <span className="text-sm text-zinc-300 w-1/3">{label}</span>
+        <div className="flex items-center w-2/3 justify-end">
+          {isEditing ? (
+            inputType === 'select' ? (
+              <select
+                value={value}
+                onChange={(e) => setter(e.target.value)}
+                onBlur={() => setEditingField(null)}
+                autoFocus
+                className="bg-transparent text-right text-sm text-white outline-none w-full appearance-none"
+                style={{ direction: 'rtl' }}
+              >
+                <option value="" disabled className="bg-[#1a1a1a]">Select</option>
+                {options.map(opt => (
+                  <option key={opt} value={opt} className="bg-[#1a1a1a]">{opt}</option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type={inputType}
+                value={value}
+                onChange={(e) => setter(e.target.value)}
+                onBlur={() => setEditingField(null)}
+                onKeyDown={(e) => e.key === 'Enter' && setEditingField(null)}
+                autoFocus
+                className="bg-transparent border-b border-[#B08038] text-right text-sm text-white outline-none w-full pb-1"
+                style={inputType === 'date' ? { colorScheme: 'dark' } : {}}
+              />
+            )
+          ) : (
+            <div 
+              className="flex items-center cursor-pointer group justify-end w-full"
+              onClick={() => setEditingField(fieldKey)}
+            >
+              <span className={`text-sm text-right truncate ${value ? 'text-white' : 'text-[#B08038]'}`}>
+                {value || 'Set Now'}
+              </span>
+              <FaChevronRight className="ml-3 text-zinc-600 text-xs group-hover:text-[#B08038] transition-colors" />
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
@@ -185,7 +247,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white pt-28 pb-20 px-6 lg:px-16 font-['Prompt']">
       <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-12 lg:gap-20">
         
-        {/* Left Column - Profile Info & Edit (Styled like the reference image) */}
+        {/* Left Column - Profile Info & Edit */}
         <div className="w-full lg:w-1/3 flex flex-col">
           
           <form onSubmit={handleUpdateProfile} className="space-y-6">
@@ -226,97 +288,21 @@ export default function ProfilePage() {
 
             {/* List Group 1: Name & Bio */}
             <div className="bg-white/5 rounded-lg border border-white/5 overflow-hidden">
-              <div className="flex justify-between items-center p-4 border-b border-white/5">
-                <span className="text-sm text-zinc-300 w-1/3">First Name</span>
-                <div className="flex items-center w-2/3 justify-end">
-                  <input 
-                    type="text" 
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    placeholder="Set Now"
-                    className="bg-transparent text-right text-sm text-white placeholder:text-[#B08038] outline-none w-full"
-                  />
-                  <FaChevronRight className="ml-3 text-zinc-600 text-xs" />
-                </div>
-              </div>
-              <div className="flex justify-between items-center p-4 border-b border-white/5">
-                <span className="text-sm text-zinc-300 w-1/3">Last Name</span>
-                <div className="flex items-center w-2/3 justify-end">
-                  <input 
-                    type="text" 
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    placeholder="Set Now"
-                    className="bg-transparent text-right text-sm text-white placeholder:text-[#B08038] outline-none w-full"
-                  />
-                  <FaChevronRight className="ml-3 text-zinc-600 text-xs" />
-                </div>
-              </div>
-              <div className="flex justify-between items-center p-4">
-                <span className="text-sm text-zinc-300 w-1/3">Bio</span>
-                <div className="flex items-center w-2/3 justify-end">
-                  <input 
-                    type="text" 
-                    value={bio}
-                    onChange={(e) => setBio(e.target.value)}
-                    placeholder="Set Now"
-                    className="bg-transparent text-right text-sm text-white placeholder:text-[#B08038] outline-none w-full"
-                  />
-                  <FaChevronRight className="ml-3 text-zinc-600 text-xs" />
-                </div>
-              </div>
+              {renderEditableRow('First Name', 'firstName', firstName, setFirstName)}
+              {renderEditableRow('Last Name', 'lastName', lastName, setLastName)}
+              {renderEditableRow('Bio', 'bio', bio, setBio)}
             </div>
 
             {/* List Group 2: Gender & Birthday */}
             <div className="bg-white/5 rounded-lg border border-white/5 overflow-hidden">
-              <div className="flex justify-between items-center p-4 border-b border-white/5">
-                <span className="text-sm text-zinc-300 w-1/3">Gender</span>
-                <div className="flex items-center w-2/3 justify-end">
-                  <select 
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    className="bg-transparent text-right text-sm outline-none w-full appearance-none cursor-pointer"
-                    style={{ color: gender ? 'white' : '#B08038', direction: 'rtl' }}
-                  >
-                    <option value="" disabled>Set Now</option>
-                    <option value="Male" className="bg-[#1a1a1a] text-white">Male</option>
-                    <option value="Female" className="bg-[#1a1a1a] text-white">Female</option>
-                    <option value="Other" className="bg-[#1a1a1a] text-white">Other</option>
-                  </select>
-                  <FaChevronRight className="ml-3 text-zinc-600 text-xs" />
-                </div>
-              </div>
-              <div className="flex justify-between items-center p-4">
-                <span className="text-sm text-zinc-300 w-1/3">Birthday</span>
-                <div className="flex items-center w-2/3 justify-end">
-                  <input 
-                    type="date" 
-                    value={birthday}
-                    onChange={(e) => setBirthday(e.target.value)}
-                    className="bg-transparent text-right text-sm outline-none w-full cursor-pointer"
-                    style={{ color: birthday ? 'white' : '#B08038' }}
-                  />
-                  <FaChevronRight className="ml-3 text-zinc-600 text-xs" />
-                </div>
-              </div>
+              {renderEditableRow('Gender', 'gender', gender, setGender, 'select', ['Male', 'Female', 'Other'])}
+              {renderEditableRow('Birthday', 'birthday', birthday, setBirthday, 'date')}
             </div>
 
             {/* List Group 3: Contact */}
             <div className="bg-white/5 rounded-lg border border-white/5 overflow-hidden">
-              <div className="flex justify-between items-center p-4 border-b border-white/5">
-                <span className="text-sm text-zinc-300 w-1/3">Phone</span>
-                <div className="flex items-center w-2/3 justify-end">
-                  <input 
-                    type="text" 
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="Set Now"
-                    className="bg-transparent text-right text-sm text-white placeholder:text-[#B08038] outline-none w-full"
-                  />
-                  <FaChevronRight className="ml-3 text-zinc-600 text-xs" />
-                </div>
-              </div>
-              <div className="flex justify-between items-center p-4">
+              {renderEditableRow('Phone', 'phone', phoneNumber, setPhoneNumber)}
+              <div className="flex justify-between items-center p-4 border-b border-white/5 last:border-0 min-h-[56px]">
                 <span className="text-sm text-zinc-300 w-1/3">Email</span>
                 <div className="flex items-center w-2/3 justify-end">
                   <span className="text-sm text-zinc-500 truncate">{email}</span>
@@ -347,7 +333,7 @@ export default function ProfilePage() {
           </form>
         </div>
 
-        {/* Right Column - Saved Downloads (Unchanged layout) */}
+        {/* Right Column - Saved Downloads */}
         <div className="w-full lg:w-2/3 lg:pl-12 lg:border-l border-white/10 mt-10 lg:mt-0">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-xl md:text-2xl font-medium tracking-wide text-white uppercase">Saved Textures</h2>

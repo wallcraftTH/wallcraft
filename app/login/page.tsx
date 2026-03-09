@@ -73,7 +73,7 @@ export default function LoginPage() {
             <span className="text-[#B08038]">Welcome</span> Back<br/>
             <span className="text-[#c2bfb6]">to Wallcraft.</span>
           </h1>
-          <p className="text-zinc-400 font-light max-w-md text-sm leading-relaxed text-left">
+          <p className="text-[#c2bfb6] font-light max-w-md text-sm leading-relaxed text-left">
             Sign in to access your saved textures, download high-resolution assets, and continue your modular wall design projects.
           </p>
         </div>
@@ -84,13 +84,13 @@ export default function LoginPage() {
         <div className="w-full max-w-md animate-reveal">
           
           <div className="mb-10 text-center lg:text-left">
-            <h2 className="text-3xl font-medium tracking-wide text-white mb-2 uppercase">Log In</h2>
-            <p className="text-zinc-500 text-sm font-light">Enter your credentials to access your account.</p>
+            <h2 className="text-3xl font-medium tracking-wide text-[#B08038] mb-2 uppercase">Log In</h2>
+            <p className="text-[#c2bfb6] text-sm font-light">Enter your credentials to access your account.</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6 text-left">
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold block">Email Address</label>
+              <label className="text-[10px] uppercase tracking-[0.2em] text-[#c2bfb6] font-bold block">Email Address</label>
               <input 
                 type="email" 
                 required 
@@ -103,7 +103,7 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold block">Password</label>
+                <label className="text-[10px] uppercase tracking-[0.2em] text-[#c2bfb6] font-bold block">Password</label>
                 <Link href="#" className="text-[10px] text-[#B08038] hover:text-white transition-colors">Forgot Password?</Link>
               </div>
               <input 
@@ -111,7 +111,7 @@ export default function LoginPage() {
                 required 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                className="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-[#B08038] transition-colors" 
+                className="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-sm text-[#c2bfb6] placeholder-zinc-600 focus:outline-none focus:border-[#B08038] transition-colors" 
                 placeholder="••••••••" 
               />
             </div>
@@ -130,7 +130,7 @@ export default function LoginPage() {
             <button 
               type="submit" 
               disabled={loading} 
-              className="w-full mt-4 bg-[#B08038] hover:bg-[#8f662a] text-white uppercase text-[11px] font-bold tracking-[0.2em] py-4 rounded-sm transition-all flex justify-center items-center gap-2 disabled:opacity-70"
+              className="w-full mt-4 bg-[#B08038] hover:bg-[#8f662a] text-[#c2bfb6] uppercase text-[11px] font-bold tracking-[0.2em] py-4 rounded-sm transition-all flex justify-center items-center gap-2 disabled:opacity-70"
             >
               {loading ? "Authenticating..." : "Log In"}
             </button>

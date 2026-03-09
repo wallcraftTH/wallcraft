@@ -186,24 +186,58 @@ export default function ProfilePage() {
     router.push('/login');
   };
 
-  const renderEditableRow = (label: string, field: string, val: string, set: any, type: any = 'text', opts: string[] = []) => {
-    const isEdit = editingField === field;
+  const renderEditableRow = (
+    label: string, 
+    fieldKey: string, 
+    value: string, 
+    setter: (val: string) => void, 
+    inputType: 'text' | 'date' | 'select' = 'text',
+    options: string[] = [] // Default value handles most cases
+  ) => {
+    const isEditing = editingField === fieldKey;
+
     return (
       <div className="flex justify-between items-center p-4 border-b border-white/5 last:border-0 min-h-[56px]">
         <span className="text-sm text-zinc-300 w-1/3">{label}</span>
         <div className="flex items-center w-2/3 justify-end">
-          {isEdit ? (
-            type === 'select' ? (
-              <select value={val} onChange={e => set(e.target.value)} onBlur={() => setEditingField(null)} autoFocus className="bg-transparent text-right text-sm text-white outline-none w-full appearance-none" style={{ direction: 'rtl' }}>
+          {isEditing ? (
+            inputType === 'select' ? (
+              <select
+                value={value}
+                onChange={(e) => setter(e.target.value)}
+                onBlur={() => setEditingField(null)}
+                autoFocus
+                className="bg-transparent text-right text-sm text-white outline-none w-full appearance-none"
+                style={{ direction: 'rtl' }}
+              >
                 <option value="" disabled className="bg-[#1a1a1a]">Select</option>
-                {opts.map(o => <option key={o} value={o} className="bg-[#1a1a1a]">{o}</option>)}
+                {/* Fixed line with optional chaining and null check */}
+                {options?.length > 0 && options.map((opt) => (
+                  <option key={opt} value={opt} className="bg-[#1a1a1a]">
+                    {opt}
+                  </option>
+                ))}
               </select>
             ) : (
-              <input type={type} value={val} onChange={e => set(e.target.value)} onBlur={() => setEditingField(null)} onKeyDown={(e) => e.key === 'Enter' && setEditingField(null)} autoFocus className="bg-transparent border-b border-[#B08038] text-right text-sm text-white outline-none w-full pb-1" style={type === 'date' ? { colorScheme: 'dark' } : {}} />
+              <input
+                type={inputType}
+                value={value}
+                onChange={(e) => setter(e.target.value)}
+                onBlur={() => setEditingField(null)}
+                onKeyDown={(e) => e.key === 'Enter' && setEditingField(null)}
+                autoFocus
+                className="bg-transparent border-b border-[#B08038] text-right text-sm text-white outline-none w-full pb-1"
+                style={inputType === 'date' ? { colorScheme: 'dark' } : {}}
+              />
             )
           ) : (
-            <div className="flex items-center cursor-pointer group justify-end w-full" onClick={() => setEditingField(field)}>
-              <span className={`text-sm text-right truncate ${val ? 'text-white' : 'text-[#B08038]'}`}>{val || 'Set Now'}</span>
+            <div 
+              className="flex items-center cursor-pointer group justify-end w-full"
+              onClick={() => setEditingField(fieldKey)}
+            >
+              <span className={`text-sm text-right truncate ${value ? 'text-white' : 'text-[#B08038]'}`}>
+                {value || 'Set Now'}
+              </span>
               <FaChevronRight className="ml-3 text-zinc-600 text-xs group-hover:text-[#B08038] transition-colors" />
             </div>
           )}
@@ -229,7 +263,6 @@ export default function ProfilePage() {
         {/* Left Column - Profile Info */}
         <div className="w-full lg:w-1/3 flex flex-col">
           <form onSubmit={handleUpdateProfile} className="space-y-6">
-            
             <div className="flex flex-col items-center justify-center pt-4 pb-6 border-b border-white/5">
               <div className="relative group mb-3">
                 <div className="w-24 h-24 rounded-full overflow-hidden bg-zinc-800 shadow-xl flex items-center justify-center border border-white/10">
@@ -244,8 +277,6 @@ export default function ProfilePage() {
                 <FaPencil className="text-xs" /> Edit Profile Picture
                 <input type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
               </label>
-
-              {/* FULL NAME DISPLAYED UNDER EDIT PROFILE PICTURE */}
               <h3 className="text-lg font-medium text-white tracking-wide uppercase">
                 {firstName || lastName ? `${firstName} ${lastName}` : 'New User'}
               </h3>
@@ -260,16 +291,7 @@ export default function ProfilePage() {
             <div className="bg-white/5 rounded-lg border border-white/5 overflow-hidden">
               {renderEditableRow('Gender', 'gender', gender, setGender, 'select', ['Male', 'Female', 'Other'])}
               {renderEditableRow('Birthday', 'birthday', birthday, setBirthday, 'date')}
-            </div>
-
-            <div className="bg-white/5 rounded-lg border border-white/5 overflow-hidden">
               {renderEditableRow('Phone', 'phone', phoneNumber, setPhoneNumber)}
-              <div className="flex justify-between items-center p-4 border-b border-white/5 last:border-0 min-h-[56px]">
-                <span className="text-sm text-zinc-300 w-1/3">Email</span>
-                <div className="flex items-center w-2/3 justify-end">
-                  <span className="text-sm text-zinc-500 truncate">{email}</span>
-                </div>
-              </div>
             </div>
 
             <div className="flex items-center justify-between pt-4">
@@ -307,9 +329,7 @@ export default function ProfilePage() {
                 <div key={item.id} className="group relative bg-[#050505] border border-white/10 rounded-sm overflow-hidden hover:border-[#B08038]/50 transition-colors flex flex-col">
                   <div className="aspect-square p-4 bg-zinc-900/50 flex items-center justify-center cursor-pointer relative" onClick={() => setSelectedProduct(item.products)}>
                     <img src={item.products.image_url} alt={item.products.title} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center backdrop-blur-sm transition-opacity">
-                      <span className="text-white text-xs uppercase tracking-widest font-bold border border-white/30 px-4 py-2 bg-black/40 flex items-center gap-2"><FaEye /> View</span>
-                    </div>
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center backdrop-blur-sm"><span className="text-white text-xs uppercase tracking-widest font-bold border border-white/30 px-4 py-2 bg-black/40 flex items-center gap-2"><FaEye /> View</span></div>
                   </div>
                   <div className="p-4 border-t border-white/5 flex-grow flex flex-col justify-between">
                     <div>
@@ -328,7 +348,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Modal with Custom Note */}
+      {/* Modal with Updated Dimensions View */}
       {selectedProduct && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md transition-opacity duration-300" onClick={e => e.target === e.currentTarget && setSelectedProduct(null)}>
           <div className="relative w-full max-w-4xl bg-[#0a0a0a] border border-white/10 rounded-sm overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
@@ -339,15 +359,31 @@ export default function ProfilePage() {
             <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col overflow-y-auto no-scrollbar text-left relative bg-[#0a0a0a]">
               <div className="mb-6">
                 <h2 className="text-3xl text-[#B08038] font-medium mb-2 leading-tight uppercase tracking-wide">{selectedProduct.title}</h2>
-                <p className="text-white text-[10px] tracking-[0.3em] uppercase mb-4 font-bold">{selectedProduct.subtitle || 'Collection'}</p>
+                <p className="text-white text-[10px] tracking-widest uppercase mb-4 font-bold">{selectedProduct.subtitle || 'Collection'}</p>
                 <p className="text-zinc-400 text-sm leading-relaxed font-light">{selectedProduct.description || 'Premium architectural material.'}</p>
               </div>
               <hr className="border-white/10 mb-6" />
+              
               <div className="mb-8 p-5 bg-white/5 rounded-sm border border-white/5 space-y-4">
-                <div className="flex justify-between items-start gap-6">
-                  <div><span className="block text-zinc-500 text-[9px] uppercase tracking-wider mb-1">Dimensions</span><span className="text-[#c2bfb6] text-xs font-light block">{selectedProduct.dimensions || 'Standard Form'}</span></div>
-                  <div className="text-right"><span className="block text-zinc-500 text-[9px] uppercase tracking-wider mb-1">Ref Code</span><span className="text-[#B08038] text-xs tracking-wider">{selectedProduct.item_code || '-'}</span></div>
+                <div className="flex flex-col gap-4">
+                  {/* Updated Standard Dimensions Block */}
+                  <div>
+                    <span className="block text-zinc-400 text-[10px] uppercase tracking-wider mb-3 font-semibold">
+                      Standard Dimensions
+                    </span>
+                    <div className="space-y-2 text-zinc-300 text-sm">
+                      <p>W1220 x H2440 x T5+- mm</p>
+                      <p>W1220 x H2800 x T5+- mm</p>
+                      <p className="pt-2 text-white font-medium">Custom Size Available</p>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-white/10">
+                    <span className="block text-zinc-500 text-[9px] uppercase tracking-wider mb-1">Ref Code</span>
+                    <span className="text-[#B08038] text-xs tracking-wider font-bold">{selectedProduct.item_code || '-'}</span>
+                  </div>
                 </div>
+
                 {activeTab === 'saved' && (
                   <div className="mt-6 pt-4 border-t border-white/10">
                     <label className="block text-zinc-500 text-[9px] uppercase font-bold mb-2">Customization Note</label>
@@ -358,6 +394,7 @@ export default function ProfilePage() {
                   </div>
                 )}
               </div>
+              
               <div className="mt-auto pt-6"><button onClick={() => handleReDownload(selectedProduct)} disabled={downloading} className="w-full py-4 bg-white text-black text-[11px] font-bold uppercase hover:bg-[#B08038] hover:text-white transition-all flex items-center justify-center gap-2">{downloading ? 'Downloading...' : <><FaDownload /> Download Image</>}</button></div>
             </div>
           </div>

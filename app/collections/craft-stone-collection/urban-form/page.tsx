@@ -28,6 +28,7 @@ interface Product {
 
 interface HardcodedProduct {
   title: string;
+  subtitle: string;
   itemCode: string;
   size: string;
   image: string;
@@ -35,6 +36,7 @@ interface HardcodedProduct {
 
 interface ModalState {
   title: string;
+  subtitle: string;
   code: string;
   price: string;
   dimensions: string;
@@ -52,18 +54,21 @@ type DragState = {
 const HARDCODED_LIST: HardcodedProduct[] = [
   {
     title: 'Cement Design Board',
+    subtitle: '-',
     itemCode: 'MBSNJZ',
     size: 'W1000 x H3000 x T4.5(+-0.5)mm',
     image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/urban_form_collection/Asset%2048.webp',
   },
   {
     title: 'Aggregate Wood',
+    subtitle: '-',
     itemCode: 'MBQSW',
     size: 'W1000 x H2800 x T5(+-0.5)mm',
     image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/urban_form_collection/Asset%2047.webp',
   },
   {
     title: 'Fair Faced Concrete',
+    subtitle: '-',
     itemCode: 'MBQSB',
     size: 'W1200 x H600 x T4mm\nW1200 x H3000 x T4mm',
     image: 'https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/urban_form_collection/Asset%2046.webp',
@@ -125,43 +130,49 @@ export default function UrbanFormPage() {
     if (addTimerRef.current) clearTimeout(addTimerRef.current);
   };
 
-  const saveToProfile = async (productId: string) => {
+  const saveToDatabase = async (productId: string, tableName: 'user_favorites' | 'user_downloads', note: string) => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        alert("Please login to save favorites.");
+        alert(`Please login to ${tableName === 'user_favorites' ? 'save favorites' : 'download items'}.`);
         return false;
       }
       const { error } = await supabase
-        .from('user_downloads')
-        .insert([{ user_id: session.user.id, product_id: productId }]);
+        .from(tableName)
+        .insert([{ 
+          user_id: session.user.id, 
+          product_id: productId,
+          custom_note: note 
+        }]);
 
       if (error) {
-        if (error.code === '23505') alert("This item is already in your favorites.");
-        else throw error;
+        if (error.code === '23505' && tableName === 'user_favorites') {
+          alert("This item is already in your favorites.");
+        } else if (error.code !== '23505') {
+          throw error;
+        }
       }
       return true;
     } catch (err) {
-      console.error("Favorite Error:", err);
-      alert("Failed to save to profile.");
+      console.error(`Database Error (${tableName}):`, err);
       return false;
     }
   };
 
   const handleFavorite = async (productId: string | null) => {
     if (!productId) {
-      alert("Please select a specific style first.");
+      alert("Please select a specific finish first.");
       return;
     }
     setIsFavoriting(true);
-    const success = await saveToProfile(productId);
+    const success = await saveToDatabase(productId, 'user_favorites', customNote); 
     if (success) alert("Added to your saved textures in Profile!");
     setIsFavoriting(false);
   };
 
   const handleAddToRequest = async () => {
     if (!modalState?.activeProductId) {
-      alert("Please select a specific style first.");
+      alert("Please select a specific finish first.");
       return;
     }
 
@@ -179,7 +190,7 @@ export default function UrbanFormPage() {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
 
-      await saveToProfile(modalState.activeProductId);
+      await saveToDatabase(modalState.activeProductId, 'user_downloads', customNote);
 
       addTimerRef.current = setTimeout(() => {
         setRequestAdded(false);
@@ -196,9 +207,10 @@ export default function UrbanFormPage() {
     const variants = groupedProducts[detail.title] || [];
     setModalState({
       title: detail.title,
-      code: detail.itemCode || '-',
+      subtitle: detail.subtitle !== '-' ? detail.subtitle : 'Urban Form Series',
+      code: detail.itemCode,
       price: 'Inquiry Required',
-      dimensions: detail.size || 'Standard Form',
+      dimensions: detail.size,
       image: detail.image,
       variants,
       activeProductId: null,
@@ -209,10 +221,12 @@ export default function UrbanFormPage() {
     const product = globalData.find((item) => item.id === productId);
     if (!product) return;
     resetModalControls();
+    const baseInfo = HARDCODED_LIST.find((item) => item.title === product.title);
     const variants = groupedProducts[product.title] || [];
     setModalState({
       title: product.title,
-      code: product.item_code || '-',
+      subtitle: baseInfo && baseInfo.subtitle !== '-' ? baseInfo.subtitle : 'Urban Form Series',
+      code: product.item_code,
       price: product.price ? `฿${product.price.toLocaleString()}` : 'Inquiry Required',
       dimensions: product.dimensions || 'Standard Form',
       image: product.image_url,
@@ -349,9 +363,9 @@ export default function UrbanFormPage() {
             </div>
             <div className="w-full lg:w-2/5 p-8 lg:p-12 flex flex-col border-l border-white/5 bg-[#0a0a0a] overflow-y-auto no-scrollbar">
               <div className="mb-8">
-                <h3 className="text-[#B08038] text-[10px] font-bold tracking-[0.4em] uppercase mb-2">Urban Form Series</h3>
-                <h2 className="text-4xl text-white font-medium uppercase mb-2 leading-tight">{modalState.title}</h2>
-                <p className="text-zinc-500 text-sm tracking-widest">{modalState.code}</p>
+                <h2 className="text-4xl text-[#B08038] font-medium uppercase mb-1 leading-tight">{modalState.title}</h2>
+                <p className="text-[#c2bfb6] text-[10px] tracking-[0.3em] uppercase mb-4 opacity-80">{modalState.subtitle}</p>
+                <p className="text-[#c2bfb6] text-sm tracking-widest">{modalState.code}</p>
               </div>
               <div className="mb-8 p-4 bg-white/5 rounded-lg border border-white/5">
                 <div className="flex justify-between items-center mb-2">
@@ -360,7 +374,7 @@ export default function UrbanFormPage() {
                 </div>
                 <div className="flex flex-col space-y-1">
                   <span className="text-zinc-400 text-[10px] uppercase tracking-wider font-bold">Standard Dimensions</span>
-                  <span className="text-zinc-300 text-sm font-light whitespace-pre-line leading-relaxed">{modalState.dimensions}</span>
+                  <span className="text-zinc-300 text-sm font-light whitespace-pre-line">{modalState.dimensions}</span>
                 </div>
               </div>
 
@@ -376,6 +390,11 @@ export default function UrbanFormPage() {
                   </div>
                 </div>
               )}
+
+              <div className="mb-8 text-left">
+                <span className="block text-white text-[10px] font-bold uppercase tracking-widest mb-4">Customization Note</span>
+                <textarea value={customNote} onChange={(e) => setCustomNote(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-md p-3 text-sm text-white focus:outline-none focus:border-[#B08038] transition-colors resize-none" rows={3} placeholder="Enter custom dimensions..." />
+              </div>
 
               <div className="mt-auto pt-8 border-t border-white/10 text-left">
                 <div className="flex flex-col gap-4">

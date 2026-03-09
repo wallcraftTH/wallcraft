@@ -87,6 +87,7 @@ export default function TarraStonePage() {
   const [globalData, setGlobalData] = useState<Product[]>([]);
   const [modalState, setModalState] = useState<ModalState | null>(null);
   const [selectedQty, setSelectedQty] = useState(1);
+  const [customNote, setCustomNote] = useState('');
   const [requestAdded, setRequestAdded] = useState(false);
   const [isFavoriting, setIsFavoriting] = useState(false);
 
@@ -131,29 +132,36 @@ export default function TarraStonePage() {
 
   const resetModalControls = () => {
     setSelectedQty(1);
+    setCustomNote('');
     setRequestAdded(false);
     if (addTimerRef.current) clearTimeout(addTimerRef.current);
   };
 
-  const saveToProfile = async (productId: string) => {
+  const saveToDatabase = async (productId: string, tableName: 'user_favorites' | 'user_downloads', note: string) => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        alert("Please login to save favorites.");
+        alert(`Please login to ${tableName === 'user_favorites' ? 'save favorites' : 'download items'}.`);
         return false;
       }
       const { error } = await supabase
-        .from('user_downloads')
-        .insert([{ user_id: session.user.id, product_id: productId }]);
+        .from(tableName)
+        .insert([{ 
+          user_id: session.user.id, 
+          product_id: productId,
+          custom_note: note 
+        }]);
 
       if (error) {
-        if (error.code === '23505') alert("This item is already in your favorites.");
-        else throw error;
+        if (error.code === '23505' && tableName === 'user_favorites') {
+          alert("This item is already in your favorites.");
+        } else if (error.code !== '23505') {
+          throw error;
+        }
       }
       return true;
     } catch (err) {
-      console.error("Favorite Error:", err);
-      alert("Failed to save to profile.");
+      console.error(`Database Error (${tableName}):`, err);
       return false;
     }
   };
@@ -164,7 +172,7 @@ export default function TarraStonePage() {
       return;
     }
     setIsFavoriting(true);
-    const success = await saveToProfile(productId);
+    const success = await saveToDatabase(productId, 'user_favorites', customNote); 
     if (success) alert("Added to your saved textures in Profile!");
     setIsFavoriting(false);
   };
@@ -178,7 +186,6 @@ export default function TarraStonePage() {
     try {
       setRequestAdded(true);
       
-      // Trigger browser download
       const response = await fetch(modalState.image);
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
@@ -190,12 +197,11 @@ export default function TarraStonePage() {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
 
-      // Auto-save to profile for download history
-      await saveToProfile(modalState.activeProductId);
+      await saveToDatabase(modalState.activeProductId, 'user_downloads', customNote);
 
       addTimerRef.current = setTimeout(() => {
         setRequestAdded(false);
-        closeModal(); // Closes modal after success
+        closeModal();
       }, 900);
     } catch (error) {
       console.error('Download failed:', error);
@@ -314,7 +320,6 @@ export default function TarraStonePage() {
                       <button type="button" onClick={() => openModalFromDetail(detail)} className="relative block w-full cursor-zoom-in bg-transparent border-0 p-0">
                         <div className="absolute inset-0 bg-[#B08038]/10 blur-[80px] rounded-full pointer-events-none w-3/4 mx-auto h-3/4 mt-8" />
                         <div className="relative z-10 w-[85%] lg:w-full max-w-[450px] lg:max-w-[550px] mx-auto aspect-square flex items-center justify-center overflow-hidden rounded-[2px] shadow-2xl border border-white/5">
-                          {/* Design correction: object-contain to prevent cropping */}
                           <img src={detail.image} alt={detail.title} className="w-full h-full object-contain p-4 transition-all duration-700 group-hover:scale-105" />
                           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <div className="p-4 border border-white/30 bg-black/40 backdrop-blur-md text-white text-[10px] uppercase tracking-widest font-bold">Quick View</div>
@@ -392,6 +397,11 @@ export default function TarraStonePage() {
                   </div>
                 </div>
               )}
+
+              <div className="mb-8 text-left">
+                <span className="block text-white text-[10px] font-bold uppercase tracking-widest mb-4">Customization Note</span>
+                <textarea value={customNote} onChange={(e) => setCustomNote(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-md p-3 text-sm text-white focus:outline-none focus:border-[#B08038] transition-colors resize-none" rows={3} placeholder="Enter custom dimensions..." />
+              </div>
 
               <div className="mt-auto pt-8 border-t border-white/10 text-left">
                 <div className="flex flex-col gap-4">

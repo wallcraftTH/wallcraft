@@ -56,11 +56,11 @@ export default function Footer() {
                  <div className="space-y-3 flex flex-col">
                    <Link href="/collections/luxe-collection/fabric" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Fabric</Link>
                    <Link href="/collections/luxe-collection/leather" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Leather</Link>
-                   <Link href="/collections/luxe-collection/semi-outdoor" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Outdoor</Link>
+                   <Link href="/collections/luxe-collection/metallic" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Metallic</Link>
+                   <Link href="/collections/luxe-collection/semi-outdoor" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Semi Outdoor</Link>
                    <Link href="/collections/luxe-collection/signature" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Signature</Link>
                    <Link href="/collections/luxe-collection/stone" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Stone</Link>
                    <Link href="/collections/luxe-collection/velvet" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Velvet</Link>
-                   {/* Fixed typo: collectiosn -> collections */}
                    <Link href="/collections/luxe-collection/wood" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Wood</Link>
                  </div>
                </div>

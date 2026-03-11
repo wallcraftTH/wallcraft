@@ -8,8 +8,8 @@ export default function SearchInput() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
+  // Category state removed; only text search remains
   const [term, setTerm] = useState(searchParams.get('q') || '');
-  const [category, setCategory] = useState(searchParams.get('category') || '');
   const [isUploading, setIsUploading] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -18,7 +18,7 @@ export default function SearchInput() {
     e.preventDefault();
     const params = new URLSearchParams();
     if (term.trim()) params.set('q', term);
-    if (category) params.set('category', category);
+    // Push only the text query to the URL
     router.push(`/search?${params.toString()}`);
   };
 
@@ -44,15 +44,12 @@ export default function SearchInput() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Updated Alert: No more mention of mock images
         alert(`Image successfully saved to the database! (Visual search will activate once AI math is connected)`);
         
         if (data.results && data.results.length > 0) {
-          // This will safely sit here waiting for tomorrow's real results!
           const matchedIds = data.results.map((item: any) => item.id).join(',');
           router.push(`/search?matches=${matchedIds}`);
         } else {
-          // Safely clears the screen so you don't see old mockups
           router.push(`/search?matches=pending`);
         }
       } else {
@@ -107,44 +104,13 @@ export default function SearchInput() {
           </button>
         </div>
 
-        <div className="flex items-center gap-4 w-full md:w-auto">
-          <select 
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="bg-transparent text-[#c2bfb6] text-[10px] tracking-widest uppercase outline-none border-b border-white/20 pb-2 cursor-pointer hover:border-[#B08038] transition-colors w-full md:w-auto"
-          >
-            <option value="" className="bg-zinc-900 text-white">ALL COLLECTIONS</option>
-            
-            <optgroup label="LUXE SERIES" className="bg-zinc-900 text-[#B08038] font-bold">
-              <option value="fabric_collection" className="text-white font-normal">Fabric</option>
-              <option value="leather_collection" className="text-white font-normal">Leather</option>
-              <option value="metallic" className="text-white font-normal">metallic</option>
-              <option value="semi-outdoor" className="text-white font-normal">semi-outdoor</option>
-              <option value="stone" className="text-white font-normal">signature</option>
-              <option value="signature" className="text-white font-normal">stone</option>
-              <option value="velvet_collection" className="text-white font-normal">velvet</option>
-              <option value="wood" className="text-white font-normal">wood</option>
-            </optgroup>
-
-            <optgroup label="CRAFT STONE" className="bg-zinc-900 text-[#B08038] font-bold">
-              <option value="Terra Stone" className="text-white font-normal">Terra Stone</option>
-              <option value="Panorama" className="text-white font-normal">Panorama</option>
-              <option value="Strength Rock" className="text-white font-normal">Strength Rock</option>
-              <option value="Geoform" className="text-white font-normal">GeoForm</option>
-              <option value="Urban Form" className="text-white font-normal">Urban Form</option>
-              <option value="Nature Grain" className="text-white font-normal">Nature Grain</option>
-              <option value="Rust Grain" className="text-white font-normal">Rust</option>
-              <option value="Finesse Grain" className="text-white font-normal">Finesse</option>
-            </optgroup>
-          </select>
-
-          <button 
-            type="submit"
-            className="bg-white text-black px-6 py-2 text-[10px] uppercase tracking-widest font-bold hover:bg-[#B08038] hover:text-white transition-colors rounded-sm"
-          >
-            Find
-          </button>
-        </div>
+        {/* Find button remains, category dropdown removed entirely */}
+        <button 
+          type="submit"
+          className="bg-white text-black px-6 py-2 text-[10px] uppercase tracking-widest font-bold hover:bg-[#B08038] hover:text-white transition-colors rounded-sm w-full md:w-auto"
+        >
+          Find
+        </button>
       </form>
     </div>
   );

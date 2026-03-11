@@ -109,13 +109,23 @@ export default function SearchInput() {
           <optgroup label="LUXE SERIES" className="bg-zinc-900 text-[#B08038] font-bold">
             <option value="fabric_collection" className="text-white font-normal">Fabric</option>
             <option value="leather_collection" className="text-white font-normal">Leather</option>
-            <option value="velvet_collection" className="text-white font-normal">Velvet</option>
-            {/* Add the other 5 Luxe collections here matching your database EXACTLY */}
+            <option value="metallic" className="text-white font-normal">metallic</option>
+            <option value="semi-outdoor" className="text-white font-normal">semi-outdoor</option>
+            <option value="stone" className="text-white font-normal">signature</option>
+            <option value="signature" className="text-white font-normal">stone</option>
+            <option value="velvet_collection" className="text-white font-normal">velvet</option>
+            <option value="wood" className="text-white font-normal">wood</option>
           </optgroup>
 
           <optgroup label="CRAFT STONE" className="bg-zinc-900 text-[#B08038] font-bold">
             <option value="Terra Stone" className="text-white font-normal">Terra Stone</option>
-            {/* Add other Craft Stone collections here */}
+            <option value="Panorama" className="text-white font-normal">Panorama</option>
+            <option value="Strength Rock" className="text-white font-normal">Strength Rock</option>
+            <option value="Geoform" className="text-white font-normal">GeoForm</option>
+            <option value="Urban Form" className="text-white font-normal">Urban Form</option>
+            <option value="Nature Grain" className="text-white font-normal">Nature Grain</option>
+            <option value="Rust Grain" className="text-white font-normal">Rust</option>
+            <option value="Finesse Grain" className="text-white font-normal">Finesse</option>
           </optgroup>
         </select>
 

@@ -2,12 +2,13 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const url = request.nextUrl
   const hostname = request.headers.get('host')
 
-  // ถ้าใครเข้าผ่าน .vercel.app ให้เด้งกลับไปที่โดเมนจริงทันที
+  // ถ้าเป็นบอทหรือใครก็ตามที่เข้าทาง .vercel.app
   if (hostname?.includes('.vercel.app')) {
-    return NextResponse.redirect(`https://www.wallcraftthailand.com${url.pathname}`, 301)
+    // สั่งยิงทิ้งด้วยรหัส 403 (Forbidden) ทันที! ไม่ต้องเด้งไปไหนแล้ว
+    // วิธีนี้กินแรง Vercel น้อยที่สุด และบอก Googlebot ว่า "เว็บนี้ตายแล้ว เลิกสแกนซะ!"
+    return new NextResponse('Access Denied: Dead End.', { status: 403 })
   }
 
   return NextResponse.next()

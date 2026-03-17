@@ -1,11 +1,10 @@
+
 User-agent: *
 Allow: /
+Allow: /collections/
+Allow: /series/
 Disallow: /api/
 Disallow: /_next/
+Disallow: /admin/ # ถ้ามี
 
-# สั่งให้บอทของ Semrush และตัวอื่นๆ คลานช้าๆ หน่อย (หน่วงเวลา 10 วินาที)
-User-agent: SemrushBot
-Crawl-delay: 10
-
-User-agent: AhrefsBot
-Crawl-delay: 10ห
+Sitemap: https://www.wallcraftthailand.com/sitemap.xml

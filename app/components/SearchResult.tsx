@@ -107,7 +107,7 @@ export default function SearchResults({ initialResults }: { initialResults: Prod
       
     if (data) {
         // Sort them alphabetically by item_code
-        const sortedVariants = data.sort((a, b) => 
+        const sortedVariants = (data as any[]).sort((a: any, b: any) =>
             String(a.item_code || '').localeCompare(String(b.item_code || ''))
         );
         setVariants(sortedVariants);

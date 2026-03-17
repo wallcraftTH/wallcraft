@@ -2,16 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'; // ✅ มีแค่บรรทัดนี้อันเดียวพอครับ
 import { FaBarsStaggered, FaXmark, FaChevronDown, FaMagnifyingGlass, FaUser } from 'react-icons/fa6';
-
-// 1. Delete the "import { createClient }..." line.
-// 2. Add this import instead (pointing to your lib folder):
 import { supabase } from '../lib/supabase';
 
 export default function Navbar() {
   const router = useRouter();
-  // ... all your existing state and logic stays exactly the same!
+  
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openSubMenu, setOpenSubMenu] = useState(""); 
@@ -24,7 +21,7 @@ export default function Navbar() {
   const [user, setUser] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
-  // Handle Scroll
+  // Handle Scroll (เอาไว้แค่ย่อขนาดความสูงแถบ Navbar เวลาเลื่อนจอ)
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -44,7 +41,7 @@ export default function Navbar() {
     checkUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (_event: any, session: any) => {
         setUser(session?.user || null);
       }
     );
@@ -58,7 +55,6 @@ export default function Navbar() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      // Redirects to /search?q=your-term
       router.push(`/search?q=${encodeURIComponent(searchTerm)}`);
       setIsSearchOpen(false);
       setSearchTerm("");
@@ -76,8 +72,8 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Mobile Top Bar */}
-      <nav className={`fixed top-0 w-full z-[60] px-6 py-5 flex justify-between items-center md:hidden transition-all duration-500 ${scrolled ? 'bg-black/95 backdrop-blur-md border-b border-white/5' : 'bg-transparent'}`}>
+      {/* 🌟 Mobile Top Bar - พื้นหลังสีดำตลอดเวลา */}
+      <nav className={`fixed top-0 w-full z-[60] px-6 flex justify-between items-center md:hidden transition-all duration-500 bg-black/95 backdrop-blur-md border-b border-white/5 ${scrolled ? 'py-4' : 'py-5'}`}>
         <Link href="/">
           <img src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Logo_Images/wallcraft%20logo%20grey%20color.webp" alt="Logo" className="h-6 w-auto" />
         </Link>
@@ -149,20 +145,24 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Desktop Navigation */}
-      <nav className={`fixed top-0 w-full z-50 px-8 py-6 hidden md:block transition-all duration-400 ${scrolled ? 'bg-black/95 py-3 backdrop-blur-md border-b border-white/5' : 'bg-black/40 backdrop-blur-md border-b border-white/5'}`}>
-        <div className="max-w-[1800px] mx-auto flex justify-center items-center relative">
-          <div className="absolute left-0 lg:left-8 flex items-center">
+ {/* 🌟 Desktop Navigation - พื้นหลังสีดำตลอดเวลา */}
+      <nav className={`fixed top-0 w-full z-50 px-8 hidden md:block transition-all duration-400 bg-black/95 backdrop-blur-md border-b border-white/5 ${scrolled ? 'py-3' : 'py-6'}`}>
+        <div className="max-w-[1800px] mx-auto flex justify-between items-center w-full gap-4">
+          
+          {/* 1. ฝั่งซ้าย: Logo (ใช้ flex-1 เพื่อกินพื้นที่ให้เท่ากับฝั่งขวา ดันเมนูให้อยู่ตรงกลางเป๊ะ) */}
+          <div className="flex-1 flex items-center justify-start">
             <Link href="/">
               <img src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Logo_Images/wallcraft%20logo%20grey%20color.webp" alt="Wallcraft Logo" className="h-5 lg:h-6 opacity-90" />
             </Link>
           </div>
 
-          <div className="flex items-center space-x-12">
-            <Link href="/introduction" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors">Band Introduction</Link>
+          {/* 2. ตรงกลาง: Main Links (ลด space-x-12 เหลือ space-x-6 ถึง 10 เพื่อไม่ให้มันกว้างเกินไปจนชนขอบ) */}
+          <div className="flex items-center justify-center space-x-6 lg:space-x-10 flex-shrink-0">
+            <Link href="/introduction" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Band Introduction</Link>
             
+            {/* --- Series Dropdown --- */}
             <div className="relative py-2 flex items-center group cursor-pointer">
-              <span className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors">Series</span>
+              <span className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Series</span>
               <div className="ml-2 p-1 group-hover:rotate-180 transition-transform duration-300">
                 <FaChevronDown className="text-[8px] opacity-40 group-hover:text-[#B08038] group-hover:opacity-100" />
               </div>
@@ -175,8 +175,9 @@ export default function Navbar() {
               </div>
             </div>
             
+            {/* --- Art & Gallery Dropdown --- */}
             <div className="relative py-2 flex items-center group cursor-pointer">
-              <span className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors">Art & Gallery</span>
+              <span className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Art & Gallery</span>
               <div className="ml-2 p-1 group-hover:rotate-180 transition-transform duration-300">
                 <FaChevronDown className="text-[8px] opacity-40 group-hover:text-[#B08038] group-hover:opacity-100" />
               </div>
@@ -188,35 +189,32 @@ export default function Navbar() {
               </div>
             </div>
 
-            <Link href="#" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors">Match Inspiration</Link>
-            <Link href="#" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors">Studio Q&A</Link>
+            <Link href="#" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Match Inspiration</Link>
+            <Link href="#" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Studio Q&A</Link>
           </div>
 
-          <div className="absolute right-0 lg:right-8 flex items-center space-x-6">
-            {/* SEARCH LOGIC START */}
-<div className="relative flex items-center">
-  <button 
-    onClick={() => router.push('/search')}
-    className="text-[#c2bfb6] hover:text-white transition text-[9px] tracking-widest uppercase flex items-center"
-  >
-    Search <FaMagnifyingGlass className="ml-3 opacity-60" />
-  </button>
-</div>
-{/* SEARCH LOGIC END */}
+          {/* 3. ฝั่งขวา: Search & Auth (ใช้ flex-1 และ justify-end เพื่อผลักของไปชิดขวา) */}
+          <div className="flex-1 flex items-center justify-end space-x-4 lg:space-x-6">
+            <button 
+              onClick={() => router.push('/search')}
+              className="text-[#c2bfb6] hover:text-white transition text-[9px] tracking-widest uppercase flex items-center whitespace-nowrap"
+            >
+              Search <FaMagnifyingGlass className="ml-3 opacity-60" />
+            </button>
             
             <div className="w-px h-4 bg-white/20 hidden lg:block"></div>
 
             {!authLoading && (
               user ? (
-                <Link href="/profile" className="text-[#B08038] hover:text-white transition text-[9px] tracking-widest uppercase flex items-center gap-2">
+                <Link href="/profile" className="text-[#B08038] hover:text-white transition text-[9px] tracking-widest uppercase flex items-center gap-2 whitespace-nowrap">
                   <FaUser className="text-xs" /> Profile
                 </Link>
               ) : (
                 <div className="flex items-center space-x-4">
-                  <Link href="/login" className="text-[#c2bfb6] hover:text-white transition text-[9px] tracking-widest uppercase">
+                  <Link href="/login" className="text-[#c2bfb6] hover:text-white transition text-[9px] tracking-widest uppercase whitespace-nowrap">
                     Log In
                   </Link>
-                  <Link href="/register" className="text-black bg-white hover:bg-[#B08038] hover:text-white transition-colors text-[9px] tracking-widest uppercase px-4 py-2 rounded-sm font-bold">
+                  <Link href="/register" className="text-black bg-white hover:bg-[#B08038] hover:text-white transition-colors text-[9px] tracking-widest uppercase px-4 py-2 rounded-sm font-bold whitespace-nowrap">
                     Register
                   </Link>
                 </div>

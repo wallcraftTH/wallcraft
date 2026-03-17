@@ -38,7 +38,7 @@ function SearchResults() {
           const ids = matchesParam.split(',');
           const { data, error } = await supabase.from('products').select('*').in('id', ids);
           if (error) throw error;
-          const sortedData = ids.map(id => data?.find(p => p.id === id)).filter(Boolean);
+          const sortedData = ids.map(id => data?.find((p: any) => p.id === id)).filter(Boolean);
           setProducts(sortedData);
         } else if (textQuery) {
           const { data, error } = await supabase.from('products').select('*').ilike('title', `%${textQuery}%`);

@@ -1,0 +1,97 @@
+// app/collection/[slug]/page.tsx
+import React from 'react';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { supabaseBall } from '@/app/lib/supabase';
+// ✅ เช็ก Path ตรงนี้ให้ดีว่า Component อยู่ตรงไหน
+import VariantCarousel from '@/app/components/VariantCarousel';
+
+const SLUG_TO_COLLECTION: Record<string, string> = {
+  "solid-panel": "Solid Panel", 
+  "tarra-stone": "Tarra Stone", //Metalic
+  "geoform": "Geo form",
+  "accessories": "Accessories",
+  "metallic": "Metalic"
+};
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function CollectionDynamicPage({ params }: PageProps) {
+  const { slug } = await params;
+  const searchName = SLUG_TO_COLLECTION[slug] || slug.replace(/-/g, ' '); 
+
+  const { data: products, error } = await supabaseBall
+    .from('products')
+    .select(`
+      *,
+      product_variants (
+        id, sku, color, film, pattern, variant_image, description
+      )
+    `)
+    .ilike('collection', `%${searchName}%`)
+    .order('id', { ascending: true });
+
+  if (error || !products || products.length === 0) {
+    return notFound();
+  }
+
+  return (
+    <div className="bg-[#121212] min-h-screen text-white font-['Sarabun']">
+       <header className="py-20 text-center bg-black border-b border-[#222]">
+          <h1 className="text-4xl lg:text-6xl font-['Playfair_Display'] text-[#c6a87c] uppercase tracking-wider">
+             {searchName} 
+          </h1>
+       </header>
+
+       <main className="max-w-[1200px] mx-auto px-6 py-12 space-y-16">
+         {products.map((product: any) => {
+            const variants = product.product_variants || [];
+            const firstVariant = variants[0];
+            const defaultImg = product.image_url || firstVariant?.variant_image;
+            const uniqueVariants = Array.from(new Map((variants as any[]).map((v: any) => [v.pattern || v.color || v.sku, v])).values());
+            
+            return (
+                <div key={product.id} className="group bg-[#1e1e1e] flex flex-col md:flex-row overflow-hidden hover:border hover:border-[#c6a87c] transition-all duration-300 shadow-2xl">
+                    
+                    <Link href={`/product/${product.id}`} className="md:flex-1 h-[400px] md:h-auto bg-black relative flex items-center justify-center overflow-hidden">
+                        <img src={defaultImg} alt={product.name} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500" />
+                        <div className="absolute bottom-4 left-4 z-10 bg-black/60 p-3 rounded border-l-2 border-[#c6a87c] backdrop-blur-md">
+                            <h3 className="text-white text-sm font-bold m-0">{firstVariant?.sku}</h3>
+                            <span className="text-white/70 text-[10px] block mt-1">{product.name}</span>
+                        </div>
+                    </Link>
+
+                    <div className="md:flex-[1.2] p-8 flex flex-col justify-center">
+                         <div className="border-b border-[#333] pb-4 mb-4">
+                             <p className="text-[37px] text-[#c6a87c] tracking-[0.2em] uppercase font-semibold">
+                                {product.collection || 'Collection'}
+                             </p>
+                         </div>
+                         <p className="text-[#b0b0b0] text-sm font-light leading-relaxed mb-6">
+                            {firstVariant?.description || '-'}
+                         </p>
+                         
+                         <div className="space-y-3">
+                            <h4 className="text-[10px] uppercase text-[#777] tracking-widest flex justify-between mb-2">
+                                Available Styles
+                            </h4>
+                            
+                            <div className="w-full max-w-[550px]"> 
+                                <VariantCarousel variants={uniqueVariants} productId={product.id} />
+                            </div>
+                            
+                         </div>
+
+                         <Link href={`/product/${product.id}`} className="mt-6 text-[#c6a87c] text-sm font-bold flex items-center gap-2 hover:translate-x-2 transition-transform">
+                             VIEW DETAILS <span>→</span>
+                         </Link>
+                    </div>
+                </div>
+            );
+         })}
+       </main>
+    </div>
+  );
+}

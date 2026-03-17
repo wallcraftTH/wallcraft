@@ -7,13 +7,24 @@ const nextConfig: NextConfig = {
   
   async redirects() {
     return [
+      // 1. ดักคนที่พิมพ์ตก s หรือบอทที่เข้าลิงก์เก่า -> โยนไปหน้าใหม่ที่มี s (ตรงตัวเป๊ะ!)
       {
-        // ของเก่าที่ยังไม่ทำหน้าเว็บ ปล่อยให้มันเด้งกลับหน้าแรกไปก่อน
-        source: '/series/:path*',
-        destination: '/',
-        permanent: true, 
+        source: '/collection/:path*',
+        destination: '/collections/:path*',
+        permanent: true, // รหัส 301 บอก Google ว่า "ย้ายบ้านถาวรแล้ว จำที่ใหม่ไว้นะ"
       },
-      // ลบส่วนของ collection ออกไปแล้ว! ทีนี้ลูกค้าจะเข้าหน้าสินค้านายได้แล้วครับ!
+      // 2. ดักผีสินค้าเก่าพวก Pikachu, รองเท้าเด็ก (ที่โฟลเดอร์มี s) -> โยนกลับหน้าแรก
+      {
+        source: '/products/:path*',
+        destination: '/', 
+        permanent: true,
+      },
+      // 3. ดักพวก URL ขยะจากเว็บเก่า -> โยนกลับหน้าแรก
+      {
+        source: '/series/:path*/_tree.segment',
+        destination: '/',
+        permanent: true,
+      }
     ];
   },
 };

@@ -37,7 +37,8 @@ export default function Footer() {
                    Craft Stone
                  </h3>
                  <div className="space-y-3 flex flex-col">
-                   <Link href="/collections/tarra-stone" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Terra Stone</Link>
+                   {/* ใช้ tarra-stone ตามที่นายคอนเฟิร์มครับ */}
+                   <Link href="/collections/tarra-stone" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Tarra Stone</Link>
                    <Link href="/collections/panorama" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Panorama</Link>
                    <Link href="/collections/strength-rock" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Strength Rock</Link>
                    <Link href="/collections/geoform" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Geoform</Link>
@@ -100,20 +101,13 @@ export default function Footer() {
             <ul className="space-y-4 text-xs text-[#c2bfb6] font-light tracking-wide mb-6">
               <li><Link href="#" className= "text-[#c2bfb6] hover:text-[#B08038] transition-colors">Showrooms</Link></li>
               <li><Link href="#" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Location</Link></li>
-              {/* ---<li className="flex items-center gap-3">
-                <FaPhone size={10} className="opacity-50" />
-                <span>+66 2 123 4567</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="text-[#c2bfb6] opacity-50 text-[10px]">@</span>
-                <span>contact@wallcraft.th</span>
-              </li>--- */}
             </ul>
             
             <div className="flex space-x-4">
-              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-#c2bfb6 hover:bg-[#B08038] hover:text-white transition-all"><FaFacebookF size={12} /></a>
-              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-#c2bfb6 hover:bg-[#B08038] hover:text-white transition-all"><FaInstagram size={12} /></a>
-              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-#c2bfb6 hover:bg-[#B08038] hover:text-white transition-all"><FaLine size={12} /></a>
+              {/* ✅ แก้ไข text-#c2bfb6 เป็น text-[#c2bfb6] ให้ Tailwind อ่านออกแล้วครับ */}
+              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#c2bfb6] hover:bg-[#B08038] hover:text-white transition-all"><FaFacebookF size={12} /></a>
+              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#c2bfb6] hover:bg-[#B08038] hover:text-white transition-all"><FaInstagram size={12} /></a>
+              <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#c2bfb6] hover:bg-[#B08038] hover:text-white transition-all"><FaLine size={12} /></a>
             </div>
           </div>
 

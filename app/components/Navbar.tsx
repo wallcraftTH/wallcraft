@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; // ✅ มีแค่บรรทัดนี้อันเดียวพอครับ
+import { useRouter } from 'next/navigation';
 import { FaBarsStaggered, FaXmark, FaChevronDown, FaMagnifyingGlass, FaUser } from 'react-icons/fa6';
 import { supabase } from '../lib/supabase';
 
@@ -14,14 +14,13 @@ export default function Navbar() {
   const [openSubMenu, setOpenSubMenu] = useState(""); 
   
   // Search State
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   
   // Auth State
   const [user, setUser] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
-  // Handle Scroll (เอาไว้แค่ย่อขนาดความสูงแถบ Navbar เวลาเลื่อนจอ)
+  // Handle Scroll
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -51,16 +50,6 @@ export default function Navbar() {
     };
   }, []);
 
-  // Search Submission Logic
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchTerm)}`);
-      setIsSearchOpen(false);
-      setSearchTerm("");
-    }
-  };
-
   const toggleSubMenu = (name: string) => {
     setOpenSubMenu(openSubMenu === name ? "" : name);
   };
@@ -72,8 +61,8 @@ export default function Navbar() {
 
   return (
     <>
-      {/* 🌟 Mobile Top Bar - พื้นหลังสีดำตลอดเวลา */}
-      <nav className={`fixed top-0 w-full z-[60] px-6 flex justify-between items-center md:hidden transition-all duration-500 bg-black/95 backdrop-blur-md border-b border-white/5 ${scrolled ? 'py-4' : 'py-5'}`}>
+      {/* 🌟 Mobile Top Bar - z-[100] */}
+      <nav className={`fixed top-0 w-full z-[100] px-6 flex justify-between items-center md:hidden transition-all duration-500 bg-black/95 backdrop-blur-md border-b border-white/5 ${scrolled ? 'py-4' : 'py-5'}`}>
         <Link href="/">
           <img src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Logo_Images/wallcraft%20logo%20grey%20color.webp" alt="Logo" className="h-6 w-auto" />
         </Link>
@@ -87,8 +76,8 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Overlay */}
-      <div className={`fixed inset-0 z-[70] bg-black transition-all duration-500 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+      {/* Mobile Overlay - z-[110] */}
+      <div className={`fixed inset-0 z-[110] bg-black transition-all duration-500 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
         <button className="absolute top-6 right-8 text-white/70 text-3xl" onClick={closeMobileMenu}>
           <FaXmark />
         </button>
@@ -121,12 +110,14 @@ export default function Navbar() {
               <FaChevronDown className={`ml-3 text-[8px] transition-transform ${openSubMenu === 'art' ? 'rotate-180' : ''}`} />
             </button>
             <div className={`flex flex-col items-center space-y-5 overflow-hidden transition-all duration-500 ${openSubMenu === 'art' ? 'max-h-[200px] mt-8 opacity-100' : 'max-h-0 opacity-0'}`}>
-              <Link href="/art&gallery/visual-showcase" onClick={closeMobileMenu} className="text-[10px] uppercase tracking-[0.3em] text-[#c2bfb6]">Visual Showcase</Link>
-              <Link href="#" onClick={closeMobileMenu} className="text-[10px] uppercase tracking-[0.3em] text-[#c2bfb6]">Project Showcase</Link>
+              {/* ✅ เรียกใช้โฟลเดอร์ art-gallery ที่สร้างใหม่ */}
+              <Link href="/art-gallery/visual-showcase" onClick={closeMobileMenu} className="text-[10px] uppercase tracking-[0.3em] text-[#c2bfb6]">Visual Showcase</Link>
+              <Link href="/art-gallery/project-showcase" onClick={closeMobileMenu} className="text-[10px] uppercase tracking-[0.3em] text-[#c2bfb6]">Project Showcase</Link>
             </div>
           </div>
 
-          <Link href="#" onClick={closeMobileMenu} className="text-[11px] uppercase tracking-[0.4em] text-white">Match Inspiration</Link>
+          {/* ✅ เรียกใช้โฟลเดอร์ match-inspiration ที่สร้างใหม่ */}
+          <Link href="/match-inspiration" onClick={closeMobileMenu} className="text-[11px] uppercase tracking-[0.4em] text-white">Match Inspiration</Link>
           
           <hr className="w-12 border-white/20 my-4" />
 
@@ -145,18 +136,16 @@ export default function Navbar() {
         </div>
       </div>
 
- {/* 🌟 Desktop Navigation - พื้นหลังสีดำตลอดเวลา */}
-      <nav className={`fixed top-0 w-full z-50 px-8 hidden md:block transition-all duration-400 bg-black/95 backdrop-blur-md border-b border-white/5 ${scrolled ? 'py-3' : 'py-6'}`}>
+      {/* 🌟 Desktop Navigation - z-[100] */}
+      <nav className={`fixed top-0 w-full z-[100] px-8 hidden md:block transition-all duration-400 bg-black/95 backdrop-blur-md border-b border-white/5 ${scrolled ? 'py-3' : 'py-6'}`}>
         <div className="max-w-[1800px] mx-auto flex justify-between items-center w-full gap-4">
           
-          {/* 1. ฝั่งซ้าย: Logo (ใช้ flex-1 เพื่อกินพื้นที่ให้เท่ากับฝั่งขวา ดันเมนูให้อยู่ตรงกลางเป๊ะ) */}
           <div className="flex-1 flex items-center justify-start">
             <Link href="/">
               <img src="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Logo_Images/wallcraft%20logo%20grey%20color.webp" alt="Wallcraft Logo" className="h-5 lg:h-6 opacity-90" />
             </Link>
           </div>
 
-          {/* 2. ตรงกลาง: Main Links (ลด space-x-12 เหลือ space-x-6 ถึง 10 เพื่อไม่ให้มันกว้างเกินไปจนชนขอบ) */}
           <div className="flex items-center justify-center space-x-6 lg:space-x-10 flex-shrink-0">
             <Link href="/introduction" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Band Introduction</Link>
             
@@ -166,7 +155,7 @@ export default function Navbar() {
               <div className="ml-2 p-1 group-hover:rotate-180 transition-transform duration-300">
                 <FaChevronDown className="text-[8px] opacity-40 group-hover:text-[#B08038] group-hover:opacity-100" />
               </div>
-              <div className="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+              <div className="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                 <div className="bg-zinc-900/95 backdrop-blur-2xl border border-white/5 p-6 space-y-4 shadow-2xl rounded-sm">
                   <Link href="/series/craft-stone" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Craft Stone Series</Link>
                   <Link href="/series/luxe" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Luxe Series</Link>
@@ -181,19 +170,20 @@ export default function Navbar() {
               <div className="ml-2 p-1 group-hover:rotate-180 transition-transform duration-300">
                 <FaChevronDown className="text-[8px] opacity-40 group-hover:text-[#B08038] group-hover:opacity-100" />
               </div>
-               <div className="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+               <div className="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                 <div className="bg-zinc-900/95 backdrop-blur-2xl border border-white/5 p-6 space-y-4 shadow-2xl rounded-sm">
-                  <Link href="/art&gallery/visual-showcase" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Visual Showcase</Link>
-                  <Link href="#" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Project Showcase</Link>
+                  {/* ✅ เปลี่ยนเป็น art-gallery */}
+                  <Link href="/art-gallery/visual-showcase" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Visual Showcase</Link>
+                  <Link href="/art-gallery/project-showcase" className="block text-[9px] uppercase tracking-[0.3em] text-[#c2bfb6] hover:text-[#B08038]">Project Showcase</Link>
                 </div>
               </div>
             </div>
 
-            <Link href="#" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Match Inspiration</Link>
-            <Link href="#" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Studio Q&A</Link>
+            {/* ✅ เรียกใช้ match-inspiration และ studio-qa */}
+            <Link href="/match-inspiration" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Match Inspiration</Link>
+            <Link href="/studio-qa" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Studio Q&A</Link>
           </div>
 
-          {/* 3. ฝั่งขวา: Search & Auth (ใช้ flex-1 และ justify-end เพื่อผลักของไปชิดขวา) */}
           <div className="flex-1 flex items-center justify-end space-x-4 lg:space-x-6">
             <button 
               onClick={() => router.push('/search')}

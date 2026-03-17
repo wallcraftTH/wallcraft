@@ -1,14 +1,15 @@
 // app/collections/[slug]/page.tsx
 import React from 'react';
-import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { supabaseBall } from '@/app/lib/supabase';
 // ✅ เช็ก Path ตรงนี้ให้ดีว่า Component อยู่ตรงไหน
 import VariantCarousel from '@/app/components/VariantCarousel';
+
 export const dynamic = 'force-dynamic';
+
 const SLUG_TO_COLLECTION: Record<string, string> = {
   "solid-panel": "Solid Panel", 
-  "terra-stone": "Terra Stone", // แก้ A เป็น E ทั้งชื่อ Slug และชื่อค้นหา
+  "tarra-stone": "Terra Stone", // 👈 แก้ตรงนี้ครับ เปลี่ยน key ให้ตรงกับ URL
   "geoform": "Geo form",
   "accessories": "Accessories",
   "metallic": "Metallic"
@@ -33,10 +34,27 @@ export default async function CollectionDynamicPage({ params }: PageProps) {
     .ilike('collection', `%${searchName}%`)
     .order('id', { ascending: true });
 
+  // 🚨 เปลี่ยนจากเตะไปหน้า 404 เป็นการโชว์หน้า Coming Soon แทนครับ
   if (error || !products || products.length === 0) {
-    return notFound();
+    return (
+      <div className="bg-[#121212] min-h-screen text-white font-['Sarabun'] flex flex-col items-center justify-center px-6">
+        <div className="text-center max-w-2xl">
+          <h1 className="text-4xl lg:text-6xl font-['Playfair_Display'] text-[#c6a87c] mb-6 uppercase tracking-wider">
+             Coming Soon
+          </h1>
+          <p className="text-[#b0b0b0] font-light tracking-wide mb-10 text-lg">
+             คอลเลกชัน <span className="text-white font-medium">{searchName}</span> กำลังอยู่ในช่วงอัปเดตสินค้าครับ 
+             <br />โปรดติดตามเร็วๆ นี้
+          </p>
+          <Link href="/" className="px-8 py-3 border border-[#c6a87c] text-[#c6a87c] hover:bg-[#c6a87c] hover:text-black transition-all duration-300 text-sm tracking-[0.2em] uppercase rounded-sm inline-block">
+             กลับสู่หน้าแรก
+          </Link>
+        </div>
+      </div>
+    );
   }
 
+  // 👇 ถ้ามีสินค้า ก็จะเรนเดอร์ปกติเหมือนเดิมครับ
   return (
     <div className="bg-[#121212] min-h-screen text-white font-['Sarabun']">
        <header className="py-20 text-center bg-black border-b border-[#222]">

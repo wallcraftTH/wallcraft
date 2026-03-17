@@ -1,3 +1,4 @@
+//app/series/essential/page.tsx
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -391,7 +392,7 @@ export default function App() {
         highlight="Panel"
         desc="ผนังสำเร็จรูปที่เน้นความแข็งแรง ติดตั้งง่าย จบงานได้ทันทีโดยไม่ต้องผ่านกระบวนการซับซ้อน"
         img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20169@2x.webp"
-        link="/collection/essential-solid"
+        link="/collections/essential-solid"
         color="#B08036"
       />
 
@@ -400,7 +401,7 @@ export default function App() {
         highlight="Panel"
         desc="ผนังน้ำหนักเบาพร้อมระบบร่องลิ้นและตัวจบมุมในตัว ช่วยให้การติดตั้งรวดเร็วและประณีตในทุกรายละเอียด"
         img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20165@2x.webp"
-        link="/collection/essential-hollow"
+        link="/collections/essential-hollow"
         reverse
       />
 
@@ -409,7 +410,7 @@ export default function App() {
         highlight="Panel"
         desc="ดีไซน์ผนังระแนงที่มาพร้อมตัวจบที่ออกแบบมาให้เข้าคู่กันโดยเฉพาะ สร้างมิติให้พื้นที่ได้อย่างลงตัว"
         img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20168@2x.webp"
-        link="/collection/essential-decor"
+        link="/collections/essential-decor"
         color="#CBBDAD"
       />
 
@@ -418,7 +419,7 @@ export default function App() {
         highlight="Aluminium & LED"
         desc="อุปกรณ์ตกแต่งเพื่อความสมบูรณ์แบบ ทั้งคิ้วอลูมิเนียมเก็บงานสีเดียวกับแผ่น และระบบไฟ LED ขนาดจิ๋ว"
         img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20167@2x.webp"
-        link="/collection/essential-accessories"
+        link="/collections/essential-accessories"
         reverse
       />
     </div>

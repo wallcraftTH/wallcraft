@@ -1,10 +1,22 @@
-
 User-agent: *
 Allow: /
-Allow: /collections/
-Allow: /series/
 Disallow: /api/
 Disallow: /_next/
-Disallow: /admin/ # ถ้ามี
+Disallow: /search # 👈 สำคัญมาก! ป้องกันบอทหลงทางในช่องค้นหาจนเกิด Infinite Loop
+Crawl-delay: 2
+
+# 🚫 บล็อกบอทสูบข้อมูล (กินแบนด์วิดท์ฟรี แต่ไม่ช่วยเรื่อง SEO)
+User-agent: SemrushBot
+Disallow: /
+User-agent: AhrefsBot
+Disallow: /
+User-agent: MJ12bot
+Disallow: /
+User-agent: DotBot
+Disallow: /
+User-agent: PetalBot
+Disallow: /
+User-agent: Rogerbot
+Disallow: /
 
 Sitemap: https://www.wallcraftthailand.com/sitemap.xml

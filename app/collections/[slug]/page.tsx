@@ -1,4 +1,4 @@
-// app/collection/[slug]/page.tsx
+// app/collections/[slug]/page.tsx
 import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -8,10 +8,10 @@ import VariantCarousel from '@/app/components/VariantCarousel';
 export const dynamic = 'force-dynamic';
 const SLUG_TO_COLLECTION: Record<string, string> = {
   "solid-panel": "Solid Panel", 
-  "tarra-stone": "Tarra Stone", //Metalic
+  "terra-stone": "Terra Stone", // แก้ A เป็น E ทั้งชื่อ Slug และชื่อค้นหา
   "geoform": "Geo form",
   "accessories": "Accessories",
-  "metallic": "Metalic"
+  "metallic": "Metallic"
 };
 
 interface PageProps {

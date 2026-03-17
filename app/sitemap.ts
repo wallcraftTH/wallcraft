@@ -1,36 +1,51 @@
 import { MetadataRoute } from 'next'
-import { supabaseBall } from '@/app/lib/supabase' // เช็ค Path ตรงนี้ให้ตรงกับใน lib นะครับ
+import { supabaseBall } from '@/app/lib/supabase'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.wallcraftthailand.com'
 
-  // 1. หน้าหลักๆ (Static Routes)
-  const routes = [
+  // 1. หน้าหลักและหน้าใหม่ที่เพิ่งสร้าง (Static Routes)
+  const staticPaths = [
     '',
     '/login',
     '/register',
     '/introduction',
     '/search',
-  ].map((route) => ({
+    '/art-gallery/visual-showcase', // ✅ เพิ่มหน้าใหม่
+    '/art-gallery/project-showcase', // ✅ เพิ่มหน้าใหม่
+    '/match-inspiration',           // ✅ เพิ่มหน้าใหม่
+    '/studio-qa',                    // ✅ เพิ่มหน้าใหม่
+  ]
+
+  const routes = staticPaths.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
-    priority: 1,
+    priority: route === '' ? 1 : 0.8,
   }))
 
-  // 2. ดึงข้อมูลจาก Supabase มาทำหน้า Dynamic
+  // 2. ดึงข้อมูลจาก Supabase
   const { data: products } = await supabaseBall
     .from('products')
     .select('id, collection')
 
   // --- ทำแผนที่สำหรับหน้า Collections ---
   const uniqueCollections = Array.from(new Set(products?.map(p => p.collection).filter(Boolean)))
-  const collectionRoutes = uniqueCollections.map((col) => ({
-    url: `${baseUrl}/collections/${col!.toLowerCase().replace(/\s+/g, '-')}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.8,
-  }))
+  
+  const collectionRoutes = uniqueCollections.map((col) => {
+    // แปลงชื่อ Collection เป็น slug (ตัวเล็กหมด, เว้นวรรคเป็นขีดกลาง)
+    let slug = col!.toLowerCase().replace(/\s+/g, '-');
+    
+    // 🚨 จุดสำคัญ: ถ้าใน DB คือ "terra" แต่ลิงก์นายจะใช้ "tarra" ต้องแก้ตรงนี้ครับ
+    if (slug === 'terra-stone') slug = 'tarra-stone';
+
+    return {
+      url: `${baseUrl}/collections/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    };
+  })
 
   // --- ทำแผนที่สำหรับหน้า Product รายชิ้น ---
   const productRoutes = (products || []).map((p) => ({

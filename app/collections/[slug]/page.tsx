@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { supabaseBall } from '@/app/lib/supabase';
 // ✅ เช็ก Path ตรงนี้ให้ดีว่า Component อยู่ตรงไหน
 import VariantCarousel from '@/app/components/VariantCarousel';
-
+export const dynamic = 'force-dynamic';
 const SLUG_TO_COLLECTION: Record<string, string> = {
   "solid-panel": "Solid Panel", 
   "tarra-stone": "Tarra Stone", //Metalic

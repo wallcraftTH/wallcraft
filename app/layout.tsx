@@ -3,7 +3,7 @@ import { Prompt, Noto_Sans_Thai } from "next/font/google";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
-
+export const dynamic = 'force-dynamic';
 import "./globals.css";
 
 import ConditionalNavbar from "./components/Navbar";

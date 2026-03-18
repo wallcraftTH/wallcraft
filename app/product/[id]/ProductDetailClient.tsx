@@ -196,7 +196,7 @@ const router = useRouter();
               <div className="text-zinc-500 text-xs mb-8 tracking-wider">SKU: <span className="text-white">{selectedVariant?.sku || '-'}</span></div>
               
               <button className="w-full bg-white text-black py-4 text-sm font-bold tracking-widest uppercase cursor-pointer hover:bg-[#c6a87c] hover:text-white transition-all duration-300">
-                 Download
+                 Save
               </button>
             </section>
           </div>

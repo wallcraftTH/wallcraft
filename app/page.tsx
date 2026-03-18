@@ -103,7 +103,8 @@ export default function HomePage() {
 
             {/* Headline */}
             <h1 className="text-4xl md:text-5xl xl:text-7xl font-bold mb-8 tracking-tighter uppercase leading-[1.1] text-[#B08038]">
-                ตัวตนของผนัง<br/>ที่สะท้อนสไตล์
+                ตัวตนของผนังหกดเ้่าสวง
+                <br/>ที่สะท้อนสไตล์
             </h1>
 
             {/* Description */}

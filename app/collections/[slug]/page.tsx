@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 const SLUG_TO_COLLECTION: Record<string, string> = {
   "solid-panel": "Solid Panel", 
-  "tarra-stone": "Terra Stone", // 👈 แก้ตรงนี้ครับ เปลี่ยน key ให้ตรงกับ URL
+  "tarra-stone": "Tarra Stone", // 👈 แก้ตรงนี้ครับ เปลี่ยน key ให้ตรงกับ URL
   "geoform": "Geo form",
   "accessories": "Accessories",
   "metallic": "Metallic"

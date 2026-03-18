@@ -6,13 +6,11 @@ import { FaFacebookF, FaInstagram, FaLine, FaPhone } from 'react-icons/fa6';
 export default function Footer() {
   return (
     <footer className="bg-[#050505] border-t border-white/5 pt-20 pb-10 text-white relative z-10">
-      {/* Reduced padding (lg:px-10) to move content closer to the left edge */}
       <div className="container mx-auto px-8 lg:px-10">
         
-        {/* Grid Layout: 5 Columns on Desktop */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 mb-32">
           
-          {/* --- Column 1: Contact (Moved Left) --- */}
+          {/* --- Column 1: Contact --- */}
           <div className="lg:col-span-1">
             <Link href="/" className="text-2xl font-bold tracking-widest text-[#B08038] uppercase mb-6 block">
               TPS GARDEN FURNITURE CO., LTD
@@ -25,7 +23,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* --- Column 2: Collections (Takes 2 columns) --- */}
+          {/* --- Column 2: Collections --- */}
           <div className="lg:col-span-2">
              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#B08038] mb-8">Collections</h4>
              
@@ -37,7 +35,6 @@ export default function Footer() {
                    Craft Stone
                  </h3>
                  <div className="space-y-3 flex flex-col">
-                   {/* ใช้ tarra-stone ตามที่นายคอนเฟิร์มครับ */}
                    <Link href="/collections/tarra-stone" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Tarra Stone</Link>
                    <Link href="/collections/panorama" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Panorama</Link>
                    <Link href="/collections/strength-rock" className="text-[9px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Strength Rock</Link>
@@ -95,16 +92,16 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* --- Column 4: Brand/Socials --- */}
+          {/* --- Column 4: Contact Us --- */}
           <div className="lg:col-span-1">
             <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#B08038] mb-8">Contact Us</h4>
             <ul className="space-y-4 text-xs text-[#c2bfb6] font-light tracking-wide mb-6">
-              <li><Link href="#" className= "text-[#c2bfb6] hover:text-[#B08038] transition-colors">Showrooms</Link></li>
-              <li><Link href="#" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Location</Link></li>
+              {/* ✅ ใส่ Link ไปหน้าใหม่เรียบร้อยครับ */}
+              <li><Link href="/contact/showrooms" className= "text-[#c2bfb6] hover:text-[#B08038] transition-colors">Showrooms</Link></li>
+              <li><Link href="/contact/location" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Location</Link></li>
             </ul>
             
             <div className="flex space-x-4">
-              {/* ✅ แก้ไข text-#c2bfb6 เป็น text-[#c2bfb6] ให้ Tailwind อ่านออกแล้วครับ */}
               <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#c2bfb6] hover:bg-[#B08038] hover:text-white transition-all"><FaFacebookF size={12} /></a>
               <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#c2bfb6] hover:bg-[#B08038] hover:text-white transition-all"><FaInstagram size={12} /></a>
               <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#c2bfb6] hover:bg-[#B08038] hover:text-white transition-all"><FaLine size={12} /></a>

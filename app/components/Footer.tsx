@@ -11,7 +11,7 @@ export default function Footer() {
     essential: false,
   });
 
-  // Toggle function (Fixed strict typing)
+  // Toggle function
   const toggleSeries = (series: 'craft' | 'luxe' | 'essential') => {
     setOpenSeries((prev) => ({ ...prev, [series]: !prev[series] }));
   };
@@ -25,12 +25,14 @@ export default function Footer() {
           
           {/* --- Column 1: Contact --- */}
           <div className="lg:col-span-1">
+            {/* Title - Kept Large */}
             <Link href="/" className="text-2xl font-bold tracking-widest text-[#B08038] uppercase mb-6 block">
               TPS GARDEN FURNITURE CO., LTD
             </Link>
-            <ul className="space-y-4 text-xs text-[#c2bfb6] font-light tracking-wide">
+            {/* Body Text - Set to 12px */}
+            <ul className="space-y-4 text-[13px] text-[#c2bfb6] font-light tracking-wide">
               <li className="flex items-start gap-3">
-                <span className="opacity-50 mt-1 text-[12px]">📍</span>
+                <span className="opacity-50 mt-1">📍</span>
                 <span>351/7-8 Soi Bangkok-Nonthaburi 13, Bangkok-Nonthaburi Road, Bang Sue Subdistrict, Bang Sue District, Bangkok 10800</span>
               </li>
             </ul>
@@ -38,6 +40,7 @@ export default function Footer() {
 
           {/* --- Column 2: Collections (Takes 2 columns) --- */}
           <div className="lg:col-span-2">
+             {/* Header - Kept Original size */}
              <h4 className="text-s font-bold uppercase tracking-[0.2em] text-[#B08038] mb-8 hidden lg:block">Collections</h4>
              
              <div className="grid grid-cols-1 sm:grid-cols-3 lg:gap-8">
@@ -51,6 +54,7 @@ export default function Footer() {
                    <span>Craft Stone</span>
                    <FaChevronDown className={`lg:hidden transition-transform duration-300 ${openSeries.craft ? 'rotate-180' : ''}`} />
                  </button>
+                 {/* Links - Set to 12px */}
                  <div className={`${openSeries.craft ? 'flex' : 'hidden'} lg:flex flex-col space-y-3 pb-2 lg:pb-0`}>
                     <Link href="/collections/craft-stone-collection/tarra-stone" className="text-[10px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Tarra Stone</Link>
                     <Link href="/collections/craft-stone-collection/panorama" className="text-[10px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Panorama</Link>
@@ -61,7 +65,7 @@ export default function Footer() {
                     <Link href="/collections/craft-stone-collection/rust" className="text-[10px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Rust</Link>
                     <Link href="/collections/craft-stone-collection/finesse" className="text-[10px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Finesse</Link>
                   </div>
-                </div>
+               </div>
 
                {/* Sub-Col 2: Luxe Series */}
                <div className="space-y-0 lg:space-y-4">
@@ -72,6 +76,7 @@ export default function Footer() {
                    <span>Luxe Series</span>
                    <FaChevronDown className={`lg:hidden transition-transform duration-300 ${openSeries.luxe ? 'rotate-180' : ''}`} />
                  </button>
+                 {/* Links - Set to 12px */}
                  <div className={`${openSeries.luxe ? 'flex' : 'hidden'} lg:flex flex-col space-y-3 pb-2 lg:pb-0`}>
                    <Link href="/collections/luxe-collection/fabric" className="text-[10px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Fabric</Link>
                    <Link href="/collections/luxe-collection/leather" className="text-[10px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Leather</Link>
@@ -93,6 +98,7 @@ export default function Footer() {
                    <span>Essential Series</span>
                    <FaChevronDown className={`lg:hidden transition-transform duration-300 ${openSeries.essential ? 'rotate-180' : ''}`} />
                  </button>
+                 {/* Links - Set to 12px */}
                  <div className={`${openSeries.essential ? 'flex' : 'hidden'} lg:flex flex-col space-y-3 pb-2 lg:pb-0`}>
                    <Link href="/collection/solid-panel" className="text-[10px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Solid Panel</Link>
                    <Link href="/collection/hollow-core" className="text-[10px] uppercase tracking-[0.2em] text-[#c2bfb6] hover:text-white transition-colors">Hollow Core Panel</Link>
@@ -109,7 +115,8 @@ export default function Footer() {
           {/* --- Column 3: Technical Support --- */}
           <div className="lg:col-span-1 mt-8 lg:mt-0">
             <h4 className="text-s font-bold uppercase tracking-[0.2em] text-[#B08038] mb-8">Technical Support</h4>
-            <ul className="space-y-4 text-s text-[#c2bfb6] font-light tracking-wide">
+            {/* Links - Set to 12px */}
+            <ul className="space-y-4 text-[12px] text-[#c2bfb6] font-light tracking-wide">
               <li><Link href="/support/installation" className= "text-[#c2bfb6] hover:text-[#B08038] transition-colors">Installation Guide</Link></li>
               <li><Link href="/support/maintenance" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Care & Maintenance</Link></li>
               <li><Link href="/support/warranty" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Warranty & Policy</Link></li>
@@ -120,7 +127,8 @@ export default function Footer() {
           {/* --- Column 4: Brand/Socials --- */}
           <div className="lg:col-span-1 mt-8 lg:mt-0">
             <h4 className="text-s font-bold uppercase tracking-[0.2em] text-[#B08038] mb-8">Contact Us</h4>
-            <ul className="space-y-4 text-s text-[#c2bfb6] font-light tracking-wide mb-6">
+            {/* Links - Set to 12px */}
+            <ul className="space-y-4 text-[12px] text-[#c2bfb6] font-light tracking-wide mb-6">
               <li><Link href="#" className= "text-[#c2bfb6] hover:text-[#B08038] transition-colors">Showrooms</Link></li>
               <li><Link href="#" className="text-[#c2bfb6] hover:text-[#B08038] transition-colors">Location</Link></li>
             </ul>

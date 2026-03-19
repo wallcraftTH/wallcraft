@@ -181,7 +181,7 @@ export default function Navbar() {
 
             {/* ✅ เรียกใช้ match-inspiration และ studio-qa */}
             <Link href="/match-inspiration" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Match Inspiration</Link>
-            <Link href="/studio-qa" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Studio Q&A</Link>
+            <Link href="/support/studio-qa" className="text-[10px] uppercase tracking-[0.4em] text-[#c2bfb6] hover:text-[#B08038] transition-colors whitespace-nowrap">Studio Q&A</Link>
           </div>
 
           <div className="flex-1 flex items-center justify-end space-x-4 lg:space-x-6">

@@ -284,10 +284,10 @@ export default function App() {
       </section>
 
       {/* --- COLLECTION SECTIONS (Now with CraftStone Style Pop) --- */}
-      <CollectionSection title="Solid" highlight="Panel" desc="ผนังสำเร็จรูปที่เน้นความแข็งแรง ติดตั้งง่าย จบงานได้ทันที" img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20169@2x.webp" link="/collection/essential-solid" />
-      <CollectionSection title="Hollow Core" highlight="Panel" desc="ผนังน้ำหนักเบาพร้อมระบบร่องลิ้นและตัวจบมุมในตัว" img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20165@2x.webp" link="/collection/essential-hollow" reverse />
-      <CollectionSection title="Decor" highlight="Panel" desc="ดีไซน์ผนังระแนงที่มาพร้อมตัวจบที่ออกแบบมาให้เข้าคู่กัน" img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20168@2x.webp" link="/collection/essential-decor" />
-      <CollectionSection title="Accessories" highlight="Aluminium & LED" desc="อุปกรณ์ตกแต่งเพื่อความสมบูรณ์แบบ ทั้งคิ้วอลูมิเนียมและ LED" img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20167@2x.webp" link="/collection/essential-accessories" reverse />
+      <CollectionSection title="Solid" highlight="Panel" desc="ผนังสำเร็จรูปที่เน้นความแข็งแรง ติดตั้งง่าย จบงานได้ทันที" img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20169@2x.webp" link="/collections/solid-panel" />
+      <CollectionSection title="Hollow Core" highlight="Panel" desc="ผนังน้ำหนักเบาพร้อมระบบร่องลิ้นและตัวจบมุมในตัว" img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20165@2x.webp" link="/collections/hollow-core" reverse />
+      <CollectionSection title="Decor" highlight="Panel" desc="ดีไซน์ผนังระแนงที่มาพร้อมตัวจบที่ออกแบบมาให้เข้าคู่กัน" img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20168@2x.webp" link="/collections/decor-panel" />
+      <CollectionSection title="Accessories" highlight="Aluminium & LED" desc="อุปกรณ์ตกแต่งเพื่อความสมบูรณ์แบบ ทั้งคิ้วอลูมิเนียมและ LED" img="https://raw.githubusercontent.com/WaiHmueThit23/wallcraft_assets/main/Essential%20Series/Essential%20Series/Asset%20167@2x.webp" link="/collections/accessories" reverse />
     </div>
   );
 }

@@ -5,6 +5,8 @@ import { FaChevronLeft, FaMagnifyingGlassPlus, FaXmark } from 'react-icons/fa6';
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import DetailCarousel from '../../components/DetailCarousel'; 
+import { supabase, supabaseBall } from '@/app/lib/supabase';
+
 
 interface ProductVariant {
   pattern?: string;
@@ -73,6 +75,51 @@ const router = useRouter();
     }
   }, [selectedFilm]);
 
+  // 1. Setup State
+  const [isSaved, setIsSaved] = useState(false);
+
+  // 2. Check status on load (using Primary Supabase)
+  useEffect(() => {
+    const checkStatus = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user || !selectedVariant?.sku) return;
+
+      const { data } = await supabase
+        .from('user_favorites')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('variant_sku', selectedVariant.sku)
+        .maybeSingle();
+
+      setIsSaved(!!data);
+    };
+    checkStatus();
+  }, [selectedVariant?.sku]);
+
+  // 3. Toggle Save (Writing to Primary Supabase)
+  const handleToggleSave = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return alert("Please login to save textures.");
+
+    if (isSaved) {
+      const { error } = await supabase
+        .from('user_favorites')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('variant_sku', selectedVariant?.sku);
+        
+      if (!error) setIsSaved(false);
+    } else {
+      const { error } = await supabase.from('user_favorites').insert({
+        user_id: user.id,
+        product_id: product.id,
+        variant_sku: selectedVariant?.sku,
+        collection_name: product.collection
+      });
+      
+      if (!error) setIsSaved(true);
+    }
+  };
   // 🔥 2. เตรียมข้อมูลสำหรับส่งให้ Carousel (แปลง patterns เป็น object ที่มี name และ image)
   const carouselItems = patterns.map(p => {
       const representFilm = Object.keys(groupedData[p])[0];
@@ -195,6 +242,26 @@ const router = useRouter();
               </div>
               <div className="text-zinc-500 text-xs mb-8 tracking-wider">SKU: <span className="text-white">{selectedVariant?.sku || '-'}</span></div>
               
+              <div className="flex items-baseline justify-between mb-2">
+     <div className="text-[2.5rem] font-['Playfair_Display'] text-[#c6a87c]">
+        {selectedVariant?.price ? `฿${Number(selectedVariant.price).toLocaleString()}` : 'Contact Us'}
+     </div>
+  </div>
+  <div className="text-zinc-500 text-xs mb-8 tracking-wider">SKU: <span className="text-white">{selectedVariant?.sku || '-'}</span></div>
+  
+  <div className="space-y-3">
+    <button 
+      onClick={handleToggleSave}
+      className={`w-full py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300 border ${
+        isSaved 
+          ? 'bg-[#c6a87c] text-white border-[#c6a87c]' 
+          : 'bg-transparent text-[#c6a87c] border-[#c6a87c]/30 hover:border-[#c6a87c]'
+      }`}
+    >
+      {isSaved ? 'SAVED' : '♡ SAVE TO FAVORITES'}
+    </button>
+  </div>
+
               <button className="w-full bg-white text-black py-4 text-sm font-bold tracking-widest uppercase cursor-pointer hover:bg-[#c6a87c] hover:text-white transition-all duration-300">
                  Download
               </button>

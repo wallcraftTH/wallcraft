@@ -28,7 +28,7 @@ export default function Footer() {
             <Link href="/" className="text-2xl font-bold tracking-widest text-[#B08038] uppercase mb-6 block">
               TPS GARDEN FURNITURE CO., LTD
             </Link>
-            <ul className="space-y-4 text-s text-[#c2bfb6] font-light tracking-wide">
+            <ul className="space-y-4 text-xs text-[#c2bfb6] font-light tracking-wide">
               <li className="flex items-start gap-3">
                 <span className="opacity-50 mt-1 text-[12px]">📍</span>
                 <span>351/7-8 Soi Bangkok-Nonthaburi 13, Bangkok-Nonthaburi Road, Bang Sue Subdistrict, Bang Sue District, Bangkok 10800</span>

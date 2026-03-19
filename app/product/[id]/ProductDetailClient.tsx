@@ -241,7 +241,6 @@ const router = useRouter();
                  </div>
               </div>
               <div className="text-zinc-500 text-xs mb-8 tracking-wider">SKU: <span className="text-white">{selectedVariant?.sku || '-'}</span></div>
-              
   
   <div className="space-y-3">
     <button 

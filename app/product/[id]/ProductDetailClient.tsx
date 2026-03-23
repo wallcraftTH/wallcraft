@@ -150,19 +150,17 @@ const router = useRouter();
 
         <div className="flex flex-col lg:flex-row gap-16 items-start">
           
-          {/* Left: Main Image */}
-          <div className="w-full lg:w-1/2 sticky top-32">
-    {/* 🔥 แก้ตรงนี้: เปลี่ยน aspect-square เป็น aspect-[3/4] */}
-    <div className="bg-[#1a1a1a] rounded-sm border border-white/5 aspect-[3/4] flex items-center justify-center relative overflow-hidden shadow-xl">
-       <img 
-        src={selectedVariant?.variant_image || product.image_url} 
-        alt={product.name} 
-        // เพิ่ม object-cover เพื่อให้รูปเต็มพื้นที่แนวตั้งใหม่ (ถ้าต้องการ) 
-        // หรือใช้ object-contain เหมือนเดิมถ้าไม่อยากให้รูปโดนตัด
-        className="w-full h-full object-contain p-8 transition-all duration-500"
-      />
-    </div>
-  </div>
+          
+          {/* Left: Main Image - Only sticky on large screens (desktop) */}
+          <div className="w-full lg:w-1/2 lg:sticky lg:top-32">
+            <div className="bg-[#1a1a1a] rounded-sm border border-white/5 aspect-square flex items-center justify-center relative overflow-hidden shadow-xl">
+               <img 
+                src={selectedVariant?.variant_image || product.image_url} 
+                alt={product.name} 
+                className="w-full h-full object-contain p-4 lg:p-8 transition-all duration-500"
+              />
+            </div>
+          </div>
 
           {/* Right: Product Info */}
           <div className="w-full lg:w-1/2 space-y-6">

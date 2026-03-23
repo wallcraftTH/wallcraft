@@ -88,28 +88,36 @@ const CollectionSection = ({
   const mainTitle = titleParts.slice(0, -1).join(' ');
   const subTitle = titleParts[titleParts.length - 1];
 
+  {/*Collection Data Section */}
   return (
-    <section className={`relative z-10 flex flex-col ${reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} min-h-[70vh] items-center py-20 border-t border-white/5 overflow-hidden`}>
-      <div className={`w-full lg:w-[50%] flex flex-col justify-center px-8 md:px-16 lg:px-24 mb-10 lg:mb-0`}>
-        <AnimatedSection>
-          <div className="max-w-lg mx-auto lg:mx-0">
-            <Separator />
-            <h2 className="text-4xl md:text-6xl font-light leading-tight mt-6 mb-8 text-[#B08038]">
-              {mainTitle} <span className="text-[#c2bfb6]"><br />{subTitle}</span>
-            </h2>
-            <p className="text-[10px] md:text-sm font-light leading-relaxed max-w-md mb-10 text-[#c2bfb6]">
-              {desc}
-            </p>
-            <a href={link} className="inline-block border px-8 py-4 text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:bg-white hover:text-black text-[#c2bfb6] border-white/20">
-              Learn More
-            </a>
-          </div>
-        </AnimatedSection>
-      </div>
-      <div className="w-full lg:w-[50%] px-8">
-        <AnimatedSection delay={200}>
-          <img src={img} className="w-full max-h-[500px] object-contain drop-shadow-2xl" alt={title} />
-        </AnimatedSection>
+    <section className="relative z-10 py-20 border-t border-white/5 overflow-hidden">
+      {/* ใช้ justify-between และ gap-16 แบบ Essential เพื่อผลักรูปและข้อความ */}
+      <div className={`container mx-auto max-w-[1200px] px-6 lg:px-8 flex flex-col ${reverse ? 'lg:flex-row-reverse lg:justify-between' : 'lg:flex-row lg:justify-center lg:gap-16'} items-center gap-12 min-h-[60vh]`}>
+        
+        {/* หดขนาดกล่องข้อความลงในแบบ reverse เพื่อเปิดพื้นที่ทำ gap ตรงกลาง */}
+        <div className={`w-full ${reverse ? 'lg:w-4/12' : 'lg:w-7/12'} flex flex-col`}>
+          <AnimatedSection>
+            <div className="max-w-lg mx-auto lg:mx-0 text-center lg:text-left">
+              <Separator />
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-light leading-tight mt-6 mb-8 text-[#B08038]">
+                {mainTitle} <span className="text-[#c2bfb6]"><br />{subTitle}</span>
+              </h2>
+              <p className="text-[10px] md:text-sm font-light leading-relaxed max-w-md mx-auto lg:mx-0 mb-10 text-[#c2bfb6]">
+                {desc}
+              </p>
+              <a href={link} className="inline-block border px-8 py-4 text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:bg-white hover:text-black text-[#c2bfb6] border-white/20">
+                Learn More
+              </a>
+            </div>
+          </AnimatedSection>
+        </div>
+
+        {/* shrink-0 ป้องกันรูปภาพหดตัว */}
+        <div className="w-full lg:w-1/2 shrink-0">
+          <AnimatedSection delay={200}>
+            <img src={img} className="w-full max-h-[500px] object-contain drop-shadow-2xl" alt={title} />
+          </AnimatedSection>
+        </div>
       </div>
     </section>
   );

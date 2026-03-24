@@ -310,9 +310,9 @@ export default function App() {
                         {isStacked ? 'Explore Layers' : 'Stack Layers'}
                     </button>
                     
-                    <div className="grid grid-cols-4 md:grid-cols-7 gap-8 mt-24 px-6">
+                    <div className="grid grid-cols-4 md:grid-cols-7 gap-10 mt-36 px-6">
                         {TECH_ICONS_DATA.map((src, i) => (
-                            <img key={i} src={src} className="w-20 md:w-32 opacity-80 hover:scale-110 transition-transform" alt="Icon" />
+                            <img key={i} src={src} className="w-42 md:w-50 opacity-80 hover:scale-110 transition-transform" alt="Icon" />
                         ))}
                     </div>
                 </section>
